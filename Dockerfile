@@ -1,6 +1,6 @@
 # syntax=docker.io/docker/dockerfile:1
 
-FROM registry.dp.tech/public/node:22-alpine AS base
+FROM node:22-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -65,4 +65,4 @@ ENV PORT=32235
 ENV HOSTNAME="0.0.0.0"
 CMD ["node", "server.js"]
 
-LABEL ghcr.io="ghcr.io/ScienceOL/docs"
+LABEL org.opencontainers.image.source="https://github.com/ScienceOL/docs"

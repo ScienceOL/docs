@@ -1,98 +1,101 @@
+import { WorkflowSite } from '@/config.ts'
+
 export const metadata = {
-    title: 'Quickstart',
-    description:
-        'This guide will get you all set up and ready to use the Protocol API. We’ll cover how to get started an API client and how to make your first API request.',
+  title: 'Quickstart',
+  description:
+    'This guide will get you all set up and ready to use the Protocol API. We’ll cover how to get started an API client and how to make your first API request.',
 }
 
 # Quickstart
 
-This guide will get you all set up and ready to use the Protocol API. We'll cover how to get started using one of our API clients and how to make your first API request. We'll also look at where to go next to find all the information you need to take full advantage of our powerful REST API. {{ className: 'lead' }}
+这个页面用来帮助你在 Protium Workshop 中快速开始。
 
 <Note>
-  Before you can make requests to the Protocol API, you will need to grab your
-  API key from your dashboard. You find it under [Settings &raquo; API](#).
+  在正式开始运行之前，你将需要先从设置中获得你的计算资源 [访问令牌 (Access Token)](#)。
 </Note>
 
-## Choose your client
+## Create your first Node
 
-Before making your first API request, you need to pick which API client you will use. In addition to good ol' cURL HTTP requests, Protocol offers clients for JavaScript, Python, and PHP. In the following example, you can see how to install each client.
+进入 <a href={WorkflowSite}>Workspace</a>，点击左侧边栏或画布按钮创建第一个工作流。
+
+<Image src="/workflow/quickstart/1.png" />
+
+点击左上角的标题可以进行改名，右键点击画布，选择你要创建的节点，点击创建。
+
+<Image src="/workflow/quickstart/2.png" />
+
+使用相同的操作，依次创建 VASP 计算所需的 `POSCAR`、`KPOINTS`、`INCAR` 文件，以及 `Solver -> VASP` 求解器。
+
+## Connect
+
+拖拽每个节点中的 Handle，你将可以为你的节点创建连接关系。允许连接的节点将会以高亮进行展示。
+这类允许拖动的部分在 Protium 中被称为 Handle，查看一个完整的节点结构介绍，可见 [Design](/workflow/design) 部分。
+
+<Image src="/workflow/quickstart/3.png" />
+
+## Input Data
+
+接下来，我们需要输入实际运行的内容，点击每个节点中的输入部分，在弹出窗口中输入以下脚本内容：
 
 <CodeGroup>
 
-```bash {{ title: 'cURL' }}
-# cURL is most likely already installed on your machine
-curl --version
+```bash {{ title: 'POSCAR' }}
+# 晶格结构定义文件，包含晶格常数、基矢和原子坐标（示例为面心立方Si的笛卡尔坐标）
+fcc:
+   3.9
+ 0.5 0.5 0.0
+ 0.0 0.5 0.5
+ 0.5 0.0 0.5
+   1
+cartesian
+0 0 0
 ```
 
-```bash {{ language: 'js' }}
-# Install the Protocol JavaScript SDK
-npm install @example/protocol-api --save
+```bash {{ title: 'INCAR' }}
+# 核心控制文件，设置截断能240eV、高斯展宽0.1eV，初始化电荷计算
+general:
+ System = fcc Si
+ ISTART = 0 
+ ICHARG = 2
+ ENCUT  = 240
+ ISMEAR = 0 
+ SIGMA = 0.1
 ```
 
-```bash {{ language: 'python' }}
-# Install the Protocol Python SDK
-pip install protocol_api
-```
-
-```bash {{ language: 'php' }}
-# Install the Protocol PHP SDK
-composer require protocol/sdk
-```
-
-</CodeGroup>
-
-<div className="not-prose">
-  <Button href="/sdks" variant="text" arrow="right">
-    <>Check out our list of first-party SDKs</>
-  </Button>
-</div>
-
-## Making your first API request
-
-After picking your preferred client, you are ready to make your first call to the Protocol API. Below, you can see how to send a GET request to the Conversations endpoint to get a list of all your conversations. In the cURL example, results are limited to ten conversations, the default page length for each client.
-
-<CodeGroup tag="GET" label="/v1/conversations">
-
-```bash {{ title: 'cURL' }}
-curl -G https://api.protocol.chat/v1/conversations \
-  -H "Authorization: Bearer {token}" \
-  -d limit=10
-```
-
-```js
-import ApiClient from '@example/protocol-api'
-
-const client = new ApiClient(token)
-
-await client.conversations.list()
-```
-
-```python
-from protocol_api import ApiClient
-
-client = ApiClient(token)
-
-client.conversations.list()
-```
-
-```php
-$client = new \Protocol\ApiClient($token);
-
-$client->conversations->list();
+```bash {{ title: 'KPOINTS' }}
+# Monkhorst-Pack方法生成11×11×11 k点网格，用于布里渊区积分
+K-Points
+ 0
+Monkhorst Pack
+ 11 11 11
+ 0  0  0
 ```
 
 </CodeGroup>
 
-<div className="not-prose">
-  <Button href="/conversations" variant="text" arrow="right">
-    <>Read the docs for the Conversations endpoint</>
-  </Button>
-</div>
+<Note> PROTIUM 支持多种不同的用户输入方式，但是对于结构灵活的可运行脚本，这里主要使用纯文本框 </Note>
 
-## What's next?
+## Running
 
-Great, you're now set up with an API client and have made your first request to the API. Here are a few links that might be handy as you venture further into the Protocol API:
+输入完毕后，点击 <kbd>`运行`</kbd> 按钮开始运行，节点将显示黄色的运行中状态。
 
-- [Grab your API key from the Protocol dashboard](#)
-- [Check out the Conversations endpoint](/conversations)
-- [Learn about the different error messages in Protocol](/errors)
+<Image src="/workflow/quickstart/4.png" />
+
+<Warn>暂停按钮暂未生效 </Warn>
+
+## Results
+
+VASP 求解器开始运行后，你将会看到 VASP 运算的实时标准输出：
+
+
+
+<Note>即将支持文件上传与批量结果回收，敬请期待</Note>
+
+
+## Next Step?
+
+很棒, 你已经创建了第一个你的 VASP 计算任务。下面的一些链接可以帮助你更好的用上 PROTIUM。
+
+- [创建一个你的自定义节点](#)
+- [浏览社区，发现你需要的节点](#)
+- [使用命令行与 Protium 进行交互](#)

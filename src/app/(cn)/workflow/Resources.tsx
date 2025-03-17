@@ -15,7 +15,7 @@ import { EnvelopeIcon } from '@/components/icons/EnvelopeIcon'
 import { UserIcon } from '@/components/icons/UserIcon'
 import { UsersIcon } from '@/components/icons/UsersIcon'
 import { PrimarySite } from '@/config'
-import { BeakerIcon, CodeBracketIcon, CommandLineIcon, PuzzlePieceIcon, RectangleGroupIcon, SignalIcon, SignalSlashIcon, WindowIcon } from '@heroicons/react/24/outline'
+import { BeakerIcon, CodeBracketIcon, CommandLineIcon, PuzzlePieceIcon, RectangleGroupIcon, SignalIcon, SignalSlashIcon, UserGroupIcon, WindowIcon } from '@heroicons/react/24/outline'
 
 interface Resource {
   href: string
@@ -61,7 +61,7 @@ const resources: Array<Resource> = [
     href: '/workflow/execution',
     name: 'Nodes',
     description:
-      '探索所有官方公布的 Nodes 清单及其相应功能。',
+      '官方公布的 Nodes 清单。探索和发现自定义节点的方法，以满足特定需求和扩展系统功能。',
     icon: RectangleGroupIcon,
     pattern: {
       y: 16,
@@ -88,10 +88,10 @@ const resources: Array<Resource> = [
   },
   {
     href: `${PrimarySite}/space`,
-    name: 'Custom',
+    name: 'Social',
     description:
-      '探索和发现自定义节点或工作流，以满足特定需求和扩展系统功能。',
-    icon: BeakerIcon,
+      '探索社区中的各类资源，和其它用户分享你的节点或工作流',
+    icon: UserGroupIcon,
     pattern: {
       y: 32,
       squares: [

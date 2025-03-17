@@ -1,14 +1,14 @@
-import Link from 'next/link'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import { Feedback } from '@/components/Feedback'
 import { Heading } from '@/components/Heading'
 import { Prose } from '@/components/Prose'
-import { ExclamationCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 export const a = Link
 export { Button } from '@/components/Button'
-export { CodeGroup, Code as code, Pre as pre } from '@/components/Code'
+export { Code as code, CodeGroup, Pre as pre } from '@/components/Code'
 
 export function wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -50,6 +50,32 @@ export function Note({ children }: { children: React.ReactNode }) {
       <div className="[&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>
+    </div>
+  )
+}
+
+export function Image({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div className="my-8 max-w-3xl">
+      <img
+        src={src}
+        alt={alt}
+        className="h-auto w-full rounded-lg border
+                   border-gray-100/60 shadow-md transition-all
+                   duration-200 hover:border-gray-200/80 hover:shadow-lg
+                   dark:border-neutral-700/80 dark:shadow-neutral-900/30
+                   dark:hover:border-neutral-600"
+        loading="lazy"
+        decoding="async"
+      />
+      {alt && (
+        <p
+          className="mt-3 text-center text-sm font-light italic text-gray-500
+                      dark:text-neutral-400"
+        >
+          {alt}
+        </p>
+      )}
     </div>
   )
 }

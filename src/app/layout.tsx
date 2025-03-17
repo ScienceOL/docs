@@ -1,11 +1,11 @@
-
-import { DocumentSite } from '@/config'
 import '@/styles/tailwind.css'
 import { type Metadata } from 'next'
 import { Providers } from './providers'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(DocumentSite),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL || 'http://127.0.0.1:32235',
+  ),
   title: {
     template: '%s - Doc',
     default: 'Protium Documentation',

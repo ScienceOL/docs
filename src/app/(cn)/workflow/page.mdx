@@ -17,7 +17,7 @@ export const sections = [
 
 <HeroPattern />
 
-# Protium Workflow Tutorial
+# Protium
 
 Protium Workflow 旨在解决科学计算研究流程中繁琐的、重复的工作。通过将各类计算任务拆分为节点(Node)，实现各任务的模块化集成，高自由复用，并实现自动化运行。
 
@@ -31,22 +31,21 @@ Protium Workflow 页面是用户友好的，仅凭直觉即可快速上手构建
   <Button href="/workflow/quickstart" arrow="right">
     <>快速开始</>
   </Button>
-  <Button href="/sdks" variant="outline">
+  <Button href={`${WorkflowSite}/flociety/nodes`} variant="outline">
     <>探索「数流」社区</>
   </Button>
 </div>
 
 ## Getting started {{ anchor: false }}
 
-To get started, create a workflow in your <a href={WorkflowSite}>Workspace</a>, 
-then follow our [Workflow Quickstart](#) to make the demo workflow by yourself. {{ className: 'lead' }} 
-When your workflow is ready to go live, publish it to our [integrations directory](#) to reach the Protium community. {{ className: 'lead' }}
+要立即开始，在你的 <a href={WorkflowSite}>Workspace</a> 中创建一个工作流，然后跟随我们的 [Quickstart](/workflow/quickstart) 来创建一个你的样例。
+当流程测试完成后，你可以发布到我们的数流社区，让整个社区的开发者都能使用您的成果。{{ className: 'lead' }}
 
-Running workflow needs the [Calculation Resources](#), So, don't forget to set 你的第三方计算平台的 access token. {{ className: 'lead' }}
+运行工作流需要消耗计算资源, 所以，请设置你的计算资源的访问令牌 Access Token. {{ className: 'lead' }}
 
 <div className="not-prose">
-  <Button href="/sdks" variant="text" arrow="right">
-    <>Set your access token</>
+  <Button href="#" variant="text" arrow="right">
+    <>设置你的访问令牌</>
   </Button>
 </div>
 
