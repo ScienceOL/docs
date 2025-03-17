@@ -1,0 +1,124 @@
+import { NodeStruSvg } from "./NodeStru.tsx"
+
+export const metadata = {
+    title: 'Design',
+    description:
+        'In this guide, we will talk about how to design a workflow and what are the best practices to follow.',
+}
+
+# Design Guide
+
+This document aims to provide clear guidelines and structural definitions for users developing and using workflow systems. By detailing connection rules, node construction, and user input form configurations, we ensure consistency and maintainability in the design and implementation of the system.
+
+These guidelines and structural definitions will help developers understand how to create and manage nodes, establish connections between nodes, and handle node execution logic. The ultimate goal is to build a flexible, scalable, and user-friendly workflow system.
+
+## Interface and Concept
+
+A workflow page consists of three parts: Canvas, Console, and MiniMap.
+
+Right-click on the canvas to create a new node. **Nodes** are connected by **Edges**, with edges starting from a Source **Handle** and connecting to a Target Handle, forming a complete workflow.
+
+## Principles to Follow
+
+* A node's Source Handle can have multiple connections, while the Target Handle is allowed only one connection.
+* All Target Handles of a node must be connected for the node to be allowed to run (TODO: Remove this restriction).
+* All Compiles of a node need to be executed (TODO: Allow customization of Compile execution in the future).
+* Nodes without any connected handles will be marked as "skipped" rather than executed.
+
+## Understanding Nodes
+
+A Node is organized by a JSON structure. Let's take an ABACUS Node as an example:
+
+<img src="/design/NodeStru@1x.png" />
+
+<Row>
+    <Col sticky>
+
+    <Properties>
+      <Property name="type" type="string">
+        Specifies the type of the Node. Currently supported types are:
+            * `Input`: Input type node
+            * `Solver`: Solver type node
+      </Property>
+    </Properties> 
+
+    <Note>Currently, the differences between types are not significant. You can choose any type.</Note>
+
+    <Properties>
+      <Property name="data" type="object">
+        Contains all the data to be displayed in the Node, including the following fields:
+            * `header`: The text displayed at the top of the node, usually an identifier used in various user-friendly pages;
+            * `handle`: **Handles** that control the connection relationship between the node and other nodes;
+            * `body`: Controls the display part within the node;
+            * `compile`: Controls the code that needs to be executed within the node;
+            * `footer`: The text displayed at the bottom of the node, usually the node's version number;
+      </Property>
+    </Properties> 
+
+    </Col>
+
+    <Col>
+    ```json {{ title: 'Node' }}
+    {
+        "type": "Solver",
+        "data": {
+            "header": "ABACUS SIAB",
+            "handles": [
+            { "key": "abacus/input", "type": "target", "rope": "ABACUS_INPUT" },
+            { "key": "siab/system", "type": "target", "rope": "SIAB_SYSTEM" },
+            { "key": "siab/orbitals", "type": "target", "rope": "SIAB_ORBITALS" },
+            { "key": "siab/outputs", "type": "source", "rope": "ABACUS_SIAB_OUTPUTS" }
+            ],
+            "body": [
+            {
+                "id": "",
+                "source": {},
+                "type": "object",
+                "title": "SIAB Config",
+                "key": "abacus_siab",
+                "compile": []
+            },
+            {
+                "id": "",
+                "source": {},
+                "type": "object",
+                "title": "Bohrium Job Config",
+                "key": "bohrium_job_config",
+                "compile": []
+            }
+            ],
+            "compile": [
+            {
+                "id": "",
+                "source": "",
+                "type": "task",
+                "script": "abacus_siab",
+                "title": "ABACUS_SIAB",
+                "key": "abacus_siab",
+                "bodies": []
+            }
+            ],
+            "footer": "Version 0.1.0"
+        }
+    }
+    ```
+    </Col>
+</Row>
+
+Here, we have briefly understood the components of a Node. For more details on constructing a Node, please refer to the [Node Structure]() section.
+
+## What's Next?
+
+<Note>
+The Protium APP will be divided into the following parts:
+
+Part 1: **Architecture** (Basic rules determining node connection and execution methods)
+
+Part 2: **Nodes** (Node structure and customization, find all in Flociety Community)
+
+Part 3: **Tasks** (Task queue)
+
+Part 4: **CLI-Py** (Command line tool/Python package for headless submission)
+
+Part 5: **Integrations** (with external facilities, e.g. using LLM to simplify workflow construction.)
+</Note>

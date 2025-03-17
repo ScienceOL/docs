@@ -1,0 +1,533 @@
+# Node 映射表 
+
+```json {{ title: "Node Mapping"}}
+{
+  "POSCAR": {
+    "type": "Input",
+    "data": {
+      "header": "POSCAR",
+
+      "handles": [
+        {
+          "type": "source",
+          "key": "poscar",
+          "rope": "VASP",
+          "data_source": "compile",
+          "data_key": "poscar"
+        }
+      ],
+      "body": [
+        {
+          "id": "",
+          "source": "",
+          "type": "object",
+          "title": "POSCAR",
+          "key": "poscar",
+          "compile": []
+        }
+      ],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "file",
+          "script": "poscar",
+          "title": "POSCAR",
+          "key": "poscar",
+          "bodies": ["poscar"]
+        }
+      ],
+      "footer": "VASP/POSCAR"
+    }
+  },
+
+  "POTCAR": {
+    "type": "Select",
+    "data": {
+      "header": "POTCAR",
+
+      "body": [
+        {
+          "id": "",
+          "source": "",
+          "type": "select",
+          "title": "POTCAR",
+          "key": "potcar"
+        }
+      ],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "file",
+          "script": "potcar",
+          "title": "POTCAR",
+          "key": "potcar",
+          "bodies": ["potcar"]
+        }
+      ],
+      "footer": "VASP/POTCAR",
+      "handles": [
+        {
+          "type": "source",
+          "key": "potcar",
+          "rope": "VASP",
+          "data_source": "compile",
+          "data_key": "potcar"
+        }
+      ]
+    }
+  },
+
+  "INCAR": {
+    "type": "Input",
+    "data": {
+      "header": "INCAR",
+
+      "handles": [
+        {
+          "type": "source",
+          "key": "incar",
+          "rope": "VASP",
+          "data_source": "compile",
+          "data_key": "incar"
+        }
+      ],
+      "body": [
+        {
+          "id": "",
+          "source": "",
+          "type": "object",
+          "title": "INCAR",
+          "key": "incar"
+        }
+      ],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "file",
+          "script": "incar",
+          "title": "INCAR",
+          "key": "incar",
+          "bodies": ["incar"]
+        }
+      ],
+      "footer": "VASP/INCAR"
+    }
+  },
+
+  "KPOINTS": {
+    "type": "Input",
+    "data": {
+      "header": "KPOINTS",
+
+      "handles": [
+        {
+          "key": "kpoints",
+          "type": "source",
+          "rope": "VASP",
+          "data_source": "compile",
+          "data_key": "kpoints"
+        }
+      ],
+      "body": [
+        {
+          "id": "",
+          "source": "",
+          "type": "object",
+          "title": "KPOINTS",
+          "key": "kpoints"
+        }
+      ],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "file",
+          "script": "kpoints",
+          "title": "KPOINTS",
+          "key": "kpoints",
+          "bodies": ["kpoints"]
+        }
+      ],
+      "footer": "VASP/KPOINTS"
+    }
+  },
+
+  "VASP": {
+    "type": "Solver",
+    "data": {
+      "header": "VASP",
+
+      "body": [
+        {
+          "id": "",
+          "source": "default",
+          "type": "select",
+          "key": "potcarSelect"
+        },
+        {
+          "id": "",
+          "source": "bohrium",
+          "type": "select",
+          "key": "machineSelect"
+        },
+        {
+          "id": "",
+          "source": "",
+          "title": "Machine Config",
+          "type": "object",
+          "key": "config"
+        }
+      ],
+
+      "footer": "VASP 5.4.4",
+      "handles": [
+        { "key": "poscar", "type": "target", "rope": "POSCAR" },
+        { "key": "incar", "type": "target", "rope": "INCAR" },
+        { "key": "kpoints", "type": "target", "rope": "KPOINTS" },
+        { "key": "vasp/outputs", "type": "source", "rope": "VASP_OUTPUTS" }
+      ],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "file",
+          "script": "vasp",
+          "title": "VASP",
+          "key": "vasp",
+          "bodies": []
+        }
+      ]
+    }
+  },
+
+  "VASP_OUTPUTS": {
+    "type": "Input",
+    "data": {
+      "header": "VASP Outputs",
+
+      "body": [
+        {
+          "id": "",
+          "source": "",
+          "type": "object",
+          "key": "vasp_outputs",
+          "compile": []
+        }
+      ],
+
+      "footer": "VASP Outputs",
+      "handles": [{ "key": "vasp/outputs", "type": "target", "rope": "VASP" }],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "file",
+          "script": "vasp",
+          "title": "VASP",
+          "key": "vasp",
+          "bodies": []
+        }
+      ]
+    }
+  },
+  "ABACUS_INPUT": {
+    "type": "Input",
+    "data": {
+      "header": "ABACUS INPUT",
+
+      "body": [
+        {
+          "id": "",
+          "source": {
+            "pseudo_dir": "/root/abacus-develop/pseudopotentials/sg15_oncv_upf_2020-02-06/1.0",
+            "pseudo_name": "Si_ONCV_PBE-1.0.upf",
+            "ecutwfc": 60,
+            "bessel_nao_smooth": 0,
+            "bessel_nao_rcut": [6, 7, 8, 9, 10],
+            "smearing_sigma": 0.01
+          },
+          "type": "object",
+          "title": "ABACUS INPUT",
+          "key": "abacus_input",
+          "compile": []
+        }
+      ],
+
+      "footer": "ABACUS INPUT",
+      "handles": [
+        {
+          "key": "abacus/input",
+          "type": "source",
+          "rope": "ABACUS",
+          "data_source": "compile",
+          "data_key": "abacus_input"
+        }
+      ],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "file",
+          "script": "abacus_input",
+          "title": "ABACUS INPUT",
+          "key": "abacus_input",
+          "bodies": ["abacus_input"]
+        }
+      ]
+    }
+  },
+
+  "SIAB_ORBITALS": {
+    "type": "Input",
+    "data": {
+      "header": "SIAB ORBITALS",
+
+      "body": [
+        {
+          "id": "",
+          "source": {},
+          "type": "object",
+          "title": "SIAB ORBITALS",
+          "key": "siab_orbitals",
+          "compile": []
+        }
+      ],
+
+      "footer": "ORBITALS",
+      "handles": [
+        {
+          "key": "siab/orbitals",
+          "type": "source",
+          "rope": "ABACUS_SIAB",
+          "data_source": "compile",
+          "data_key": "siab_orbitals"
+        }
+      ],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "file",
+          "script": "siab_orbitals",
+          "title": "SIAB Oribitals",
+          "key": "siab_orbitals",
+          "bodies": ["siab_orbitals"]
+        }
+      ]
+    }
+  },
+
+  "ABACUS_STRU": {
+    "type": "Input",
+    "data": {
+      "header": "STRU",
+
+      "body": [
+        {
+          "id": "",
+          "source": {},
+          "type": "object",
+          "key": "stru",
+          "compile": []
+        }
+      ],
+
+      "footer": "STRU",
+      "handles": [{ "key": "abacus/stru", "type": "source", "rope": "ABACUS" }],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "file",
+          "script": "abacus_stru",
+          "title": "ABACUS_STRU",
+          "key": "abacus_stru",
+          "bodies": ["stru"]
+        }
+      ]
+    }
+  },
+
+  "SIAB_SYSTEM": {
+    "type": "Input",
+    "data": {
+      "header": "SIAB SYSTEM",
+
+      "body": [
+        {
+          "id": "",
+          "source": {},
+          "type": "object",
+          "title": "SIAB SYSTEM",
+          "key": "siab_system",
+          "compile": []
+        }
+      ],
+
+      "footer": "Version 0.1.0",
+      "handles": [
+        {
+          "key": "siab/system",
+          "type": "source",
+          "rope": "ABACUS_SIAB",
+          "data_source": "compile",
+          "data_key": "siab_system"
+        }
+      ],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "file",
+          "script": "siab_system",
+          "title": "SIAB SYSTEM",
+          "key": "siab_system",
+          "bodies": ["siab_system"]
+        }
+      ]
+    }
+  },
+
+  "ABACUS": {
+    "type": "Solver",
+    "data": {
+      "header": "ABACUS",
+      "body": [
+        {
+          "id": "",
+          "source": "default",
+          "type": "select",
+          "key": "potcarSelect"
+        },
+        {
+          "id": "",
+          "source": "bohrium",
+          "type": "select",
+          "key": "machineSelect"
+        },
+        {
+          "id": "",
+          "source": "",
+          "title": "Machine Config",
+          "type": "object",
+          "key": "config"
+        }
+      ],
+
+      "footer": "ABACUS 3.7.1",
+      "handles": [
+        { "key": "input", "type": "target", "rope": "INPUT" },
+        { "key": "kpt", "type": "target", "rope": "KPT" },
+        { "key": "stru", "type": "target", "rope": "STRU" }
+      ],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "file",
+          "script": "vasp",
+          "title": "VASP",
+          "key": "vasp",
+          "bodies": []
+        }
+      ]
+    }
+  },
+
+  "ABACUS_SIAB": {
+    "type": "Solver",
+    "data": {
+      "header": "ABACUS SIAB",
+      "body": [
+        {
+          "id": "",
+          "source": {
+            "environment": "",
+            "mpi_command": "mpirun -np 8",
+            "abacus_command": "abacus",
+            "optimizer": "bfgs",
+            "max_steps": 1000,
+            "spill_coefs": [0.0, 1.0],
+            "spill_guess": "atomic",
+            "nthreads_rcut": 4,
+            "jY_type": "reduced"
+          },
+          "type": "object",
+          "title": "SIAB Config",
+          "key": "abacus_siab",
+          "compile": []
+        },
+        {
+          "id": "",
+          "source": {},
+          "type": "object",
+          "title": "Bohrium Job Config",
+          "key": "bohrium_job_config",
+          "compile": []
+        }
+      ],
+      "handles": [
+        { "key": "abacus/input", "type": "target", "rope": "ABACUS_INPUT" },
+        { "key": "siab/system", "type": "target", "rope": "SIAB_SYSTEM" },
+        { "key": "siab/orbitals", "type": "target", "rope": "SIAB_ORBITALS" },
+        {
+          "key": "siab/outputs",
+          "type": "source",
+          "rope": "ABACUS_SIAB_OUTPUTS"
+        }
+      ],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "task",
+          "script": "abacus_siab",
+          "title": "ABACUS_SIAB",
+          "key": "abacus_siab",
+          "bodies": []
+        }
+      ],
+      "footer": "Version 0.1.0"
+    }
+  },
+
+  "ABACUS_SIAB_OUTPUTS": {
+    "type": "Input",
+    "data": {
+      "header": "ABACUS SIAB Outputs",
+      "body": [
+        {
+          "id": "",
+          "source": "",
+          "type": "object",
+          "key": "vasp_outputs",
+          "compile": []
+        }
+      ],
+
+      "footer": "ABACUS SIAB Outputs",
+      "handles": [
+        {
+          "key": "siab/outputs",
+          "type": "target",
+          "rope": "PIPELINE_ABACUS_SIAB"
+        }
+      ],
+      "compile": [
+        {
+          "id": "",
+          "source": "",
+          "type": "file",
+          "script": "vasp",
+          "title": "VASP",
+          "key": "vasp",
+          "bodies": []
+        }
+      ]
+    }
+  }
+}
+```

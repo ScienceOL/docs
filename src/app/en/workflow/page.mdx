@@ -1,0 +1,56 @@
+import { Guides } from './Guides'
+import { Resources } from './Resources'
+import { HeroPattern } from '@/components/HeroPattern'
+import { WorkflowSite } from '@/config.ts'
+
+export const metadata = {
+  title: 'Protium',
+  description:
+    'Learn everything there is to know about the Protium and integrate tools into your product.',
+  image: '/images/python.svg',
+}
+
+export const sections = [
+  { title: 'Guides', id: 'guides' },
+  { title: 'Resources', id: 'resources' },
+]
+
+<HeroPattern />
+
+# Protium Workflow Tutorial
+
+Protium Workflow 旨在解决科学计算研究流程中繁琐的、重复的工作。通过将各类计算任务拆分为节点(Node)，实现各任务的模块化集成，高自由复用，并实现自动化运行。
+
+Protium Workflow 页面是用户友好的，仅凭直觉即可快速上手构建你的自动化工作流。我们也制作了[快速上手教程]("#")，来帮助你更快速的了解它的功能。
+
+如果你想深入了解 Workflow 背后发生了什么，不妨阅读我们的[设计理念](“#”)，这将帮助你了解其背后发生的过程，或者，你也可以阅读[开发者手册]("#")来自定义一个你的自定义节点，实现更符合你的需求的自定义工作流。
+
+最后，当你实现一个工作流后，你可以将其发布到我们的[数流](#)社区中，又或者其中寻找你需要的工作流。
+
+<div className="not-prose mb-16 mt-6 flex gap-3">
+  <Button href="/workflow/quickstart" arrow="right">
+    <>快速开始</>
+  </Button>
+  <Button href="/sdks" variant="outline">
+    <>探索「数流」社区</>
+  </Button>
+</div>
+
+## Getting started {{ anchor: false }}
+
+To get started, create a workflow in your <a href={WorkflowSite}>Workspace</a>, 
+then follow our [Workflow Quickstart](#) to make the demo workflow by yourself. {{ className: 'lead' }} 
+When your workflow is ready to go live, publish it to our [integrations directory](#) to reach the Protium community. {{ className: 'lead' }}
+
+Running workflow needs the [Calculation Resources](#), So, don't forget to set 你的第三方计算平台的 access token. {{ className: 'lead' }}
+
+<div className="not-prose">
+  <Button href="/sdks" variant="text" arrow="right">
+    <>Set your access token</>
+  </Button>
+</div>
+
+
+<Guides />  
+
+<Resources /> 

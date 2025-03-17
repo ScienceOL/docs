@@ -1,0 +1,930 @@
+*数值原子轨道生成代码简称为SIAB（Systematically Improvable Atomic Basis）*
+
+# 环境部署
+
+## Method 1. 拉取Bohrium镜像
+
+如果已经在ABACUS (ID: 717)项目中，建立新的容器节点：
+
+![img](https://ucoyxk075n.feishu.cn/space/api/box/stream/download/asynccode/?code=OWNkYWIxMjEzYmFjMjY2OWYzYmMyYzliNTc1MTcxZjBfaWpOa0RVRGtvSnNhTlRSRW9LaXNNeDExSElINXY1WTNfVG9rZW46UzFNU2JiaXZGb1hwY3B4QUcxQ2NpcjZRbktuXzE3MjE3MTU1MTg6MTcyMTcxOTExOF9WNA)
+
+之后选择镜像`registry.dp.tech/dptech/prod-16047/apns:orbgen`，选择`c32_m64_cpu`机器启动：
+
+![img](https://ucoyxk075n.feishu.cn/space/api/box/stream/download/asynccode/?code=MmMyZGMxODAxODYyNzZlZTRjMmI0NzliM2FiZjI1NmNfdDZBWkdtcWpyZVVaUDhWeHNwdEVMU3hKWldUdmNsQzZfVG9rZW46SGpaOGJtdFhrbzJlTlh4ZnlWUWNzeFZqbmdoXzE3MjE3MTU1MTg6MTcyMTcxOTExOF9WNA)
+
+通过如下命令激活conda虚拟环境：
+
+```bash
+conda activate orbgen
+```
+
+## Method 2：从零开始
+
+为支持PyTorch的SWAT优化器优化Spillage函数，需要合理配置PyTorch，保证链接Intel-MKL库以充分提高性能。对于Bohrium用户，可以使用镜像：`ubuntu:22.04-py3.10-intel2022`，选择`c32_m64_cpu`机器。
+
+### 创建conda虚拟环境
+
+Miniconda（https://docs.anaconda.com/free/miniconda/#quick-command-line-install）或者Anaconda（https://docs.anaconda.com/free/anaconda/install/linux/）在官方网站下载，安装之后创建（例如名为“pytorch”的）虚拟环境：
+
+```bash
+conda create -n pytorch # create virtual environment called "pytorch"
+# EVERYTIME BEFORE ORBITAL GENERATION, DO THE FOLLOWING
+source activate pytorch # activate virtual environment
+```
+
+### conda虚拟环境安装PyTorch
+
+```bash
+# make sure you have activated pytorhc
+conda install pytorch torchvision torchaudio cpuonly -c pytorch
+pip3 install --user scipy numpy
+pip3 install --user torch_optimizer
+```
+
+### 从仓库拉取ABACUS和SIAB
+
+使用`git`命令拉取位于开发分支的仓库
+
+```bash
+git clone https://github.com/kirk0830/abacus_orbital_generation.git
+```
+
+使用pip进行安装
+
+```bash
+pip install -e .
+```
+
+记得也需要安装ABACUS，目前推荐安装最新版本：
+
+```bash
+git clone https://github.com/deepmodeling/abacus-develop.git
+cd abacus-develop
+cmake -B build
+cmake --build build -j16
+cmake --install build
+```
+
+# 输入文件准备
+
+在下载的仓库目录中，共有`SIAB_INPUT_old`、`SIAB_INPUT_new`和`SIAB_INPUT.json`三个意义几乎相同的不同组织方式输入文件，其中`SIAB_INPUT_old`为旧版输入文件，`SIAB_INPUT_new`为新版输入文件，目前不开放使用，`SIAB_INPUT.json`为普适的版本输入文件。
+
+## BASIC -方法一：旧版输入文件（不推荐）
+
+### 计算环境配置
+
+```bash
+ #--------------------------------------------------------------------------------
+#1. CMD & ENV
+ EXE_mpi      mpirun -np 8
+ EXE_pw       abacus
+```
+
+`EXE_mpi`：MPI并行的执行方式
+
+`EXE_pw`：ABACUS的调用命令，如ABACUS所在目录并未在环境变量中，需要具体指定可执行文件位置
+
+### ABACUS pw计算参数设置
+
+```bash
+#-------------------------------------------------------------------------------- 
+#2. Electronic calculatation
+ element     Si  # element name 
+ Ecut        60  # cutoff energy (in Ry)
+ Rcut        6 7 8 9 10  # cutoff radius (in a.u.)
+ Pseudo_dir  /root/abacus-develop/pseudopotentials/sg15_oncv_upf_2020-02-06/1.0
+ Pseudo_name Si_ONCV_PBE-1.0.upf
+ sigma       0.01 # energy range for gauss smearing (in Ry)
+```
+
+`element`：生成轨道所属元素
+
+`Ecut`：平面波计算`ecutwfc`参数，平面波动能截断。随着ABACUS赝势轨道库（APNS）的上线，推荐使用APNS中推荐数值（对每种赝势，见https://kirk0830.github.io/ABACUS-Pseudopot-Nao-Square/pseudopotential/pseudopotential.html，单击元素即可跳转至`ecutwfc`收敛性测试结果界面）
+
+### 参考结构定义
+
+```bash
+#--------------------------------------------------------------------------------
+#3. Reference structure related parameters for PW calculation
+#For the built-in structure types (including 'dimer', 'trimer' and 'tetramer'):
+#STRU Name   #STRU Type  #nbands #MaxL   #nspin  #Bond Length list 
+ STRU1       dimer       8       2       1      1.62 1.82 2.22 2.72 3.22
+ STRU2       trimer      10      2       1      1.9 2.1 2.6
+```
+
+接下来的部分定义用于**拟合数值原子轨道**的**参考（平面波）波函数**所属的几何构型（define reference structures whose wavefunctions are used as reference for fitting numerical atomic orbitals，以下简称为**参考结构**）。对于dimer或trimer，多个键长采样使得数值原子轨道具有描述非平衡几何结构的信息，对于增强轨道的**可迁移性（transferability）**具有重要意义。
+
+第一列定义了分别名为`STRU1`和`STRU2`的两个**参考结构**，其**结构类别**分别为`dimer`和`trimer`。**需要注意的是，过于特殊的几何构型可能对轨道质量具有负面影响。**
+
+对于不同的结构，可以通过指定`nbands`来设置平面波计算中待求得能带数量。
+
+`MaxL`指定当前**参考结构**所生成数值原子轨道的最大角动量，例如对于dimer，如果期望以dimer为参考结构所生成的数值原子轨道包含最高角动量的轨道为d轨道，则应赋值为2
+
+`nspin`指定当前**参考结构**中考虑的spin channel数量。对于部分原子，例如Co, Mn，目前以`nspin = 2`生成轨道。不同的`nspin`理论上对轨道的可适用范围应有影响，但该影响实际依赖于参考结构最终的自旋态（即若波函数对称性未破缺，则`nspin`为1或2并不应该具有差别）。
+
+最后一列定义了**参考结构**的**特征键长**。对于dimer，其对应于两原子之间距离，对于trimer，其构型考虑为平面正三角形，特征键长对应于任意两原子间距离。
+
+### SIAB计算参数设置与轨道定义
+
+```bash
+#-------------------------------------------------------------------------------- 
+#4. SIAB calculatation
+ max_steps    1000
+#Orbital configure and reference target for each level
+#LevelIndex  #Ref STRU name  #Ref Bands  #InputOrb    #OrbitalConf 
+ Level1      STRU1           4           none        1s1p   
+ Level2      STRU1           4           fix         2s2p1d  
+ Level3      STRU2           6           fix         3s3p2d  
+```
+
+`max_steps`指定了最小化Spillage函数的最大步数。
+
+之后的三行则如同`STRU1`，定义了三个等级的需要生成的轨道，其中`Level1`以`STRU1`为参考结构，`Level2`以`STRU1`为参考结构，...。
+
+`Ref Bands`为选取能级数量，即对于每个参考结构所得到的电子结构，可选定一定数量的态包含进数值原子轨道。
+
+`InputOrb`则考虑了层级优化。若该参数指定为`none`，则每次**优化所有**的用于构造数值原子轨道参数，若指定为`fix`，则默认复制上一`level`的数值原子轨道，仅优化比上一级轨道多出来的参数，以此类推。
+
+```bash
+#--------------------------------------------------------------------------------
+#5. Save Orbitals
+#Index    #LevelNum   #OrbitalType 
+ Save1    Level1      SZ
+ Save2    Level2      DZP
+ Save3    Level3      TZDP
+```
+
+最后如同`STRU*`和`Level*`，`Save*`创建了三个轨道保存任务，第一个任务将`Level1`轨道保存为`SZ`标记，...，以此类推。
+
+因此输入文件整体如下：
+
+```bash
+ #--------------------------------------------------------------------------------
+#1. CMD & ENV
+ EXE_mpi      mpirun -np 8
+ EXE_pw       abacus
+
+#-------------------------------------------------------------------------------- 
+#2. Electronic calculatation
+ element     Si  # element name 
+ Ecut        60  # cutoff energy (in Ry)
+ Rcut        6 7 8 9 10  # cutoff radius (in a.u.)
+ Pseudo_dir  /root/abacus-develop/pseudopotentials/sg15_oncv_upf_2020-02-06/1.0
+ Pseudo_name Si_ONCV_PBE-1.0.upf
+ sigma       0.01 # energy range for gauss smearing (in Ry)
+
+#--------------------------------------------------------------------------------
+#3. Reference structure related parameters for PW calculation
+#For the built-in structure types (including 'dimer', 'trimer' and 'tetramer'):
+#STRU Name   #STRU Type  #nbands #MaxL   #nspin  #Bond Length list 
+ STRU1       dimer       8       2       1      1.62 1.82 2.22 2.72 3.22
+ STRU2       trimer      10      2       1      1.9 2.1 2.6
+
+#-------------------------------------------------------------------------------- 
+#4. SIAB calculatation
+ max_steps    1000
+#Orbital configure and reference target for each level
+#LevelIndex  #Ref STRU name  #Ref Bands  #InputOrb    #OrbitalConf 
+ Level1      STRU1           4           none        1s1p   
+ Level2      STRU1           4           fix         2s2p1d  
+ Level3      STRU2           6           fix         3s3p2d  
+
+#--------------------------------------------------------------------------------
+#5. Save Orbitals
+#Index    #LevelNum   #OrbitalType 
+ Save1    Level1      SZ
+ Save2    Level2      DZP
+ Save3    Level3      TZDP
+```
+
+## BASIC -方法二：json输入文件（推荐）
+
+对于使用Bohrium镜像`registry.dp.tech/dptech/prod-16047/apns:orbgen`的用户可以参考`/root/document/orbgen/`目录下`SIAB_INPUT.json`。
+
+实际上我们发现旧版输入文件具有如下冗余方面：
+
+- 赝势中有元素信息，因此元素并不需要显式在输入文件中指定
+- 赝势中有价电子布居信息，因此`OrbitalConf`信息不需要显式指定，通过`SZ`、`DZP`和`TZDP`，结合赝势可以推断出`OrbitalConf`
+- 轨道的保存信息不需要额外声明
+
+对于旧版本而言，ABACUS pw计算的设置不够灵活，尤其对于希望更换对角化方法、改变scf最大步数、更改mixing相关设置以提高收敛性等需求需要扩展。因此连同新版输入文件，我们对输入文件进行了许些改动：
+
+### 计算环境配置
+
+```bash
+{
+    "environment": "",
+    "mpi_command": "mpirun -np 16",
+    "abacus_command": "/path/to/your/abacus",
+```
+
+此部分和原版相同，几乎无改动。
+
+### ABACUS pw计算参数设置
+
+```bash
+    "pseudo_dir": "/path/to/dir/you/store/pseudopotential",
+    "pseudo_name": "Si_ONCV_PBE-1.0.upf",
+    "ecutwfc": 60,
+    "bessel_nao_rcut": [6, 7, 8, 9, 10],
+    "smearing_sigma": 0.01,
+```
+
+在这部分中，我们实际上支持了ABACUS INPUT中的**所有**参数。推荐ecutwfc的设置参考赝势轨道库测定值：https://kirk0830.github.io/ABACUS-Pseudopot-Nao-Square/pseudopotential/pseudopotential.html
+
+### SIAB计算参数设置
+
+```bash
+    "optimizer": "pytorch.SWAT",
+    "max_steps": 1000,
+    "spill_coefs": [0.0, 1.0],
+    "spill_guess": "random",
+    "nthreads_rcut": 4,
+    "jY_type": "reduced"
+```
+
+对于现行最新版本，`optimizer`支持`pytorch.SWAT`和`bfgs`。由于前者的收敛限不明确因此一般设置为较大步数（~5000），**后者的优化时间相对确定因而轨道生成时间较短**。
+
+`spill_coefs`参数用于调整`"optimizer": "pytorch.SWAT"`时Spillage函数中PSI与DPSI两项的权重（注意：程序实现中此项未经过归一化），默认值为`[0.0, 1.0]`。
+
+`spill_guess`参数用于指定对于Spillage函数中球贝塞尔函数系数的初猜方法。
+
+对于`"optimizer": "pytorch.SWAT"`，目前支持`random`和`identity`。
+
+对于`"optimizer": "bfgs"`，支持`random`和`atomic`。`atomic`会对单原子进行一次pw计算，得到$$\langle jY|jY\rangle$$等矩阵元。注意：对于单原子的pw计算可能会以小概率无法收敛。
+
+`nthreads_rcut`用于指定优化每个rcut系列轨道所使用线程数量。
+
+对于`"optimizer": "pytorch.SWAT"`，如果总线程数/`nthreads_rcut`>=2，则会以进程并行方式进行轨道生成，如果未指定/指定数量超过总线程数，则会自动切换至串行方式优化，每个轨道使用所有可用线程。
+
+对于`"optimizer": "bfgs"`，由于rcut间仍然是串行关系，因此`nthreads_rcut`直接指定scipy优化器的并行线程数。
+
+`jY_type`仅对`"optimizer": "bfgs"`有效。在新版的轨道生成代码中，参考ONCV赝势赝波函数生成时使用的基函数，`reduced`（默认）将线性组合球贝塞尔函数，使得r = rcut处的一阶与二阶导数平滑纳入了Spillage函数。`normalized`不推荐使用。
+
+### 参考结构定义
+
+```bash
+    "reference_systems": [
+        {
+            "shape": "dimer",
+            "nbands": 8,
+            "nspin": 1,
+            "bond_lengths": [1.62, 1.82, 2.22, 2.72, 3.22]
+        },
+        {
+            "shape": "trimer",
+            "nbands": 10,
+            "nspin": 1,
+            "bond_lengths": [1.9, 2.1, 2.6]
+        }
+    ],
+```
+
+和旧版输入文件相比，我们删除了`STRU*`等定义，只保留了必需信息。其中：
+
+`shape`指定了提取轨道信息的参考结构，可以有如下选择：
+
+`dimer`：原子二聚体
+
+`trimer`：原子三聚体，正三角形
+
+`tetrahedron`：正四面体
+
+`square`：正方形
+
+`triangular_bipyramid`：三角双锥
+
+`octahedron`：正八面体
+
+`cube`：立方体
+
+，建议**根据**所需**轨道的对称性**和**原子的电子组态**进行**选择**。
+
+`nbands`被指定为`auto`，则取值总电子数量，即占据和非占据能带数比为1（以RKS情况考虑）
+
+`bond_lengths`被指定为
+
+`scan`：首先进行一定范围内键长扫描，以Morse potential拟合，得到距离能量最低点最近的，和两侧与最低能量比高约1.0 - 1.5 eV（每原子）的两个点
+
+`default`：对于dimer和trimer的情况，使用内置的键长数据，对于其他形状则无法使用这一参数
+
+`auto`：对于dimer/trimer，使用`default`，对于其他形状，使用`scan`。
+
+### 轨道定义
+
+```bash
+    "orbitals": [
+        {
+            "zeta_notation": "Z",
+            "shape": "dimer",
+            "nbands_ref": 4,
+            "orb_ref": "none"
+        },
+        {
+            "zeta_notation": "DZP",
+            "shape": "dimer",
+            "nbands_ref": 4,
+            "orb_ref": "Z"
+        },
+        {
+            "zeta_notation": "TZDP",
+            "shape": "trimer",
+            "nbands_ref": 6,
+            "orb_ref": "DZP"
+        }
+    ]
+}
+```
+
+- `zeta_notation`可以指定类似于`SZ`、`DZP`、`TZDP`、`QZTP`、`8Z5P`等参数，在最新版本中支持了如下格式：
+  -  传统格式：`SZ`：single zeta，如赝势中价电子有2个s shell和1个p shell，1个d shell，则`SZ` = 2s1p1d，`DZP`=4s2p2d1f，`TZDP`=6s3p3d2f，`QZTP`=8s4p4d3f，`QZTPDP`=8s4p3d3f2g
+  -  shell格式：任何以SsPpDdFf...格式指定的字符串，其中大写字母应当被替换为数字
+  -  list格式：基于shell格式，直接以[S, P, D, F, ...] list赋值
+- `shape`则指定当前轨道的信息提取于上面“参考结构定义”中的哪个结构。如果所有轨道都未link到某种结构，该结构的lmaxmax会被指定为1。
+- `nbands_ref`指定了参考能级数量，
+  -  对于`"optimizer": "pytorch.SWAT"`，如果指定为`auto`，则对于当前版本仅包含所有占据态。
+  -  对于`"optimizer": "bfgs"`可以指定为具体数字、"all"或者"occ+/-%d"，其中%d代表任意数字
+
+`orb_ref`等同于旧版本中`InputOrb`参数，可以指定为前一个level的轨道。
+
+因此输入文件整体如下：
+
+```bash
+{
+    "environment": "",
+    "mpi_command": "mpirun -np 8",
+    "abacus_command": "abacus",
+
+    "pseudo_dir": "/root/abacus-develop/pseudopotentials/sg15_oncv_upf_2020-02-06/1.0",
+    "pseudo_name": "Si_ONCV_PBE-1.0.upf",
+    "ecutwfc": 60,
+    "bessel_nao_rcut": [6, 7, 8, 9, 10],
+    "smearing_sigma": 0.01,
+
+    "optimizer": "pytorch.SWAT",
+    "max_steps": 1000,
+    "spill_coefs": [0.0, 1.0],
+    "spill_guess": "atomic",
+    "nthreads_rcut": 4,
+    "jY_type": "reduced"
+
+    "reference_systems": [
+        {
+            "shape": "dimer",
+            "nbands": 8,
+            "nspin": 1,
+            "bond_lengths": [1.62, 1.82, 2.22, 2.72, 3.22]
+        },
+        {
+            "shape": "trimer",
+            "nbands": 10,
+            "nspin": 1,
+            "bond_lengths": [1.9, 2.1, 2.6]
+        }
+    ],
+    
+    "orbitals": [
+        {
+            "zeta_notation": "Z",
+            "shape": "dimer",
+            "nbands_ref": 4,
+            "orb_ref": "none"
+        },
+        {
+            "zeta_notation": "DZP",
+            "shape": "dimer",
+            "nbands_ref": 4,
+            "orb_ref": "Z"
+        },
+        {
+            "zeta_notation": "TZDP",
+            "shape": "trimer",
+            "nbands_ref": 6,
+            "orb_ref": "DZP"
+        }
+    ]
+}
+```
+
+## BASIC -方法三：新版输入文件（未充分支持）
+
+因目前未开放使用，仅展示，其内容和json相符
+
+```bash
+# PROGRAM CONFIGURATION
+mpi_command         mpirun -np 8
+abacus_command      abacus
+# ELECTRONIC STRUCTURE CALCULATION
+pseudo_dir          /root/abacus-develop/pseudopotentials/sg15_oncv_upf_2020-02-06/1.0
+pesudo_name         Si_ONCV_PBE-1.0.upf
+ecutwfc             60
+bessel_nao_rcut     6 7 8 9 10
+smearing_sigma      0.01         # optional, default 0.015
+# SIAB PARAMETERS
+optimizer           pytorch.SWAT # optimizers, can be pytorch.SWAT, SimulatedAnnealing, ...
+spillage_coeff      0.5 0.5      # order of derivatives of wavefunction to include in Spillage, can be 0 or 1.
+max_steps           1000
+# REFERENCE SYSTEMS
+# shape    nbands    nspin    bond_lengths   
+  dimer    8         1        1.62 1.82 2.22 2.72 3.22
+  trimer   10        1        1.9 2.1 2.6
+# ORBITALS
+# zeta_notation    shape    nbands_ref   orb_ref
+  SZ               dimer    4            none
+  DZP              dimer    4            SZ
+  TZDP             trimer   6            DZP
+```
+
+## EXTEND -方法四：APNS（ABACUS赝势轨道库）-SIAB-ABACUS联用
+
+对于使用Bohrium镜像`registry.dp.tech/dptech/prod-16047/apns:orbgen`构建的环境来讲，在熟练使用方法二的基础上，本方法自动化了大批量轨道的生成流程。准备APNS输入文件orbgen.json（可在镜像的`/root/deepmodeling/ABACUS-Pseudopot-Nao-Square`目录下找到示例文件：
+
+```json
+{
+    "global": {
+        "mode": "orbgen",
+        "pseudo_dir": "./download/pseudopotentials",
+        "cache_dir": "./apns_cache",
+        "out_dir": "./output",
+        "siab_dir": "/root/deepmodeling/abacus_orbital_generation/SIAB"
+    },
+    "ppsets": [
+        {
+            "elements": ["Hf", "W", "Ta"],
+            "tags": ["sg15", "1.0", "sr"]
+        }
+    ],
+    "strusets": [
+        [
+            {
+                "shape": "dimer",
+                "nbands": "auto",
+                "bond_lengths": "auto",
+                "nspin": 1
+            },
+            {
+                "shape": "trimer",
+                "nbands": "auto",
+                "bond_lengths": "auto",
+                "nspin": 1
+            }
+        ]
+    ],
+    "orbsets": [
+        [{"conf": "Z", "shape": "dimer", "dep": "none", "states": "occ"},
+         {"conf": "DZP", "shape": "dimer", "dep": "Z", "states": "all"},
+         {"conf": "TZDP", "shape": "trimer", "dep": "DZP", "states": "all"}]
+    ],
+    "pwsets": [
+        {"smearing_sigma": 0.01}
+    ],
+    "siabsets": [
+        {
+            "rcuts": [6, 7, 8, 9, 10],
+            "optimizer": "bfgs",
+            "max_steps": 5000,
+            "spill_coefs": [0.0, 1.0],
+            "spill_guess": "atomic",
+            "nthreads_rcut": 4,
+            "jY_type": "reduced"
+        }
+    ],
+    "tasks": [
+        {"orb": 0, "pp": 0, "stru": 0, "pw": 0, "siab": 0}
+    ]
+}
+```
+
+程序将针对`tasks` key，依次执行每个value代表的任务（orb: 0映射到orbsets索引为0的设置，pp: 0映射到ppsets索引为0的设置，以此类推，stru->strusets, pw->pwsets, siab->siabsets）。注意：`ppsets`的`tags`给出了用于检索本地可用赝势文件的标签，如"sg15", "1.0", "sr"，对于元素Hf，将获得"Hf_ONCV_PBE-1.0.upf"的赝势文件用于生成轨道。但如果只在`tags`中指定"sr"，则会得到所有带有"sr"标签的赝势文件，相应地会生成所有赝势对应的轨道。
+
+具体生成轨道使用的ecutwfc值为APNS内置数据库自动设置。运行命令：
+
+```bash
+python3 /root/deepmodeling/ABACUS-Pseudopot-Nao-Sqaure/main.py -i orbgen.json
+```
+
+可以在`output`目录下发现生成了轨道生成的工作文件夹，以及一个自动化串行脚本`autorun.py`。
+
+使用命令：
+
+```bash
+nohup python3 autorun.py > log&
+```
+
+将开始批量生成轨道。
+
+## EXTEND -方法五：abacustest-SIAB-ABACUS联用
+
+由@赵天琦 探索的使用方法：[轨道测试工作流](https://ucoyxk075n.feishu.cn/docx/Os2qditbzoUc1GxTpmOcbe26ncc)
+
+# 程序启动与输出内容举例（以Si SG15-V1.0为例）
+
+以如下命令启动轨道生成程序
+
+```bash
+python3 SIAB/SIAB_nouvelle.py -i SIAB_INPUT.json
+```
+
+首先将任务间串行地进行MPI并行ABACUS pw计算，工作目录的命名格式为`[element]-[shape]-[bond_length]`，之后在作业目录生成一系列输出文件。
+
+![img](https://ucoyxk075n.feishu.cn/space/api/box/stream/download/asynccode/?code=NjMxZmFjN2Q0M2U4OWU3ZDk1Y2IzYWFjNzA3YTU1YTdfbjRKQkkzT1NPc0c4aE15RE1GSnNKSGlVRUtVaW5XNHNfVG9rZW46VmxPemJndjBtb0kzQjJ4UUE1bWNHRUY5bnM0XzE3MjE3MTU1MTg6MTcyMTcxOTExOF9WNA)![img](https://ucoyxk075n.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjhjZjQ0YWM3ODMwYzgxNjhlYjIyNjNiMjViYjhmZWRfc08zZ2NVZ3RkREdPbXJNZGdwWGZRVEZ1UzhtSTdneWVfVG9rZW46Qnhrd2JKRXlVb3ZRMGN4dXh1RmNLVVkxbmZkXzE3MjE3MTU1MTg6MTcyMTcxOTExOF9WNA)
+
+之后进行轨道的优化。
+
+## 轨道优化（BFGS）
+
+屏幕输出如下信息（可通过设置stdout重定向到文件来存储，且避免太多信息干扰其他工作）：
+
+```bash
+...
+ORBGEN: Optimizing orbitals for rcut = 6 au
+ORBGEN: jy_jy, mo_jy and mo_mo matrices loaded from Si-dimer-1.82/orb_matrix_rcut6deriv0.dat and Si-dimer-1.82/orb_matrix_rcut6deriv1.dat
+ORBGEN: jy_jy, mo_jy and mo_mo matrices loaded from Si-dimer-3.22/orb_matrix_rcut6deriv0.dat and Si-dimer-3.22/orb_matrix_rcut6deriv1.dat
+ORBGEN: jy_jy, mo_jy and mo_mo matrices loaded from Si-dimer-1.62/orb_matrix_rcut6deriv0.dat and Si-dimer-1.62/orb_matrix_rcut6deriv1.dat
+ORBGEN: jy_jy, mo_jy and mo_mo matrices loaded from Si-dimer-2.22/orb_matrix_rcut6deriv0.dat and Si-dimer-2.22/orb_matrix_rcut6deriv1.dat
+ORBGEN: jy_jy, mo_jy and mo_mo matrices loaded from Si-dimer-4.22/orb_matrix_rcut6deriv0.dat and Si-dimer-4.22/orb_matrix_rcut6deriv1.dat
+ORBGEN: Y*Y (jy_mo*mo_jy) eigval diagnosis:
+        l = 0: [9.97641561e-01 3.20387961e-09 3.27052074e-11]
+ORBGEN: Y*Y (jy_mo*mo_jy) eigval diagnosis:
+        l = 1: [2.91184263e+00 1.98372807e-10 3.04279899e-12]
+ORBGEN: Y*Y (jy_mo*mo_jy) eigval diagnosis:
+        l = 2: [8.30238311e-11 3.34364213e-13]
+ORBGEN: optimization on level 1 (with # of zeta functions for each l: [1, 1]), 
+        based on orbital (None)
+ORBGEN: End optimization on level 1 orbital, merge with previous orbital shell(s).
+ORBGEN: optimization on level 2 (with # of zeta functions for each l: [2, 2, 1]), 
+        based on orbital ([1, 1])
+RUNNING THE L-BFGS-B CODE
+
+           * * *
+
+Machine precision = 2.220D-16
+ N =           26     M =           20
+
+At X0         0 variables are exactly at the bounds
+
+At iterate    0    f=  7.55744D-02    |proj g|=  6.61322D-01
+
+At iterate    1    f=  5.01914D-02    |proj g|=  4.20864D-01
+
+At iterate    2    f=  4.23787D-02    |proj g|=  1.39568D-01
+
+At iterate    3    f=  3.72751D-02    |proj g|=  9.85885D-02
+
+At iterate    4    f=  3.35225D-02    |proj g|=  1.47411D-01
+...
+
+Tit   = total number of iterations
+Tnf   = total number of function evaluations
+Tnint = total number of segments explored during Cauchy searches
+Skip  = number of BFGS updates skipped
+Nact  = number of active bounds at final generalized Cauchy point
+Projg = norm of the final projected gradient
+F     = final function value
+
+           * * *
+
+   N    Tit     Tnf  Tnint  Skip  Nact     Projg        F
+   26     34     39     35     0     0   5.393D-07   2.590D-02
+  F =   2.5899660929261149E-002
+...
+At iterate   76    f=  1.01617D-02    |proj g|=  8.31381D-07
+
+           * * *
+
+Tit   = total number of iterations
+Tnf   = total number of function evaluations
+Tnint = total number of segments explored during Cauchy searches
+Skip  = number of BFGS updates skipped
+Nact  = number of active bounds at final generalized Cauchy point
+Projg = norm of the final projected gradient
+F     = final function value
+
+           * * *
+
+   N    Tit     Tnf  Tnint  Skip  Nact     Projg        F
+ORBGEN: End optimization on level 2 orbital, merge with previous orbital shell(s).
+ORBGEN: optimization on level 3 (with # of zeta functions for each l: [3, 3, 2]), 
+        based on orbital ([2, 2, 1])
+   38     76     81     77     0     0   8.314D-07   1.016D-02
+  F =   1.0161683391606767E-002
+
+CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL            
+RUNNING THE L-BFGS-B CODE
+
+           * * *
+
+Machine precision = 2.220D-16
+ N =           38     M =           20
+
+At X0         0 variables are exactly at the bounds
+...
+At iterate   60    f=  1.26812D-02    |proj g|=  1.18432D-06
+ORBGEN: End optimization on level 3 orbital, merge with previous orbital shell(s).
+orbital saved as Si_gga_6au_60Ry_1s1p.orb
+orbital saved as Si_gga_6au_60Ry_2s2p1d.orb
+orbital saved as Si_gga_6au_60Ry_3s3p2d.orb
+...
+ORBGEN: Optimizing orbitals for rcut = 10 au
+ORBGEN: jy_jy, mo_jy and mo_mo matrices loaded from Si-dimer-1.82/orb_matrix_rcut10deriv0.dat and Si-dimer-1.82/orb_matrix_rcut10deriv1.dat
+ORBGEN: jy_jy, mo_jy and mo_mo matrices loaded from Si-dimer-3.22/orb_matrix_rcut10deriv0.dat and Si-dimer-3.22/orb_matrix_rcut10deriv1.dat
+ORBGEN: jy_jy, mo_jy and mo_mo matrices loaded from Si-dimer-1.62/orb_matrix_rcut10deriv0.dat and Si-dimer-1.62/orb_matrix_rcut10deriv1.dat
+ORBGEN: jy_jy, mo_jy and mo_mo matrices loaded from Si-dimer-2.22/orb_matrix_rcut10deriv0.dat and Si-dimer-2.22/orb_matrix_rcut10deriv1.dat
+ORBGEN: jy_jy, mo_jy and mo_mo matrices loaded from Si-dimer-4.22/orb_matrix_rcut10deriv0.dat and Si-dimer-4.22/orb_matrix_rcut10deriv1.dat
+ORBGEN: Y*Y (jy_mo*mo_jy) eigval diagnosis:
+        l = 0: [9.99996849e-01 1.40425913e-08 4.00189674e-11]
+ORBGEN: Y*Y (jy_mo*mo_jy) eigval diagnosis:
+        l = 1: [2.99913781e+00 4.76063982e-10 2.60327394e-11]
+ORBGEN: Y*Y (jy_mo*mo_jy) eigval diagnosis:
+        l = 2: [1.40387006e-10 1.41805460e-12]
+ORBGEN: optimization on level 1 (with # of zeta functions for each l: [1, 1]), 
+        based on orbital (None)
+...
+ORBGEN: End optimization on level 3 orbital, merge with previous orbital shell(s).
+orbital saved as Si_gga_10au_60Ry_1s1p.orb
+orbital saved as Si_gga_10au_60Ry_2s2p1d.orb
+orbital saved as Si_gga_10au_60Ry_3s3p2d.orb
+
+====================================================================================
+If SIAB package is used in your project, please cite the following paper:
+
+Chen M, Guo G C, He L. 
+Systematically improvable optimized atomic basis sets for ab initio calculations[J]. 
+Journal of Physics: Condensed Matter, 2010, 22(44): 445501.
+
+Li P, Liu X, Chen M, et al. 
+Large-scale ab initio simulations based on systematically improvable atomic basis[J]. 
+Computational Materials Science, 2016, 112: 503-517.
+
+Lin P, Ren X, He L. 
+Strategy for constructing compact numerical atomic orbital basis sets by 
+incorporating the gradients of reference wavefunctions[J]. 
+Physical Review B, 2021, 103(23): 235131.
+
+If wannierization is used in your project, please cite the following paper:
+
+Chen M, Guo G C, He L. 
+Electronic structure interpolation via atomic orbitals[J]. 
+Journal of Physics: Condensed Matter, 2011, 23(32): 325501.
+====================================================================================
+
+TIME STATISTICS
+---------------
+initialize                 0.00 s
+run                       13.93 s
+finalize                   0.00 s
+total                     13.93 s
+```
+
+## 轨道优化（串行，Pytorch.SWAT）
+
+屏幕输出如下信息：
+
+```bash
+--------------------------------------------------
+Module Spillage - find the most similar space to the target spanned planewave wavefunction:
+SIAB.pytorch_swat starts, numerical atomic orbitals are optimized.
+--------------------------------------------------
+
+SEED INITIALIZATION: due to optimization method is local, random seed is somehow preferred. Present seed: 3333759634
+WORKFLOW: use on-the-fly information pass from front-end to back-end.
+Read file: Si-dimer-1.62/orb_matrix_rcut6deriv0.dat
+atom symbol: Si
+number of l for present structure: 3
+number of l for present coefficients: 3
+# ... OMIT SIMILAR INFORMATION
+--------------------------------------------------------------------------------
+INFORMATION CHECK - Please check every detail of the information below:
+--------------------------------------------------------------------------------
+PRINT INFO_KST INFORMATION
+--------------------------
+General Information: 
+All atom types: Si
+Orbital configuration for each atom type: 
+Symbol, l: 0, 1, 2, 3, ... 
+Si: 1, 1, 0
+Realspace cutoff radius (rcut), grid (dr), kinetic cutoff (ecutwfc) and maximal angularmomentum (lmax) for each atom type: 
+Atom  Rcut  dr    ecutwfc lmax 
+Si    6.00  0.01  60.00 3    
+Optimizer Learning Rate: 0.03
+Including additional kinetic term in Spillage: False
+Gaussian smoothing for orbitals at rcut: True
+Max steps for optimization: 1000
+lmax for each atom type: 
+Si: 3
+
+Structure specific information:
+Number of reference structure: 5
+Atom type for each reference structure: 
+Structure 0: Si
+# ... OMIT SIMILAR INFORMATION
+Number of atoms for each atom type for each reference structure: 
+Structure 0: Si: 2 
+# ... OMIT SIMILAR INFORMATION
+Number of bands selected to learn for each reference structure: 
+Struectures: 0: 8 1: 8 2: 8 3: 8 4: 8 
+Spherical Bessel function:
+Number of Spherical Bessel functions (Sphbes) for each atom type: 
+Si: 14 
+PRINT INFO_KST INFORMATION END.
+
+PRINT INFO_STRU INFORMATION
+--------------------------
+Structure 0:
+Number of atoms for each type: 
+Si: 2
+Number of bands calculated for present structure: 8
+Number of bands taken INFO consideration for learning: 4
+Detailed weight information for each band: 
+  Band   0: 5.0000e-02
+  Band   1: 5.0000e-02
+  Band   2: 5.0000e-02
+  Band   3: 5.0000e-02
+  Band   4: 0.0000e+00
+  Band   5: 0.0000e+00
+  Band   6: 0.0000e+00
+  Band   7: 0.0000e+00
+# ... OMIT SIMILAR INFORMATION
+PRINT INFO_STRU INFORMATION END.
+
+PRINT INFO_ELEMENT INFORMATION
+--------------------------
+Element-wise information: 
+Element Si:
+nsphbes: 14
+Number of subshells: 3
+Orbital configuration: 1s, 1p, 0d
+rcut: 6
+dr: 0.01
+atomic index: 0
+
+PRINT INFO_ELEMENT INFORMATION END.
+
+PRINT INFO_OPT INFORMATION
+--------------------------
+Optimizer information: 
+Calculate kinetic term: False
+Calculate smooth term: True
+Optimizer learning rate: 0.03
+Max steps: 1000
+PRINT INFO_OPT INFORMATION END.
+
+PRINT INFO_MAX INFORMATION
+--------------------------
+The data dimension information for each reference structure: 
+Structure 0:
+Number of atom types: 1
+Number of atoms: 2
+Number of bands: 8
+Number of Sphbes: 14
+Number of subshells: 3
+Maximal number of magnetic channels: 5
+# ... OMIT SIMILAR INFORMATION
+PRINT INFO_MAX INFORMATION END.
+
+--------------------------------------------------------------------------------
+
+DATA IMPORT - read_QSV
+Reading OVERLAP_Q, OVERLAP_Sq and OVERLAP_V from ABACUS.
+For PTG_dpsi formulation that kinetic term is included, 
+will read both orb_matrix*.dat of both order 0 and 1.
+# ... OMIT SIMILAR INFORMATION
+
+Optimization of the orbital starts.
+torch_optimizer.SWATS (Improving Generalization Performance by Switching from Adam to SGD) optimizer is used.
+Parameters are listed below
+Learning rate: 0.03
+Epsilon: 1e-20
+Max steps: 1000
+
+Optimization on Spillage function starts, check "Spillage.dat" for detailed trajectory.
+------------------------------------------------------------
+      Step            Spillage          deltaSpill      Time
+------------------------------------------------------------
+         0    7.8619708181e+00    7.8619708181e+00    0.0060
+       100    5.2165701084e-02   -2.1325277866e-06    0.0047
+       200    5.2135961515e-02   -1.4288620981e-10    0.0052
+       300    5.2135960518e-02   -4.8155923693e-15    0.0080
+       400    5.2135960518e-02    1.3877787808e-16    0.0066
+       500    5.2135960518e-02    1.5265566589e-16    0.0064
+       600    5.2135960518e-02    9.7144514655e-17    0.0066
+       700    5.2135960518e-02    0.0000000000e+00    0.0050
+       800    5.2135960518e-02    0.0000000000e+00    0.0047
+       900    5.2135960518e-02    1.3877787808e-17    0.0099
+...
+---------------------------------
+Optimization of the orbital ends.
+
+Several files generated:
+Spillage.dat: detailed trajectory of the optimization
+ORBITAL_RESULTS.txt: optimized orbital coefficients
+ORBITAL_*U.dat: numerical atomic orbital before renaming
+ORBITAL_PLOTU.dat: for plot, the first column is the r, latter colomns are the orbitals
+
+TOTAL TIME (PyTorch):     22.117316961288452
+CHECKPOINT: handling on temporary files:
+            Spillage.dat        : 0a9572548679359e972276e5cd4208cf.dat
+            ORBITAL_RESULTS.txt : 12f817955db736bea04d690d202342fe.txt
+            ORBITAL_PLOTU.dat   : 2bbf4ae1ca9e333799f318eac0c6f676.dat
+            ORBITAL.dat         : 198efe57ecb73421a525bfc7297cfee3.dat
+CHECKPOINT: folder Si_1s1p/6au_60Ry created.
+CHECKPOINT: folder 338ea4fc-dac4-39ac-a958-a25e58a043b5 created.
+Orbital file Si_1s1p/6au_60Ry/Si_gga_60Ry_6au_1s1p.orb generated.
+Report: quality of the orbital Si_1s1p/6au_60Ry/Si_gga_60Ry_6au_1s1p.orb is:
+l = 0: 5.70212019e-01
+l = 1: 9.23294999e-01
+l = 2: 
+
+# ... OMIT SIMILAR INFORMATION
+====================================================================================
+If SIAB package is used in your project, please cite the following paper:
+
+Chen M, Guo G C, He L. 
+Systematically improvable optimized atomic basis sets for ab initio calculations[J]. 
+Journal of Physics: Condensed Matter, 2010, 22(44): 445501.
+
+Li P, Liu X, Chen M, et al. 
+Large-scale ab initio simulations based on systematically improvable atomic basis[J]. 
+Computational Materials Science, 2016, 112: 503-517.
+
+Lin P, Ren X, He L. 
+Strategy for constructing compact numerical atomic orbital basis sets by 
+incorporating the gradients of reference wavefunctions[J]. 
+Physical Review B, 2021, 103(23): 235131.
+
+If wannierization is used in your project, please cite the following paper:
+
+Chen M, Guo G C, He L. 
+Electronic structure interpolation via atomic orbitals[J]. 
+Journal of Physics: Condensed Matter, 2011, 23(32): 325501.
+====================================================================================
+
+TIME STATISTICS
+---------------
+initialize                 0.00 s
+run                      458.60 s
+finalize                   0.00 s
+total                    458.60 s
+```
+
+## 轨道优化（并行，Pytorch.SWAT）
+
+和串行所不同地，并行时为了避免不同进程在屏幕上输出内容混合在一起，因此各进程输出到文件中，以`log.[iproc].txt`和`err.[iproc].txt`命名方式分别存储stdout和stderr内容。以`nthreads_rcut: 4`设置运行，在主进程上将屏幕输出如下内容：
+
+```bash
+Parallelization - RUNTIME
+Number of threads for each rcut: 4
+Number of rcuts that can be parallelized: 3
+Total number of threads available: 12
+----------------------------------
+NOTE: for parallelized run, the stdout and stderr will be redirected to log.[iproc].txt and err.[iproc].txt respectively.
+
+Finish level 0 orbital generation (in total 3).
+Finish level 1 orbital generation (in total 3).
+Finish level 2 orbital generation (in total 3).
+All processes finish, see stdout and stderr in log.[iproc].txt and err.[iproc].txt respectively.
+
+# REFERENCE INFORMATION OMITTED
+
+TIME STATISTICS
+---------------
+initialize                 0.00 s
+run                      185.57 s
+finalize                   0.00 s
+total                    185.57 s
+```
+
+生成如下文件在工作目录：
+
+![img](https://ucoyxk075n.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGEzYmIyYzhkNWI0NzRhMmZjZjI1MjlmODQ5M2Y2NjBfaDlQRGZhVHdJdGZvc0ZHa0ltSXhWUU1MWjd0ejJoV0xfVG9rZW46RHM5bmJCVmltb3ZCcHp4a1d6TmN3VG1EbkVkXzE3MjE3MTU1MTg6MTcyMTcxOTExOF9WNA)
+
+### 并行加速效率曲线
+
+轨道生成任务的进程级并行和PyTorch内部的线程并行紧密相关。如果设置`nthreads_rcut`过小，则会同时以低效率并行大量`rcut`对应轨道系列，如果`nthreads_rcut`设置过大，则只会串行生成轨道。对于PyTorch的线程并行，或在并行效率上具有“并行收益明显、加速比增益平台期早”的特点，因此最理想的情况是在PyTorch接近线程加速平台时使用进程并行。以个人电脑（总线程数12）进行测试：
+
+| Param: nthreads_rcut | nrcuts_toparallelize | TimeAVG (s) | Time1 (s) | Time2 (s) | Time3 (s) |
+| :------------------- | :------------------- | :---------- | :-------- | :-------- | :-------- |
+| 1                    | 5                    | 106.59      | 108.34    | 105.37    | 106.07    |
+| 2                    | 5                    | 110.82      | 112.35    | 109.68    | 110.42    |
+| 3                    | 4                    | 193.61      | 194.04    | 194.13    | 192.68    |
+| 4                    | 3                    | 186.87      | 185.57    | 188.75    | 186.30    |
+| 6                    | 2                    | 270.95      | 267.67    | 270.21    | 274.97    |
+| 12                   | 1                    | 458.60      | 458.60    |           |           |
+
+![img](https://ucoyxk075n.feishu.cn/space/api/box/stream/download/asynccode/?code=NGIzMzM0YjU0MmViY2NlN2ViNzkzM2RkNGM0NWQwNDhfYTAzQnVPVUhzS042NXRIYXBRbmFRYUEzUUN6UHRyYVVfVG9rZW46WHRoSWJsdXR2bzd6WTd4UHdSSmNiN1JTbkpRXzE3MjE3MTU1MTg6MTcyMTcxOTExOF9WNA)
+
+# 轨道质量诊断（简易）
+
+请参阅@彭星亮 开发abacustest工作流：[测试工作流使用：reuse已有测试](https://dptechnology.feishu.cn/docx/I7NKdmURHosJSMxn7NCc5RsEnxb)
+
+# 断点续算（Checkpoint & RESTART）
+
+对于大型串行任务，必须保证有尽可能多的存档点，以方便任务能在意外中断时能从最近位置重启，继续之前中断的任务，而非每次必须重新开始。目前断点续算的检查节点为：
+
+- 每次ABACUS pw计算结束后
+
+![img](https://ucoyxk075n.feishu.cn/space/api/box/stream/download/asynccode/?code=YzMzNzU3ODdkMTM0MzFiNDQ1ODA0OTVhYTEwOTdkNjJfeXBKYlJYemdwMmJ4ZWxzamw0d2lQRDlSME5MZUZmNUJfVG9rZW46QXVyZGIyMVY2bzBhZzR4ZWJ3WmNmTzc4bnZoXzE3MjE3MTU1MTg6MTcyMTcxOTExOF9WNA)
+
+- 对于`optimizer pytorch.SWAT`：每次轨道优化产生输入文件后
+
+![img](https://ucoyxk075n.feishu.cn/space/api/box/stream/download/asynccode/?code=Nzg2NjVlMWI3YTVmNzBjNzk2ZGM0N2IyNjI1YWNlNGZfNVFJS1VNU3FNM0k4VjFqbjVJTGJhSmVHeUh0VVp2RnRfVG9rZW46VVBDamJzYU9Vb0U0cGV4ck8ycmMyc3pBbkVnXzE3MjE3MTU1MTg6MTcyMTcxOTExOF9WNA)

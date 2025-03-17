@@ -1,0 +1,124 @@
+# VASP
+
+当我们创建一个 VASP 节点时，前端渲染的内容实际由以下 Json 组织。
+
+```ts
+  VASP: {
+    type: 'Solver',  // node type 指定 node 卡片的模板
+    data: {  // data 关键词包括所有内部数据
+      header: 'VASP',   // header 显示在卡片顶部
+      status: 'draft',  // 状态边框指示节点的运行状态
+      body: [  // body 为卡片中显示的内容
+        {
+          id: '',  // id 为 uuid，自动生成
+          source: 'default',  // source 为内容
+          type: 'select',  // type 指定这个 body 组件的模版
+          key: 'potcarSelect',  // key 用于引用这个 body 中的内容
+        },
+        {
+          id: '',
+          source: 'bohrium',
+          type: 'select',
+          key: 'machineSelect',
+        },
+        {
+          id: '',
+          source: '',
+          title: 'Machine Config',
+          type: 'textarea',
+          key: 'config',
+        },
+      ],
+
+      footer: 'VASP 5.4.4',  // footer 显示在卡片尾部
+      handles: [  // handles 为 node 可连接的把手
+        { key: 'poscar', type: 'target', rope: 'POSCAR' },  // key 会全部大写显示为文本，只有 key 相同的 handles 才允许连接
+        { key: 'incar', type: 'target', rope: 'INCAR' },  // type 有两种，一种为 source，另一种为 target。source 是引出的，target 是引入的。
+        { key: 'kpoints', type: 'target', rope: 'KPOINTS' },  // rope 用以判断当从该节点自动拉出时，自动添加的节点。与 NodeMapping 中对应
+        { key: 'vasp/outputs', type: 'source', rope: 'VASP_OUTPUTS' },
+      ],
+      results: [  // resulrs 列表中记录该节点需要运行的程序与运行结果
+        {
+          id: '',
+          source: '',  // source 记录运行结果
+          type: 'file',  // type 
+          script: 'vasp',  // script 使用关键词的方式，将会调用后端中该关键词映射的相应代码
+          title: 'VASP',  // 
+          key: 'vasp', // key 用于外部引用该 result
+          bodies: [],  // bodies 为该 result 运行代码需要引用的该节点内部的 body 的 key 的列表
+        },
+      ],
+    },
+    dragHandle: '.drag-handle',  // handle 可拖拽的位置的类名，默认为 drag-handle，不修改。
+  },
+  ```
+
+  当运行后，其后端对应的代码如下：
+
+  ```python
+
+  async def execute(self, result: WorkflowNodeResult) -> NodeStatus:
+
+        # 从 target handle 获取 POSCAR, INCAR, KPOINTS 的文件路径
+        if not await check_handle_connected(self.node, "target"):
+            raise Exception("Target handle not connected")
+
+        # 从 Edge 获取 Source handle
+        connected_target_handles = await filter_target_handles(self.node, connected=True)
+        source_handles = [await get_bound_handle_from_target(handle) for handle in connected_target_handles]
+
+        sources = [get_handle_data_source_content(source_handle) for source_handle in source_handles]
+        sub_file_path = await asyncio.gather(*sources)
+
+        # 创建文件夹
+        dir_path = await self.create_dir_path()
+
+        # 将 POSCAR, INCAR, KPOINTS 移动到文件夹
+        for sub_file in sub_file_path:
+            if sub_file is None:
+                return "failed"
+            await move_file(src=sub_file, dst=dir_path)
+
+        # 从 body 判断 POTCAR 来自于哪里
+        potcar_body_source = await self.get_body_source("potcarSelect")
+
+        if potcar_body_source == "default":
+            potcar_file_path = os.path.join(dir_path, "POTCAR")
+            element = await self.generate_potcar(os.path.join(dir_path, "POSCAR"), potcar_file=potcar_file_path)
+            if element is None:
+                print("generate potcar failed")
+                return "failed"
+        else:
+            raise Exception("POTCAR not found")
+
+        machine_body_source = await self.get_body_source("machineSelect")
+
+        if machine_body_source == "bohrium":
+
+            machine_config = await self.get_body_source("config")
+            if machine_config is None:
+                return "failed"
+            await self.write(os.path.join(dir_path, "job.json"), machine_config)
+
+            try:
+                machine_config = json.loads(machine_config)
+            except json.JSONDecodeError:
+                raise Exception("Machine Config is not a valid JSON")
+
+            details = await self.submit_bohrium_job(dir_path, machine_config)
+            workflow = await self.get_workflow(self.node)
+
+            # 返回给前端执行成功的信息
+            await channel_send_node_result(
+                workflow=workflow,
+                execute_status={
+                    "uuid": str(self.node.uuid),
+                    "header": await get_node_header(self.node),
+                    "status": "success",
+                    "results": [{"key": result.key, "source": str(details.get("data")["jobId"])}],
+                },
+            )
+
+        return "success"
+
+    ```

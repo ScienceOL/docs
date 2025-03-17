@@ -1,0 +1,42 @@
+export const metadata = {
+  title: 'Deploy from Source',
+  description:
+    'On this page, we’ll dive into the different conversation endpoints you can use to manage conversations programmatically.',
+}
+
+# 从源码部署
+
+Protium 软件包从部署角度整体分为两个部分：
+
+1. 软件服务本体
+
+软件服务本体由 1 个 Python 后端服务（后端服务同时包含 PosgreSQL 数据库服务及 ElasticSearch 弹性搜索服务）
+以及 3 个 React 前端服务（官网、文档、工作流），其中文档和工作流前端需要依赖官网前端提供用户登陆
+
+2. 工作流服务
+
+Protium 工作流基于云原生的理念打造，基于 
+
+* [Docker](https://www.docker.com/)
+* [Kubernetes](https://kubernetes.io/)
+* [Argo](https://argoproj.github.io/)
+* [MinIO](https://min.io/)
+
+实现对象存储与分布式计算。因此，要使用云原生的工作流功能，需要在本地计算集群上部署以上服务（在本地运行时，使用 Minikube 以替代 Kubernete）
+
+因此，要实现从源码完整部署 Protium 服务，需要整体部署以上两个部分。
+
+## Part 1. 软件服务本体
+
+软件服务本体所需的六个服务已经打好镜像并配置好 docker-compose.yaml 文件供一键启动，因此仍然推荐优先安装 Docker Desktop，使用安装脚本一键拉取并启动即可。
+
+工作流服务需要在安装 Minikube 后通过 yaml 配置文件一键应用即可
+
+因此，推荐本地部署的完整流程为：
+
+1. 安装 Docker Desktop
+2. 使用 docker-compose 启动软件服务
+3. 安装 Minikube
+4. 安装 kubectl
+5. 一键应用我们提供的 k8s 配置文件以安装 Argo 与 MinIO
+6. 使用安装脚本一键暴露启动的容器服务

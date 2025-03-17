@@ -1,0 +1,72 @@
+export const metadata = {
+  title: 'Custom Node',
+  description:
+    '本章节介绍如何自定义一个节点',
+}
+
+# 创建自定义节点
+
+创建一个自定义节点很简单，仅需要完善两个部分的内容：
+
+1. Node 的展示形式（以 json 文件的形式组织）
+2. 提供 Node 的运行程序（以 Python 代码的形式组织）
+
+让我们来分别查看这两个部分。
+
+## Part 1｜Node 的展示形式
+
+### 1.1 层级
+
+在前端展示时，一个 Node 具有以下层级，让我们以一个 ABACUS 的 Node 举例：
+
+```typescript
+  ABACUS_SIAB: {
+    type: 'Solver',
+    data: {
+      header: 'ABACUS SIAB',
+      body: [
+        {
+          id: '',
+          source: {
+            
+          },
+          type: 'textarea',
+          title: 'SIAB Config',
+          key: 'abacus_siab',
+          compile: [],
+        },
+        {
+          id: '',
+          source: {
+
+          },
+          type: 'textarea',
+          title: 'Bohrium Job Config',
+          key: 'bohrium_job_config',
+          compile: [],
+        },
+      ],
+      handles: [
+        { key: 'abacus/input', type: 'target', rope: 'ABACUS_INPUT' },
+        { key: 'siab/system', type: 'target', rope: 'SIAB_SYSTEM' },
+        { key: 'siab/orbitals', type: 'target', rope: 'SIAB_ORBITALS' },
+        { key: 'siab/outputs', type: 'source', rope: 'ABACUS_SIAB_OUTPUTS' },
+      ],
+      compile: [
+        {
+          id: '',
+          source: '',
+          type: 'task',
+          script: 'abacus_siab',
+          title: 'ABACUS_SIAB',
+          key: 'abacus_siab',
+          bodies: [],
+        },
+      ],
+      footer: 'Version 0.1.0',
+    },
+  },
+
+```
+
+

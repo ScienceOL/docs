@@ -1,0 +1,155 @@
+export const metadata = {
+    title: 'API',
+    description:
+        '',
+}
+
+# API
+
+除了通过网页操作，你也可以通过我们的 api 来构建工作流，这可以极大简化你的工作流自动化进程。
+
+## List all workflow{{ tag: 'GET', label: 'https://api.protium.space/v1/workflow' }}
+
+<Row>
+  <Col>
+
+    This endpoint allows you to retrieve a paginated list of all your contacts. By default, a maximum of ten contacts are shown per page.
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="limit" type="integer">
+        Limit the number of contacts returned.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/contacts">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G https://api.protocol.chat/v1/contacts \
+      -H "Authorization: Bearer {token}" \
+      -d active=true \
+      -d limit=10
+    ```
+
+    ```python
+    from protocol_api import ApiClient
+
+    client = ApiClient(token)
+
+    client.contacts.list()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "has_more": false,
+      "data": [
+        {
+          "id": "WAz8eIbvDR60rouK",
+          "username": "FrankMcCallister",
+          "phone_number": "1-800-759-3000",
+          "avatar_url": "https://assets.protocol.chat/avatars/frank.jpg",
+          "display_name": null,
+          "conversation_id": "xgQQXg3hrtjh7AvZ",
+          "last_active_at": 705103200,
+          "created_at": 692233200
+        },
+        {
+          "id": "hSIhXBhNe8X1d8Et"
+          // ...
+        }
+      ]
+    }
+    ```
+
+  </Col>
+</Row>
+
+
+---
+
+## Create a workflow {{ tag: 'POST', label: 'https://api.protium.space/v1/workflow' }}
+
+<Row>
+  <Col>
+
+    This endpoint allows you to add a new workflow in protium. To add a workflow, you must provide your `AccessToken` and the workflow file.
+
+    ### Required attributes
+
+    <Properties>
+      <Property name="token" type="string">
+        The username for the contact.
+      </Property>
+      <Property name="workflow" type="object">
+        The JSON file path of the workflow content, about how to setup a workflow, please see part 2.
+      </Property>
+    </Properties>
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="run" type="boolean">
+        Choose whether run the workflow or not, default is `False`
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/workflow">
+
+    ```bash {{ title: 'cURL' }}
+    curl https://api.protium.space/v1/contacts \
+      -H "Authorization: Bearer {token}" \
+      -d username="FrankMcCallister" \
+      -d phone_number="1-800-759-3000" \
+      -d avatar_url="https://assets.protocol.chat/avatars/frank.jpg"
+    ```
+
+    {/* ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.contacts.create({
+      username: 'FrankMcCallister',
+      phone_number: '1-800-759-3000',
+      avatar_url: 'https://assets.protocol.chat/avatars/frank.jpg',
+    })
+    ``` */}
+
+    ```python
+    from protium import ApiClient
+
+    client = ApiClient(token)
+
+    client.workflow.create(
+      username="FrankMcCallister",
+      phone_number="1-800-759-3000",
+      avatar_url="https://assets.protocol.chat/avatars/frank.jpg",
+    )
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "WAz8eIbvDR60rouK",
+      "username": "FrankMcCallister",
+      "phone_number": "1-800-759-3000",
+      "avatar_url": "https://assets.protocol.chat/avatars/frank.jpg",
+      "display_name": null,
+      "conversation_id": "xgQQXg3hrtjh7AvZ",
+      "last_active_at": null,
+      "created_at": 692233200
+    }
+    ```
+
+  </Col>
+</Row>

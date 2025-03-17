@@ -1,0 +1,49 @@
+import { Guides } from '@/components/Guides'
+import { Resources } from '@/components/Resources'
+import { HeroPattern } from '@/components/HeroPattern'
+
+export const metadata = {
+  title: 'Protium',
+  description:
+    'Learn everything there is to know about the Protium and integrate tools into your product.',
+  image: '/images/python.svg',
+}
+
+export const sections = [
+  { title: 'Guides', id: 'guides' },
+  { title: 'Resources', id: 'resources' },
+]
+
+<HeroPattern />
+
+# Protium Tutorial
+
+Use the Tutorial to access our features, knowledges, and seamlessly integrate your 
+research into the workflows of dozens of devoted Protium explorers. {{ className: 'lead' }}
+
+<div className="not-prose mb-16 mt-6 flex gap-3">
+  <Button href="/quickstart" arrow="right">
+    <>Quickstart</>
+  </Button>
+  <Button href="/sdks" variant="outline">
+    <>Explore SDKs</>
+  </Button>
+</div>
+
+## Getting started {{ anchor: false }}
+
+To get started, create a workflow in your [Dashboard -> Workflow](#), 
+then follow our [Workflow Quickstart](#) to make the demo workflow by yourself. {{ className: 'lead' }} 
+When your workflow is ready to go live, publish it to our [integrations directory](#) to reach the Protium community. {{ className: 'lead' }}
+
+Running workflow needs the [Calculation Resources](#), So, don't forget to set your API key. {{ className: 'lead' }}
+
+<div className="not-prose">
+  <Button href="/sdks" variant="text" arrow="right">
+    <>Set your API key</>
+  </Button>
+</div>
+
+<Guides />
+
+<Resources />

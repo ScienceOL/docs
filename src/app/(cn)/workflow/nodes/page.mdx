@@ -1,0 +1,352 @@
+export const metadata = {
+    title: 'Node',
+    description:
+        '',
+}
+
+# Node
+
+> 更新时间：2024.12.25
+
+Node 是构建工作流的最小节点。有关 Workflow 的整体概念，可见：[Design](/workflow/design)
+
+## Node Structure
+
+一个 Node 的结构由一个 json 组织，让我们以一个 ABACUS 的 Node 举例：
+
+<Row>
+    <Col sticky>
+
+    <Properties>
+      <Property name="type" type="string">
+        指定 Node 的类型，Node 类型目前支持的是：
+            * `Input`: 输入类型的节点
+            * `Solver`: 求解器类型的节点
+      </Property>
+    </Properties> 
+
+    <Note>目前，不同的 type 的差异不明显。任意选用即可。</Note>
+
+    <Properties>
+      <Property name="data" type="object">
+        包含 Node 中需要展示的所有数据，包含以下字段：
+            * `header`: 在 node 顶部展示的字符，一般为 node 的标识符，将被用在多个用户友好页面的展示；
+            * `handle`: **柄**，控制 node 与其它 node 的连接关系；
+            * `body`: 控制 node 中的展示部分；
+            * `compile`: 控制 node 中需要运行的代码；
+            * `footer`: 在 Node 尾部展示的字符，一般为 node 的版本号；
+      </Property>
+    </Properties> 
+
+    </Col>
+
+    <Col>
+    ```json {{ title: 'Node' }}
+    {
+        "type": "Solver",
+        "data": {
+            "header": "ABACUS SIAB",
+            "handles": [
+            { "key": "abacus/input", "type": "target", "rope": "ABACUS_INPUT" },
+            { "key": "siab/system", "type": "target", "rope": "SIAB_SYSTEM" },
+            { "key": "siab/orbitals", "type": "target", "rope": "SIAB_ORBITALS" },
+            { "key": "siab/outputs", "type": "source", "rope": "ABACUS_SIAB_OUTPUTS" }
+            ],
+            "body": [
+            {
+                "id": "",
+                "schema": {},
+                "source": {},
+                "type": "object",
+                "title": "SIAB Config",
+                "key": "abacus_siab",
+                "compile": []
+            },
+            {
+                "id": "",
+                "schema": {},
+                "source": {},
+                "type": "object",
+                "title": "Bohrium Job Config",
+                "key": "bohrium_job_config",
+                "compile": []
+            }
+            ],
+            "compile": [
+            {
+                "id": "",
+                "source": "",
+                "type": "task",
+                "script": "abacus_siab",
+                "title": "ABACUS_SIAB",
+                "key": "abacus_siab",
+                "bodies": []
+            }
+            ],
+            "footer": "Version 0.1.0"
+        }
+    }
+    ```
+    </Col>
+</Row>
+
+## Node Data
+
+<Row>
+    <Col>
+
+        <Properties>
+        <Property name="header" type="string">
+            指定 Node 顶部展示的字符，一般为 Node 的标识符，将被用在多个用户友好页面的展示。
+        </Property>
+
+        <Property name="handles" type="list">
+            包含 Node 的连接点信息，每个连接点定义如下字段：
+            * `key`: 连接点的唯一标识符。key 将统一大写后展示在 handle 处，只有 key 相同的 handle 才允许被连接。
+            * `type`: 连接点的类型，可以是 `target` 或 `source`，分别表示输入和输出。
+            * `label`: label 控制显示的文本，若为空则显示 key 的大写值。
+            * `rope`[弃用]: 当从该 handle 向外拖拽时，生成由该处键指定的 Node。
+
+            <Note>一般的，handle key 由 <b>小写字母 + "-"</b> 声明 </Note>
+        </Property>
+
+        <Property name="body" type="list">
+            包含 Node 中展示的数据部分，每个部分定义如下字段：
+            * `id`: 数据部分的唯一标识符，默认自动添加，保留空字符串即可。
+            * `source`: 数据源，可以为空或包含具体的数据源信息。
+            * `type`: 数据部分的类型，一般为 `object`。
+            * `title`: 数据部分的标题，用于展示。
+            * `key`: 数据部分的唯一键，用于标识和访问。使用该 key 来指定该 body 所对应的用户输入表单
+            * `compile`: 需要运行的代码或任务列表。
+        </Property>
+
+        <Property name="compile" type="list">
+            包含 Node 中需要运行的代码或任务，每个任务定义如下字段：
+            * `id`: 任务的唯一标识符，默认自动添加，保留空字符串即可。
+            * `source`: 任务的源代码或脚本路径。
+            * `type`: 任务的类型，可以是 `task` 或其他类型。
+            * `script`: 任务的脚本名称或路径。
+            * `title`: 任务的标题，用于展示。
+            * `key`: 任务的唯一键，用于标识和访问。
+            * `bodies`: 该 compile 运行需要的用户输入的 body key 的列表
+        </Property>
+
+        <Property name="footer" type="string">
+            指定 Node 底部展示的字符，一般为 Node 的版本号或其他附加信息。
+        </Property>
+        </Properties> 
+
+    </Col>
+    <Col sticky>
+
+
+    ```json {{ title: "Node.Data" }}
+    {
+            "header": "ABACUS SIAB",
+            "handles": [
+            { "key": "abacus/input", "type": "target", "rope": "ABACUS_INPUT" },
+            { "key": "siab/system", "type": "target", "rope": "SIAB_SYSTEM" },
+            { "key": "siab/orbitals", "type": "target", "rope": "SIAB_ORBITALS" },
+            { "key": "siab/outputs", "type": "source", "rope": "ABACUS_SIAB_OUTPUTS" }
+            ],
+            "body": [
+            {
+                "id": "",
+                "schema": {},
+                "source": {},
+                "type": "object",
+                "title": "SIAB Config",
+                "key": "abacus_siab",
+                "compile": []
+            },
+            {
+                "id": "",
+                "schema": {},
+                "source": {},
+                "type": "object",
+                "title": "Bohrium Job Config",
+                "key": "bohrium_job_config",
+                "compile": []
+            }
+            ],
+            "compile": [
+            {
+                "id": "",
+                "source": "",
+                "type": "task",
+                "script": "abacus_siab",
+                "title": "ABACUS_SIAB",
+                "key": "abacus_siab",
+                "bodies": []
+            }
+            ],
+            "footer": "Version 0.1.0"
+        }
+    ```
+    </Col>
+</Row>
+
+## JSON Schema - 用户输入表单
+
+JSON Schema 是一种用于验证和描述 JSON 数据结构的规范。它可以用来定义 JSON 数据的格式、内容和约束条件，从而确保数据的完整性和一致性。
+
+JSON Schema 在 `node.body` 中指定，但是 body list 中仅指定了 key，由该 key 指定这个 body 对应的用户输入表单的内容。
+
+<Row>
+    <Col>
+
+    ### `jsonSchemaMappingProps`
+   <Properties>
+        <Property name="key" type="string">
+        由 node.body.key 指定
+            <Note>一般的，该键值由小写字母 + "_" 构成</Note>
+        </Property>
+ 
+        <Property name="panelType" type="React.FC<any>">
+            指定与用户交互的面板类型，目前仅支持 `default`（预设的 `InteractivePanel`），即从屏幕右侧滑出的交互面板。
+        </Property>
+        <Property name="schema" type="object">
+            <div className="flex items-center">
+                schema 存储 JSON Schema 信息，详见：  
+                <Button href="https://json-schema.org/" variant="text" arrow="right">
+                    <>JSON Schema 官方网站</>
+                </Button>
+            </div>
+        </Property>
+        <Property name="uiSchema" type="object">
+            <div className="flex items-center">
+                【已弃用】uiSchema 决定组件的 UI，在系统中内置，无需添加。
+            </div>
+        </Property>
+    </Properties>
+    
+    </Col>
+    <Col sticky>
+        ```json {{ title: "A Complete Node Example"}}
+        {
+            "creator": {
+                "username": "PROTIUM",
+                "avatar": "/media/accounts/2/avatar/IMG_6208_41v6YQI.jpeg"
+            },
+            "name": "ILab_Add",
+            "description": "Add Action for IntelliLab",
+            "version": "0.0.0",
+            "created_at": "2024-09-19T19:51:44.102735+08:00",
+            "updated_at": "2024-10-10T16:21:02.726753+08:00",
+            "public": true,
+            "type": "ILab",
+            "data": {
+                "handles": [
+                    {
+                        "key": "ready",
+                        "type": "source",
+                        "label": null,
+                        "data_source": null,
+                        "data_key": null,
+                        "rope": null
+                    },
+                    {
+                        "key": "ready",
+                        "type": "target",
+                        "label": null,
+                        "data_source": null,
+                        "data_key": null,
+                        "rope": null
+                    }
+                ],
+                "body": [
+                    {
+                        "schema": {
+                            "panel_type": "default",
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "mass": {
+                                            "type": "number",
+                                            "description": "Optional. Mass of reagent to add."
+                                        },
+                                        "stir": {
+                                            "type": "boolean",
+                                            "description": "Optional. If True, stir vessel while adding reagent."
+                                        },
+                                        "time": {
+                                            "type": "number",
+                                            "description": "Optional. Time to add reagent over."
+                                        },
+                                        "amount": {
+                                            "type": "string",
+                                            "description": "Optional. amount of reagent to add in moles, grams or equivalents. Sanitisation occurs on call of on_prepare_for_execution for this prop. This will change in future."
+                                        },
+                                        "vessel": {
+                                            "type": "string",
+                                            "description": "Vessel to add reagent to."
+                                        },
+                                        "volume": {
+                                            "type": "number",
+                                            "description": "Optional. Volume of reagent to add."
+                                        },
+                                        "reagent": {
+                                            "type": "string",
+                                            "description": "Reagent to add."
+                                        },
+                                        "viscous": {
+                                            "type": "boolean",
+                                            "description": "Optional. If True, adapt process to handle viscous reagent, e.g. use slower addition speeds."
+                                        },
+                                        "dropwise": {
+                                            "type": "boolean",
+                                            "description": "Optional. If True, use dropwise addition speed."
+                                        },
+                                        "stir_speed": {
+                                            "type": "number",
+                                            "description": "Optional. Speed in RPM at which to stir at if stir is True."
+                                        }
+                                    }
+                                },
+                                "title": "Reagent Addition Properties"
+                            },
+                            "uiSchema": null
+                        },
+                        "key": "ilab-add",
+                        "type": "DEFAULT",
+                        "title": "Add",
+                        "source": [
+                            {
+                                "mass": 0.0,
+                                "stir": false,
+                                "time": 0.0,
+                                "amount": "0 moles",
+                                "vessel": "vessel_1",
+                                "volume": 0.0,
+                                "reagent": "reagent_1",
+                                "viscous": false,
+                                "dropwise": false,
+                                "stir_speed": 0.0
+                            }
+                        ],
+                        "select_choices": null,
+                        "attachment": null
+                    }
+                ],
+                "compile": [
+                    {
+                        "id": 11,
+                        "key": "ilab-add",
+                        "script": "ilab_add",
+                        "type": "Parameter",
+                        "source": null,
+                        "title": null,
+                        "attachment": null,
+                        "node_id": 8,
+                        "bodies": []
+                    }
+                ],
+                "header": "ILab ADD",
+                "footer": "0.0.1"
+            }
+        }
+        ```
+    </Col>
+</Row>
