@@ -1,6 +1,6 @@
-SCRIPT_DIR=$(dirname "$0")
-PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
-ENV_FILE=".env.prod"
+env_file=".env.prod"
+
+grep -v '^#' ${env_file} | xargs -I % echo "--build-arg %"
 
 docker buildx build \
   --platform linux/amd64,linux/arm64 \

@@ -4,5 +4,5 @@ node_modules
 .next
 .git
 .vscode
-
+buildx.sh
 npm-debug.log
