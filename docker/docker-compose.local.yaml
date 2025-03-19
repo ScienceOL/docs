@@ -1,0 +1,4 @@
+services:
+  docs:
+    env_file:
+      - .env.local

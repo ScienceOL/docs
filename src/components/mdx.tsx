@@ -5,6 +5,7 @@ import { Feedback } from '@/components/Feedback'
 import { Heading } from '@/components/Heading'
 import { Prose } from '@/components/Prose'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import Image from 'next/image'
 
 export const a = Link
 export { Button } from '@/components/Button'
@@ -54,12 +55,14 @@ export function Note({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function Image({ src, alt }: { src: string; alt: string }) {
+export function Img({ src, alt }: { src: string; alt: string }) {
   return (
     <div className="my-8 max-w-3xl">
-      <img
+      <Image
         src={src}
         alt={alt}
+        width={800}
+        height={400}
         className="h-auto w-full rounded-lg border
                    border-gray-100/60 shadow-md transition-all
                    duration-200 hover:border-gray-200/80 hover:shadow-lg

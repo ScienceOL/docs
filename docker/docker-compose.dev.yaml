@@ -1,0 +1,8 @@
+services:
+  docs:
+    env_file:
+      - .env.dev
+    volumes:
+      - ../:/app
+    command:
+      - sh -c "if [ ! -d 'node_modules' ]; then yarn install; fi && yarn dev"
