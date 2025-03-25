@@ -4,7 +4,6 @@ import { Menu, Transition } from '@headlessui/react'
 import { AdjustmentsHorizontalIcon, Cog6ToothIcon, CubeTransparentIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { Fragment, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import {
   DocumentTextIcon,
@@ -39,7 +38,6 @@ export function DropdownMenu({
   itemClassName,
 }: DropdownMenuProps<NavigationProps>) {
   const { logout } = useAuthServiceContext()
-  const { t } = useTranslation('userPanel')
   const MEDIA_URL = 'your_media_url_here' // replace with your actual media URL
   const userInfo = {
     avatar: 'default_avatar', // replace with your actual default avatar
@@ -123,7 +121,7 @@ export function DropdownMenu({
                     >
                       <div className="mr-2 h-4 w-4">{item.icon}</div>
 
-                      {t(item.name)}
+                      {(item.name)}
                     </Link>
                   )}
                 </Menu.Item>
@@ -144,7 +142,7 @@ export function DropdownMenu({
                       )}
                     >
                       <div className="mr-2 h-4 w-4">{item.icon}</div>
-                      {t(item.name)}
+                      {(item.name)}
                     </Link>
                   )}
                 </Menu.Item>
@@ -165,7 +163,7 @@ export function DropdownMenu({
                       )}
                     >
                       <div className="mr-2 h-4 w-4">{item.icon}</div>
-                      {t(item.name)}
+                      {(item.name)}
                     </Link>
                   )}
                 </Menu.Item>

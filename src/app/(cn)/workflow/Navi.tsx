@@ -10,14 +10,6 @@ export const navigation: Array<NavGroup> = [
     ],
   },
   {
-    title: 'Nodes',
-    links: [
-      { title: 'Node', href: '/workflow/nodes' },
-      // { title: 'Node - Mapping', href: '/workflow/nodes/mapping' },
-      { title: 'ABACUS SIAB', href: '/workflow/nodes/abacus_siab' },
-    ],
-  },
-  {
     title: 'Interface',
     links: [{ title: 'Interface', href: `/workflow/interface` }],
   },
@@ -25,16 +17,34 @@ export const navigation: Array<NavGroup> = [
     title: 'Execution',
     links: [
       { title: 'Execution', href: '/workflow/execution/how-it-works' },
-      { title: 'Executor', href: '/workflow/execution' },
+      { title: 'NodeExecutor', href: '/workflow/execution' },
+      { title: 'IOExecutor', href: '/workflow/execution' },
+      { title: 'SolverExecutor', href: '/workflow/execution' },
+      { title: 'ILabExecutor', href: '/workflow/execution' },
+    ],
+  },
+  {
+    title: 'Nodes',
+    links: [
+      { title: 'Node', href: '/workflow/nodes' },
+      { title: 'VASP Node', href: '/workflow/execution' },
     ],
   },
   {
     title: 'CLI',
     links: [
       { title: 'CLI', href: '/workflow/api/cli' },
-      { title: 'API Token', href: '/workflow/api/api-token' },
       { title: 'File Format', href: '/workflow/api/file-format' },
+      { title: 'API Token', href: '/workflow/api/api-token' },
       { title: 'API', href: '/workflow/api' },
     ],
+  },
+  {
+    title: 'Society',
+    links: [{ title: 'Society', href: '/workflow/society' }],
+  },
+  {
+    title: 'Integration',
+    links: [{ title: 'Integration', href: '/workflow/integration' }],
   },
 ]

@@ -88,7 +88,7 @@ const resources: Array<Resource> = [
   },
   {
     href: `${PrimarySite}/space`,
-    name: 'Social',
+    name: 'Society',
     description:
       '探索社区中的各类资源，和其它用户分享你的节点或工作流',
     icon: UserGroupIcon,

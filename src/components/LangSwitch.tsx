@@ -1,6 +1,5 @@
-'use client';
-import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
+'use client'
+import { useTranslation } from 'react-i18next'
 
 function ZhLanguageIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -24,7 +23,7 @@ function ZhLanguageIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
         p-id="10447"
       />
     </svg>
-  );
+  )
 }
 
 function EnLanguageIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
@@ -35,15 +34,15 @@ function EnLanguageIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
         p-id="10301"
       />
     </svg>
-  );
+  )
 }
 
 function LangSwitch({ className }: { className?: string }) {
-  const { t, i18n } = useTranslation('translation');
+  const { t, i18n } = useTranslation('translation')
 
   const handleLanguageChange = (lang: string) => {
-    i18n.changeLanguage(i18n.language === 'en' ? 'zh' : 'en');
-  };
+    i18n.changeLanguage(i18n.language === 'en' ? 'zh' : 'en')
+  }
 
   return (
     // <button
@@ -57,21 +56,22 @@ function LangSwitch({ className }: { className?: string }) {
     //    group-hover:opacity-100 dark:fill-white"
     //   />
     // </button>
-    <button
-      type="button"
-      aria-label={
-        i18n.language === 'en' ? 'Switch to 中文' : 'Switch to English'
-      }
-      className={clsx('group', className)}
-      onClick={() => handleLanguageChange(i18n.language)}
-    >
-      {i18n.language === 'en' ? (
-        <EnLanguageIcon className="h-4 w-4 fill-gray-600 transition-colors duration-300 ease-in-out hover:fill-gray-950 dark:fill-gray-400 dark:hover:fill-gray-50" />
-      ) : (
-        <ZhLanguageIcon className="h-4 w-4 fill-gray-600 transition-colors duration-300 ease-in-out hover:fill-gray-950 dark:fill-gray-400 dark:hover:fill-gray-50" />
-      )}
-    </button>
-  );
+    // <button
+    //   type="button"
+    //   aria-label={
+    //     i18n.language === 'en' ? 'Switch to 中文' : 'Switch to English'
+    //   }
+    //   className={clsx('group', className)}
+    //   onClick={() => handleLanguageChange(i18n.language)}
+    // >
+    //   {i18n.language === 'en' ? (
+    //     <EnLanguageIcon className="h-4 w-4 fill-gray-600 transition-colors duration-300 ease-in-out hover:fill-gray-950 dark:fill-gray-400 dark:hover:fill-gray-50" />
+    //   ) : (
+    //     <ZhLanguageIcon className="h-4 w-4 fill-gray-600 transition-colors duration-300 ease-in-out hover:fill-gray-950 dark:fill-gray-400 dark:hover:fill-gray-50" />
+    //   )}
+    // </button>
+    <></>
+  )
 }
 
-export default LangSwitch;
+export default LangSwitch
