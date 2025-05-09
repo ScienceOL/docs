@@ -3,27 +3,28 @@ import { Heading } from '@/components/Heading'
 
 const guides = [
   {
-    href: '/pagination',
+    href: '/quickstart',
     name: 'Quickstart',
-    description: 'Understand how to work with paginated responses.',
-  },
-  {
-    href: '/authentication',
-    name: 'Design',
-    description: 'Learn how to authenticate your API requests.',
-  },
-
-  {
-    href: '/errors',
-    name: 'Use CLI',
     description:
-      'Read about the different types of errors returned by the API.',
+      '快速开始熟悉 PROTIUM 的一切。通过简单的步骤轻松上手我们的平台功能。无需复杂配置，几分钟内即可开始您的第一个项目。',
   },
   {
-    href: '/webhooks',
-    name: 'Set API Key',
+    href: '/sdk',
+    name: 'Use SDK',
     description:
-      'Learn how to configure api for your app.',
+      '使用 SDK 来自动化你的工作流管理。强大的API接口让您能够无缝集成现有系统。通过可定制的组件快速构建满足特定需求的解决方案。',
+  },
+  {
+    href: '/mcps',
+    name: 'MCPs',
+    description:
+      '发现使用 AI Agent 与 PROTIUM 集成的方法。了解如何利用 MCP(Model Context Protocol) 增强您的智能应用，打造更智能的交互体验。',
+  },
+  {
+    href: '/development',
+    name: 'Hi, Developer',
+    description:
+      '加入我们的开源项目，贡献你的想法和代码。参与活跃的开发者社区，共同塑造未来的功能和方向。通过Pull Request提交改进，让产品变得更好。',
   },
 ]
 

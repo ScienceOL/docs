@@ -60,7 +60,7 @@ export function Img({ src, alt }: { src: string; alt: string }) {
     <div className="my-8 max-w-3xl">
       <Image
         src={src}
-        alt={alt}
+        alt={alt||""}
         width={800}
         height={400}
         className="h-auto w-full rounded-lg border

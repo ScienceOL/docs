@@ -17,6 +17,13 @@ const withMDX = nextMDX({
 const nextConfig = {
   output: 'standalone',
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
+  allowedDevOrigins: ['127.0.0.1'],
+  turbopack: {
+    resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.json'],
+    resolveAlias: {
+      underscore: 'lodash',
+    },
+  },
 }
 
 export default withSearch(withMDX(nextConfig))
