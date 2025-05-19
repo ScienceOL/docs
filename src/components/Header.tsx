@@ -39,32 +39,32 @@ import LangSwitch from './LangSwitch'
 const navItems = [
   {
     name: 'Tutorials',
-    href: `${DocumentSite}/tutorial/`,
+    href: `/tutorial`,
     icon: BookOpenIcon,
     sub: [
       {
         name: 'Workflow',
-        href: `${DocumentSite}/workflow`,
+        href: `/workflow`,
         icon: RectangleGroupIcon,
       },
       {
         name: 'Environment',
-        href: `${DocumentSite}/environment`,
+        href: `/environment`,
         icon: Square3Stack3DIcon,
       },
       {
         name: 'SDK',
-        href: `${DocumentSite}/sdk`,
+        href: `/sdk`,
         icon: CodeBracketIcon,
       },
       {
         name: 'MCP',
-        href: `${DocumentSite}/mcp`,
+        href: `/mcp`,
         icon: ChatBubbleOvalLeftEllipsisIcon,
       },
       {
         name: 'Development',
-        href: `${DocumentSite}/development`,
+        href: `/development`,
         icon: RocketLaunchIcon,
       },
     ],

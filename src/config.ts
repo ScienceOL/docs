@@ -21,10 +21,3 @@ export const DocumentSite =
   process.env.NEXT_PUBLIC_DOCUMENT_SITE || 'http://127.0.0.1:32235'
 
 export const WorkflowSite = process.env.NEXT_PUBLIC_WORKFLOW_SITE || ''
-
-console.log('ENV:', ENV)
-console.log('WorkflowSite:', WorkflowSite)
-console.log(
-  'process.env.NEXT_PUBLIC_WORKFLOW_SITE:',
-  process.env.NEXT_PUBLIC_WORKFLOW_SITE,
-)

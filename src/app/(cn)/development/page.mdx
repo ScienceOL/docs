@@ -15,36 +15,57 @@ export const sections = [
 
 <HeroPattern />
 
-# PROTIUM
+# 本地部署开发版本【支持代码热更新，面向开发者】
 
-Protium Workflow 旨在解决科学计算研究流程中繁琐的、重复的工作。通过将各类计算任务拆分为节点(Node)，实现各任务的模块化集成，高自由复用，并实现自动化运行。
+## Linux/MacOS
 
-Protium Workflow 页面是用户友好的，仅凭直觉即可快速上手构建你的自动化工作流。我们也制作了[快速上手教程]("#")，来帮助你更快速的了解它的功能。
+1. Clone 当前仓库的 dev 分支【最新版本】
 
-如果你想深入了解 Workflow 背后发生了什么，不妨阅读我们的[设计理念](“#”)，这将帮助你了解其背后发生的过程，或者，你也可以阅读[开发者手册]("#")来自定义一个你的自定义节点，实现更符合你的需求的自定义工作流。
+```sh
+git clone --branch dev --depth 1 git@github.com:ScienceOL/PROTIUM.git
+```
 
-最后，当你实现一个工作流后，你可以将其发布到我们的[数流](#)社区中，又或者其中寻找你需要的工作流。
+2. 进入文件夹并创建环境变量文件
 
-<div className="not-prose mb-16 mt-6 flex gap-3">
-  <Button href="/workflow/quickstart" arrow="right">
-    <>快速开始</>
-  </Button>
-  <Button href={`${WorkflowSite}/flociety/nodes`} variant="outline">
-    <>探索「数流」社区</>
-  </Button>
-</div>
+```sh
+cd PROTIUM
+cp ./docker/.env.example ./docker/.env.dev
+```
 
-## Getting started {{ anchor: false }}
+3. 一键启动项目
 
-要立即开始，在你的 <a href={WorkflowSite}>Workspace</a> 中创建一个工作流，然后跟随我们的 [Quickstart](/workflow/quickstart) 来创建一个你的样例。
-当流程测试完成后，你可以发布到我们的数流社区，让整个社区的开发者都能使用您的成果。{{ className: 'lead' }}
+```sh
+./launch/dev.sh
+```
 
-运行工作流需要消耗计算资源, 所以，请设置你的计算资源的访问令牌 Access Token. {{ className: 'lead' }}
+<Note>
+使用 -d 参数以后台运行方式，更多参数可使用 -h 查看
+</Note>
 
-<div className="not-prose">
-  <Button href="#" variant="text" arrow="right">
-    <>设置你的访问令牌</>
-  </Button>
-</div>
+4. 开发
 
+项目启动后，你可以访问：http://127.0.0.1:32234 进入项目。
 
+现在，你可以修改代码，反馈将立即呈现。更多开发帮助请参阅[开发者指南](/development/quick-start)
+
+<Note>
+初次启动项目时，将创建管理员账户，默认凭据为：
+
+* 账号：`admin@example.com`
+* 密码：`admin`
+
+你可以通过 .env.dev 文件中的 Init Configuration 部分修改默认创建的管理员账户信息
+</Note>
+
+5. 可选配置项
+  * 配置 VSCode 工作区
+
+  如果你使用 vscode 开发，可配置 vscode 工作区以减少代码风格上的问题检出
+
+  ```sh
+  cp ./.vscode/settings.example.json ./.vscode/settings.json
+  ```
+
+# 本地部署试用版本【面向有试用需求的非开发者】
+
+待完善
