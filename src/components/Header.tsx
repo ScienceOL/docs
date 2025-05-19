@@ -3,6 +3,7 @@ import { type NavGroup } from '@/@types/navigation'
 import { useAuthServiceContext } from '@/auth/AuthContext'
 import { Button } from '@/components/Button'
 import DropdownMenu from '@/components/DropdownMenu'
+import { GridPattern } from '@/components/GridPattern'
 import { Logo } from '@/components/Logo'
 import {
   MobileNavigation,
@@ -12,73 +13,246 @@ import {
 import { MobileSearch, Search } from '@/components/Search'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { DocumentSite, MEDIA_URL, PrimarySite } from '@/config'
+// Import icons
 import { Menu } from '@headlessui/react'
+import {
+  BookOpenIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
+  CodeBracketIcon,
+  RectangleGroupIcon,
+  RocketLaunchIcon,
+  Square3Stack3DIcon,
+} from '@heroicons/react/24/outline'
 import clsx from 'clsx'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import {
+  AnimatePresence,
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useScroll,
+  useTransform,
+} from 'framer-motion'
 import Link from 'next/link'
-import { forwardRef, useEffect } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import LangSwitch from './LangSwitch'
 
 const navItems = [
   {
     name: 'Tutorials',
     href: `${DocumentSite}/tutorial/`,
+    icon: BookOpenIcon,
     sub: [
-      {
-        name: 'Home',
-        href: `${DocumentSite}`,
-      },
       {
         name: 'Workflow',
         href: `${DocumentSite}/workflow`,
+        icon: RectangleGroupIcon,
+      },
+      {
+        name: 'Environment',
+        href: `${DocumentSite}/environment`,
+        icon: Square3Stack3DIcon,
+      },
+      {
+        name: 'SDK',
+        href: `${DocumentSite}/sdk`,
+        icon: CodeBracketIcon,
+      },
+      {
+        name: 'MCP',
+        href: `${DocumentSite}/mcp`,
+        icon: ChatBubbleOvalLeftEllipsisIcon,
+      },
+      {
+        name: 'Development',
+        href: `${DocumentSite}/development`,
+        icon: RocketLaunchIcon,
       },
     ],
+    pattern: {
+      y: 16,
+      squares: [
+        [0, 1],
+        [1, 3],
+      ],
+    },
   },
-  // {
-  //   name: 'Docs',
-  //   href: '#',
-  //   sub: [
-  //     {
-  //       name: 'API Reference',
-  //       href: `${DocumentSite}/docs/api-reference`,
-  //     },
-  //     {
-  //       name: 'Guides',
-  //       href: `${DocumentSite}/docs/guides`,
-  //     },
-  //   ],
-  // },
 ]
 
-function TopLevelNavItem({ item }: { item: (typeof navItems)[0] }) {
-  return (
-    <li className=" group relative">
-      <Link
-        href={item.href}
-        className=" py-2  text-sm leading-5 text-zinc-600 transition
-         group-hover:text-teal-900 dark:text-zinc-400 dark:group-hover:text-white"
-      >
-        {item.name}
-      </Link>
-      {/* Dropdown menu */}
+function DropdownPattern({
+  mouseX,
+  mouseY,
+  ...gridProps
+}: {
+  mouseX: any
+  mouseY: any
+}) {
+  let maskImage = useMotionTemplate`radial-gradient(180px at ${mouseX}px ${mouseY}px, white, transparent)`
+  let style = { maskImage, WebkitMaskImage: maskImage }
 
-      <div
-        className={clsx(
-          'absolute left-1/2 top-full flex w-fit min-w-full -translate-x-1/2 translate-y-1 scale-0 flex-col items-center gap-1 rounded',
-          'bg-white/50 p-2 shadow backdrop-blur-xl group-hover:scale-100 dark:border dark:border-white/5 dark:bg-white/10',
-        )}
-      >
-        {item.sub?.map((subItem, idx) => (
-          <Link
-            href={subItem.href}
-            key={subItem.name}
-            className="w-full whitespace-nowrap rounded  px-2 py-1 text-center text-xs
-             hover:bg-neutral-300 dark:text-white dark:hover:bg-white/10 dark:hover:text-white"
-          >
-            {subItem.name}
-          </Link>
-        ))}
+  return (
+    <div className="pointer-events-none">
+      <div className="absolute inset-0 rounded-xl transition duration-300 [mask-image:linear-gradient(white,transparent)] group-hover:opacity-50">
+        <GridPattern
+          width={72}
+          height={56}
+          x={50}
+          y={16}
+          squares={[
+            [0, 1],
+            [1, 3],
+          ]}
+          className="absolute inset-x-0 inset-y-[-30%] h-[160%] w-full skew-y-[-18deg] fill-black/[0.02] stroke-black/5 dark:fill-white/1 dark:stroke-white/2.5"
+          {...gridProps}
+        />
       </div>
+      <motion.div
+        className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#D7EDEA] to-[#F4FBDF] opacity-0 transition duration-300 group-hover:opacity-100 dark:from-[#202D2E] dark:to-[#303428]"
+        style={style}
+      />
+      <motion.div
+        className="absolute inset-0 rounded-xl opacity-0 mix-blend-overlay transition duration-300 group-hover:opacity-100"
+        style={style}
+      >
+        <GridPattern
+          width={72}
+          height={56}
+          x={50}
+          y={16}
+          squares={[
+            [0, 1],
+            [1, 3],
+          ]}
+          className="absolute inset-x-0 inset-y-[-30%] h-[160%] w-full skew-y-[-18deg] fill-black/50 stroke-black/70 dark:fill-white/2.5 dark:stroke-white/10"
+          {...gridProps}
+        />
+      </motion.div>
+    </div>
+  )
+}
+
+function TopLevelNavItem({ item }: { item: (typeof navItems)[0] }) {
+  const [isHovered, setIsHovered] = useState(false)
+  let mouseX = useMotionValue(0)
+  let mouseY = useMotionValue(0)
+
+  function onMouseMove({
+    currentTarget,
+    clientX,
+    clientY,
+  }: React.MouseEvent<HTMLDivElement>) {
+    let { left, top } = currentTarget.getBoundingClientRect()
+    mouseX.set(clientX - left)
+    mouseY.set(clientY - top)
+  }
+
+  // Animation variants for dropdown menu
+  const dropdownVariants = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+
+      transition: {
+        duration: 0.25,
+        ease: [0.22, 1, 0.36, 1], // Custom cubic bezier for smoother animation
+        staggerChildren: 0.06,
+      },
+    },
+    exit: {
+      opacity: 0,
+
+      transition: {
+        duration: 0.18,
+        ease: 'easeIn',
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -8 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.2, ease: 'easeOut' },
+    },
+  }
+
+  return (
+    <li
+      className="group relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <motion.div className="flex items-center gap-1">
+        <Link
+          href={item.href}
+          className="relative cursor-pointer px-1 py-2 text-sm font-medium leading-5 text-zinc-600
+           transition group-hover:text-teal-600 dark:text-zinc-300 dark:group-hover:text-teal-400"
+        >
+          {item.name}
+        </Link>
+        {item.sub && (
+          <motion.svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            animate={{ rotate: isHovered ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="text-zinc-500 group-hover:text-teal-500 dark:text-zinc-400 dark:group-hover:text-teal-400"
+          >
+            <path
+              d="M2 4L6 8L10 4"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </motion.svg>
+        )}
+      </motion.div>
+
+      <AnimatePresence>
+        {isHovered && item.sub && (
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={dropdownVariants}
+            onMouseMove={onMouseMove}
+            className={clsx(
+              'absolute left-1/2 top-full z-50 -translate-x-1/2 translate-y-2',
+              'group rounded-xl bg-white/85 shadow-lg backdrop-blur-xl dark:bg-zinc-800/90',
+              'border border-zinc-200/60 dark:border-zinc-700/60',
+              'overflow-hidden transition dark:shadow-zinc-900/40',
+            )}
+          >
+            <DropdownPattern
+              mouseX={mouseX}
+              mouseY={mouseY}
+              {...item.pattern}
+            />
+            <div className="relative z-10 flex min-w-48 flex-col p-1">
+              {item.sub?.map((subItem) => (
+                <motion.div key={subItem.name} variants={itemVariants}>
+                  <Link
+                    href={subItem.href}
+                    className="group/sub flex w-full cursor-pointer items-center gap-3 whitespace-nowrap rounded-lg px-4 py-2 text-sm
+                     text-zinc-700 transition-colors hover:bg-teal-800/5 hover:text-teal-600
+                     dark:text-zinc-200 dark:hover:bg-zinc-700/40 dark:hover:text-teal-300"
+                  >
+                    {subItem.icon && (
+                      <subItem.icon className="h-5 w-5 flex-none text-zinc-400 group-hover/sub:text-teal-600 dark:text-zinc-500 dark:group-hover/sub:text-teal-400" />
+                    )}
+                    {subItem.name}
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </li>
   )
 }

@@ -1,21 +1,24 @@
 'use client'
 
-import Link from 'next/link'
 import {
   type MotionValue,
   motion,
   useMotionTemplate,
   useMotionValue,
 } from 'framer-motion'
+import Link from 'next/link'
 
 import { GridPattern } from '@/components/GridPattern'
 import { Heading } from '@/components/Heading'
-import { ChatBubbleIcon } from '@/components/icons/ChatBubbleIcon'
-import { EnvelopeIcon } from '@/components/icons/EnvelopeIcon'
-import { UserIcon } from '@/components/icons/UserIcon'
-import { UsersIcon } from '@/components/icons/UsersIcon'
 import { PrimarySite } from '@/config'
-import { BeakerIcon, CodeBracketIcon, CommandLineIcon, PuzzlePieceIcon, RectangleGroupIcon, SignalIcon, SignalSlashIcon, UserGroupIcon, WindowIcon } from '@heroicons/react/24/outline'
+import {
+  CommandLineIcon,
+  PuzzlePieceIcon,
+  RectangleGroupIcon,
+  RocketLaunchIcon,
+  UserGroupIcon,
+  WindowIcon,
+} from '@heroicons/react/24/outline'
 
 interface Resource {
   href: string
@@ -30,7 +33,7 @@ interface Resource {
 
 const resources: Array<Resource> = [
   {
-    href: '/workflow/execution',
+    href: '/workflow/interface',
     name: 'Interface',
     description:
       'Workflow 的设计，包括 Node 的结构，各类接口，如何与 Handles, Edges 交互，概括为操作界面逻辑。',
@@ -48,7 +51,7 @@ const resources: Array<Resource> = [
     name: 'Execution',
     description:
       '详细描述了节点内部脚本的执行逻辑，以及运行过程中产生的数据如何在不同节点之间流转。',
-    icon: CommandLineIcon,
+    icon: RocketLaunchIcon,
     pattern: {
       y: 16,
       squares: [
@@ -58,7 +61,7 @@ const resources: Array<Resource> = [
     },
   },
   {
-    href: '/workflow/execution',
+    href: '/workflow/nodes',
     name: 'Nodes',
     description:
       '官方公布的 Nodes 清单。探索和发现自定义节点的方法，以满足特定需求和扩展系统功能。',
@@ -68,35 +71,33 @@ const resources: Array<Resource> = [
       squares: [
         [0, 1],
         [1, 3],
+      ],
+    },
+  },
 
-      ],
-    },
-  },
   {
-    href: '/Console',
-    name: 'CLI',
-    description:
-      '探索使用命令行界面直接提交任务，以提高任务提交的灵活性和效率',
-    icon: SignalIcon,
-    pattern: {
-      y: -6,
-      squares: [
-        [-1, 2],
-        [1, 3],
-      ],
-    },
-  },
-  {
-    href: `${PrimarySite}/space`,
-    name: 'Society',
-    description:
-      '探索社区中的各类资源，和其它用户分享你的节点或工作流',
+    href: `${PrimarySite}/flociety`,
+    name: 'Flociety',
+    description: '探索社区中的各类资源，和其它用户分享你的节点或工作流',
     icon: UserGroupIcon,
     pattern: {
       y: 32,
       squares: [
         [0, 2],
         [1, 4],
+      ],
+    },
+  },
+  {
+    href: '/Console',
+    name: 'SDK',
+    description: '探索使用命令行界面直接提交任务，以提高任务提交的灵活性和效率',
+    icon: CommandLineIcon,
+    pattern: {
+      y: -6,
+      squares: [
+        [-1, 2],
+        [1, 3],
       ],
     },
   },
