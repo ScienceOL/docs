@@ -2,6 +2,7 @@ import { slugifyWithCounter } from '@sindresorhus/slugify'
 import * as acorn from 'acorn'
 import { toString } from 'mdast-util-to-string'
 import { mdxAnnotations } from 'mdx-annotations'
+import pinyin from 'pinyin'
 import shiki from 'shiki'
 import { visit } from 'unist-util-visit'
 
@@ -56,7 +57,19 @@ function rehypeSlugify() {
     let slugify = slugifyWithCounter()
     visit(tree, 'element', (node) => {
       if (node.tagName === 'h2' && !node.properties.id) {
-        node.properties.id = slugify(toString(node))
+        // Get the text content of the heading
+        const text = toString(node)
+
+        // Convert Chinese characters to pinyin
+        const pinyinText = pinyin(text, {
+          style: pinyin.STYLE_NORMAL,
+          heteronym: false,
+        })
+          .flat()
+          .join('-')
+
+        // Generate ID using the pinyin text or fall back to original text
+        node.properties.id = slugify(pinyinText || text)
       }
     })
   }
