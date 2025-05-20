@@ -49,13 +49,13 @@ export const metadata = {
 
 {/* 可选添加 */}
 export const sections = [
-  { title: '第一部分', id: 'part-one' },
-  { title: '第二部分', id: 'part-two' },
+  { title: '第一部分', id: 'di-yi-bu-fen' },
+  { title: 'id 必须与 title 关联', id: 'id-bi-xu-yu-title-guan-lian' },
 ]
 ```
 
 <Note>
-Sections 部分为可选添加，主要用于渲染为左侧目录树。若不手动声明，将自动发现 markdown 中的 1、2 级标题作为目录。
+Sections 部分为可选添加，主要用于渲染为左侧目录树。大部分情况下无需声明。若需声名，id 必需与 title 关联。
 </Note>
 
 3. 在相应的 `Navi.tsx` 文件中添加导航链接：
