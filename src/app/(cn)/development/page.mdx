@@ -15,9 +15,11 @@ export const sections = [
 
 <HeroPattern />
 
-# 本地部署开发版本【支持代码热更新，面向开发者】
+# 项目部署
 
-## Linux/MacOS
+## 本地部署开发版本【支持代码热更新，面向开发者】
+
+### Linux/MacOS
 
 1. Clone 当前仓库的 dev 分支【最新版本】
 
@@ -35,11 +37,12 @@ cp ./docker/.env.example ./docker/.env.dev
 3. 一键启动项目
 
 ```sh
+# 使用 -d 参数以后台运行方式，更多参数可使用 -h 查看
 ./launch/dev.sh
 ```
 
 <Note>
-使用 -d 参数以后台运行方式，更多参数可使用 -h 查看
+这个脚本的作用是运行 docker/ 文件夹下的 compose 文件以一键启动开发环境，代码将在容器中运行。
 </Note>
 
 4. 开发
@@ -66,6 +69,47 @@ cp ./docker/.env.example ./docker/.env.dev
   cp ./.vscode/settings.example.json ./.vscode/settings.json
   ```
 
-# 本地部署试用版本【面向有试用需求的非开发者】
+# 本地部署测试版本【面向有试用需求的非开发者】
 
-待完善
+### Linux/MacOS
+
+1. clone 当前仓库的 main 分支【生产版本】
+
+```sh
+git clone --branch main --depth 1 git@github.com:ScienceOL/PROTIUM.git
+```
+
+2. 进入文件夹并创建环境变量文件
+
+```sh
+cd PROTIUM
+cp ./docker/.env.example ./docker/.env.local
+```
+
+3. 一键启动项目
+
+```sh
+# 使用 -d 参数以后台运行方式，更多参数可使用 -h 查看
+./launch/local.sh
+```
+
+<Note>
+这个脚本的作用是运行 docker/ 文件夹下的 compose 文件以一键启动开发环境，代码将在容器中运行。
+</Note>
+
+4. 开发
+
+项目启动后，你可以访问：http://127.0.0.1:32234 进入项目。
+
+<Note>
+初次启动项目时，将创建管理员账户，默认凭据为：
+
+* 账号：`admin@example.com`
+* 密码：`admin`
+
+你可以通过 .env.local 文件中的 Init Configuration 部分修改默认创建的管理员账户信息
+</Note>
+
+## K8s 部署生产版本
+
+为保持生产安全性，目前尚不支持分布式生产版本的一键构建。若有生产环境构建需求，请联系 quehh@aisi.ac.cn。
