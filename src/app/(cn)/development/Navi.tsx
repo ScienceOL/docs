@@ -2,11 +2,18 @@ import { NavGroup } from '@/@types/navigation'
 
 export const navigation: Array<NavGroup> = [
   {
-    title: 'Development',
-    links: [{ title: 'Introduction', href: `/development` }],
+    title: '开发者手册',
+    links: [{ title: '你好，开发者 👋', href: `/development` }],
   },
   {
-    title: 'Dev Docs',
-    links: [{ title: 'How to write dev docs', href: `/development/dev-docs` }],
+    title: '版本部署',
+    links: [
+      { title: '开发版本部署', href: `/development/deploy-dev` },
+      { title: '试用版本部署', href: `/development/deploy-local` },
+    ],
+  },
+  {
+    title: '撰写开发文档',
+    links: [{ title: '如何撰写开发文档', href: `/development/dev-docs` }],
   },
 ]

@@ -1,115 +1,44 @@
+import { Guides } from './Guides'
+import { Resources } from './Resources'
 import { HeroPattern } from '@/components/HeroPattern'
-import { WorkflowSite } from '@/config.ts'
 
 export const metadata = {
-  title: 'Protium',
+  title: 'Protium 开发者中心',
   description:
-    'Learn everything there is to know about the Protium and integrate tools into your product.',
+    '为开发者提供完整的 Protium 开发指南、部署文档和文档编写规范。',
   image: '/images/python.svg',
 }
 
 export const sections = [
-  { title: 'Guides', id: 'guides' },
-  { title: 'Resources', id: 'resources' },
+  { title: '开发指南', id: 'guides' },
+  { title: '开发资源', id: 'resources' },
 ]
 
 <HeroPattern />
 
-# 项目部署
+# 你好，开发者 👋
 
-## 本地部署开发版本【支持代码热更新，面向开发者】
+欢迎来到 Protium 开发者中心！这里为你提供完整的开发指南、部署文档和文档编写规范，帮助你快速上手 Protium 项目的开发和部署。{{ className: 'lead' }}
 
-### Linux/MacOS
+<div className="not-prose mb-16 mt-6 flex gap-3">
+  <Button href="/development/dev-local" arrow="right">
+    <>本地开发</>
+  </Button>
+  <Button href="/development/deploy-dev" variant="outline">
+    <>本地试用</>
+  </Button>
+</div>
 
-1. Clone 当前仓库的 dev 分支【最新版本】
+## 开始使用 {{ anchor: false }}
 
-```sh
-git clone --branch dev --depth 1 git@github.com:ScienceOL/PROTIUM.git
-```
+如果你是首次使用 Protium，建议先阅读我们的开发文档指南了解项目结构和编写规范。然后你可以选择适合的部署方式来搭建本地开发或试用环境。{{ className: 'lead' }}
 
-2. 进入文件夹并创建环境变量文件
+<div className="not-prose">
+  <Button href="/development/deploy-dev" variant="text" arrow="right">
+    <>本地开发环境</>
+  </Button>
+</div>
 
-```sh
-cd PROTIUM
-cp ./docker/.env.example ./docker/.env.dev
-```
+<Guides />
 
-3. 一键启动项目
-
-```sh
-# 使用 -d 参数以后台运行方式，更多参数可使用 -h 查看
-./launch/dev.sh
-```
-
-<Note>
-这个脚本的作用是运行 docker/ 文件夹下的 compose 文件以一键启动开发环境，代码将在容器中运行。
-</Note>
-
-4. 开发
-
-项目启动后，你可以访问：http://127.0.0.1:32234 进入项目。
-
-现在，你可以修改代码，反馈将立即呈现。更多开发帮助请参阅[开发者指南](/development/quick-start)
-
-<Note>
-初次启动项目时，将创建管理员账户，默认凭据为：
-
-* 账号：`admin@example.com`
-* 密码：`admin`
-
-你可以通过 .env.dev 文件中的 Init Configuration 部分修改默认创建的管理员账户信息
-</Note>
-
-5. 可选配置项
-  * 配置 VSCode 工作区
-
-  如果你使用 vscode 开发，可配置 vscode 工作区以减少代码风格上的问题检出
-
-  ```sh
-  cp ./.vscode/settings.example.json ./.vscode/settings.json
-  ```
-
-# 本地部署测试版本【面向有试用需求的非开发者】
-
-### Linux/MacOS
-
-1. clone 当前仓库的 main 分支【生产版本】
-
-```sh
-git clone --branch main --depth 1 git@github.com:ScienceOL/PROTIUM.git
-```
-
-2. 进入文件夹并创建环境变量文件
-
-```sh
-cd PROTIUM
-cp ./docker/.env.example ./docker/.env.local
-```
-
-3. 一键启动项目
-
-```sh
-# 使用 -d 参数以后台运行方式，更多参数可使用 -h 查看
-./launch/local.sh
-```
-
-<Note>
-这个脚本的作用是运行 docker/ 文件夹下的 compose 文件以一键启动开发环境，代码将在容器中运行。
-</Note>
-
-4. 开发
-
-项目启动后，你可以访问：http://127.0.0.1:32234 进入项目。
-
-<Note>
-初次启动项目时，将创建管理员账户，默认凭据为：
-
-* 账号：`admin@example.com`
-* 密码：`admin`
-
-你可以通过 .env.local 文件中的 Init Configuration 部分修改默认创建的管理员账户信息
-</Note>
-
-## K8s 部署生产版本
-
-为保持生产安全性，目前尚不支持分布式生产版本的一键构建。若有生产环境构建需求，请联系 quehh@aisi.ac.cn。
+<Resources />
