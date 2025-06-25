@@ -39,7 +39,7 @@ import LangSwitch from './LangSwitch'
 
 const navItems = [
   {
-    name: 'Navi',
+    name: '导航',
     href: `/`,
     icon: BookOpenIcon,
     sub: [
