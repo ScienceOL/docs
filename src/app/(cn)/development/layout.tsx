@@ -4,14 +4,46 @@ import glob from 'fast-glob'
 import { type Section } from '@/components/SectionProvider'
 import { type Metadata } from 'next'
 import path from 'path'
-import { navigation } from './Navi'
+
+import { NavGroup } from '@/@types/navigation'
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - Dev Tutorial',
-    default: 'Protium Tutorial',
+    template: '%s - Dev',
+    default: 'Dev Docs',
   },
 }
+
+export const navigation: Array<NavGroup> = [
+  {
+    title: '开发者手册',
+    links: [{ title: '你好，开发者 👋', href: `/development` }],
+  },
+  {
+    title: '版本部署',
+    links: [
+      { title: '开发版本部署', href: `/development/deploys/deploy-dev` },
+      { title: '试用版本部署', href: `/development/deploys/deploy-local` },
+      { title: '实验室端侧部署', href: `/development/deploys/deploy-edge` },
+      // {
+      //   title: '标签自动上线流程',
+      //   href: `/development/tag-deploy`,
+      // },
+    ],
+  },
+  {
+    title: '数据模型',
+    links: [],
+  },
+  {
+    title: 'API 接口',
+    links: [],
+  },
+  {
+    title: '撰写开发文档',
+    links: [{ title: '如何撰写开发文档', href: `/development/dev-docs` }],
+  },
+]
 
 export default async function RootLayout({
   children,

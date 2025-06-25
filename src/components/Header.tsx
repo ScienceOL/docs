@@ -12,7 +12,7 @@ import {
 } from '@/components/MobileNavigation'
 import { MobileSearch, Search } from '@/components/Search'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import { DocumentSite, MEDIA_URL, PrimarySite } from '@/config'
+import { MEDIA_URL, PrimarySite } from '@/config'
 // Import icons
 import { Menu } from '@headlessui/react'
 import {
@@ -39,28 +39,28 @@ import LangSwitch from './LangSwitch'
 const navItems = [
   {
     name: 'Tutorials',
-    href: `/tutorial`,
+    href: `/`,
     icon: BookOpenIcon,
     sub: [
       {
-        name: 'Workflow',
+        name: 'Studio',
+        href: `/environment`,
+        icon: Square3Stack3DIcon,
+      },
+      {
+        name: 'Protium',
         href: `/workflow`,
         icon: RectangleGroupIcon,
       },
       {
-        name: 'Environment',
-        href: `/environment`,
-        icon: Square3Stack3DIcon,
+        name: 'Xyzen',
+        href: `/xyzen`,
+        icon: ChatBubbleOvalLeftEllipsisIcon,
       },
       {
         name: 'SDK',
         href: `/sdk`,
         icon: CodeBracketIcon,
-      },
-      {
-        name: 'MCP',
-        href: `/mcp`,
-        icon: ChatBubbleOvalLeftEllipsisIcon,
       },
       {
         name: 'Development',
@@ -106,7 +106,7 @@ function DropdownPattern({
         />
       </div>
       <motion.div
-        className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#D7EDEA] to-[#F4FBDF] opacity-0 transition duration-300 group-hover:opacity-100 dark:from-[#202D2E] dark:to-[#303428]"
+        className="absolute inset-0 rounded-xl bg-gradient-to-r from-teal-50 to-green-50 opacity-0 transition duration-300 group-hover:opacity-100 dark:from-[#202D2E] dark:to-[#303428]"
         style={style}
       />
       <motion.div
@@ -180,14 +180,14 @@ function TopLevelNavItem({ item }: { item: (typeof navItems)[0] }) {
 
   return (
     <li
-      className="group relative"
+      className="group relative cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <motion.div className="flex items-center gap-1">
         <Link
           href={item.href}
-          className="relative cursor-pointer px-1 py-2 text-sm font-medium leading-5 text-zinc-600
+          className="relative  px-1 py-2 text-xs font-medium leading-5 text-zinc-600
            transition group-hover:text-teal-600 dark:text-zinc-300 dark:group-hover:text-teal-400"
         >
           {item.name}
