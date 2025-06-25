@@ -46,7 +46,7 @@ export default function GiscusComment() {
       script.setAttribute('data-input-position', 'top')
       script.setAttribute(
         'data-theme',
-        resolvedTheme === 'dark' ? 'dark' : 'light',
+        resolvedTheme === 'dark' ? 'transparent_dark' : 'light',
       )
       script.setAttribute('data-loading', 'lazy')
       script.setAttribute('data-lang', 'zh-CN')
@@ -84,7 +84,7 @@ export default function GiscusComment() {
         'iframe.giscus-frame',
       ) as HTMLIFrameElement
       if (iframe) {
-        const theme = resolvedTheme === 'dark' ? 'dark' : 'light'
+        const theme = resolvedTheme === 'dark' ? 'transparent_dark' : 'light'
         iframe.contentWindow?.postMessage(
           { giscus: { setConfig: { theme } } },
           'https://giscus.app',
