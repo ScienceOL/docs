@@ -72,5 +72,6 @@ export default async function RootLayout({
         {children}
       </Layout>
     </div>
+    
   )
 }

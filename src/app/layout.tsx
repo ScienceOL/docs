@@ -1,5 +1,6 @@
 import '@/styles/tailwind.css'
 import { type Metadata } from 'next'
+import Script from 'next/script'
 import { Providers } from './providers'
 
 export const metadata: Metadata = {
@@ -39,4 +40,3 @@ export default async function RootLayout({
     </html>
   )
 }
-
