@@ -8,35 +8,35 @@ import { NavGroup } from '@/@types/navigation'
 
 export const navigation: Array<NavGroup> = [
   {
-    title: 'Guides',
+    title: '概览',
     links: [
-      { title: 'Introduction', href: '/' },
+      { title: '介绍', href: '/' },
       {
-        title: 'Quick Start',
+        title: '快速开始',
         href: '/quickstart',
       },
       {
-        title: 'Deployment',
+        title: '部署指南',
         href: 'https://scienceol.tech',
       },
+      // {
+      //   title: '设计理念',
+      //   href: '/design',
+      // },
       {
-        title: 'Design',
-        href: '/design',
-      },
-      {
-        title: 'Roadmap',
+        title: '路线图',
         href: '/roadmap',
       },
-      {
-        title: 'FAQs',
-        href: '/faqs',
-      },
+      // {
+      //   title: '常见问题',
+      //   href: '/faqs',
+      // },
     ],
   },
   {
     title: '实验环境',
     links: [
-      { title: '实验室概览', href: '/labs' },
+      { title: '概览', href: '/labs' },
       { title: '3D 模型', href: '/labs/experiment-data' },
       { title: '组态图', href: '/labs/workflow-data' },
       { title: '资源管理', href: '/labs/resources' },
