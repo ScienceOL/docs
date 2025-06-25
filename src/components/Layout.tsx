@@ -11,6 +11,7 @@ import { Logo } from '@/components/Logo'
 import { Navigation } from '@/components/Navigation'
 import { type Section, SectionProvider } from '@/components/SectionProvider'
 import { PrimarySite } from '@/config'
+import Script from 'next/script'
 
 export function Layout({
   children,
@@ -50,6 +51,8 @@ export function Layout({
           <main className="flex-auto">{children}</main>
           <Footer navigation={navigation} />
         </div>
+
+
       </div>
     </SectionProvider>
   )

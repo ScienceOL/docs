@@ -2,9 +2,12 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
 
 import { type NavGroup } from '@/@types/navigation'
 import { Button } from '@/components/Button'
+import { useTheme } from 'next-themes'
+import Script from 'next/script'
 
 function PageLink({
   label,
@@ -137,9 +140,53 @@ function PageNavigation({ navigation }: { navigation: NavGroup[] }) {
 }
 
 export function Footer({ navigation }: { navigation: NavGroup[] }) {
+  const { theme, resolvedTheme } = useTheme()
+
+  // 动态更新 Giscus 主题
+  useEffect(() => {
+    const updateGiscusTheme = () => {
+      const iframe = document.querySelector(
+        'iframe.giscus-frame',
+      ) as HTMLIFrameElement
+      if (iframe) {
+        const giscusTheme = resolvedTheme === 'dark' ? 'dark' : 'light'
+        iframe.contentWindow?.postMessage(
+          { giscus: { setConfig: { theme: giscusTheme } } },
+          'https://giscus.app',
+        )
+      }
+    }
+
+    // 延迟执行，确保 Giscus 已经加载
+    const timer = setTimeout(updateGiscusTheme, 100)
+    return () => clearTimeout(timer)
+  }, [resolvedTheme])
+
+  const giscusTheme = resolvedTheme === 'dark' ? 'dark' : 'light'
+
   return (
     <footer className="mx-auto w-full max-w-2xl space-y-10 pb-16 lg:max-w-5xl">
       <PageNavigation navigation={navigation} />
+      {/* Giscus 评论区 */}
+      <div className="giscus mt-8"></div>
+      <Script
+        src="https://giscus.app/client.js"
+        data-repo="ScienceOL/docs"
+        data-repo-id="R_kgDOOI9EFg"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOOI9EFs4Cr9K0"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme={giscusTheme}
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossOrigin="anonymous"
+        async
+        strategy="lazyOnload"
+      />
       <SmallPrint />
     </footer>
   )
