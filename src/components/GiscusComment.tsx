@@ -72,8 +72,8 @@ export default function GiscusComment() {
 
     return () => {
       document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded)
-    }
-  }, [pathname, resolvedTheme])
+    } // 依赖 resolvedTheme 是正确的
+  }, [pathname, resolvedTheme]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // 监听主题变化，实时更新Giscus主题
   useEffect(() => {

@@ -3,7 +3,7 @@ import * as acorn from 'acorn'
 import { toString } from 'mdast-util-to-string'
 import { mdxAnnotations } from 'mdx-annotations'
 import pinyin from 'pinyin'
-import shiki from 'shiki'
+import { getHighlighter } from 'shiki'
 import { visit } from 'unist-util-visit'
 
 function rehypeParseCodeBlocks() {
@@ -24,7 +24,47 @@ let highlighter
 function rehypeShiki() {
   return async (tree) => {
     highlighter =
-      highlighter ?? (await shiki.getHighlighter({ theme: 'css-variables' }))
+      highlighter ??
+      (await getHighlighter({
+        theme: 'css-variables',
+        langs: [
+          'javascript',
+          'typescript',
+          'jsx',
+          'tsx',
+          'json',
+          'css',
+          'html',
+          'markdown',
+          'yaml',
+          'bash',
+          'sh',
+          'zsh',
+          'fish',
+          'powershell',
+          'dockerfile',
+          'python',
+          'rust',
+          'go',
+          'java',
+          'c',
+          'cpp',
+          'php',
+          'ruby',
+          'sql',
+          'graphql',
+          'xml',
+          'toml',
+          'ini',
+          'diff',
+          'git-commit',
+          'git-rebase',
+          'vue',
+          'svelte',
+          'astro',
+          'mdx',
+        ],
+      }))
 
     visit(tree, 'element', (node) => {
       if (node.tagName === 'pre' && node.children[0]?.tagName === 'code') {
@@ -34,18 +74,31 @@ function rehypeShiki() {
         node.properties.code = textNode.value
 
         if (node.properties.language) {
-          let tokens = highlighter.codeToThemedTokens(
-            textNode.value,
-            node.properties.language,
-          )
+          // Normalize language names for better shell script support
+          let language = node.properties.language
+          if (language === 'sh' || language === 'shell') {
+            language = 'bash'
+          }
 
-          textNode.value = shiki.renderToHtml(tokens, {
-            elements: {
-              pre: ({ children }) => children,
-              code: ({ children }) => children,
-              line: ({ children }) => `<span>${children}</span>`,
-            },
-          })
+          try {
+            let tokens = highlighter.codeToThemedTokens(
+              textNode.value,
+              language,
+            )
+
+            textNode.value = highlighter.renderToHtml(tokens, {
+              elements: {
+                pre: ({ children }) => children,
+                code: ({ children }) => children,
+                line: ({ children }) => `<span class="line">${children}</span>`,
+              },
+            })
+          } catch (error) {
+            // Fallback to plain text if language is not supported
+            console.warn(
+              `Language "${language}" not supported by Shiki, falling back to plain text`,
+            )
+          }
         }
       }
     })

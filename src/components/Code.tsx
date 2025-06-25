@@ -1,5 +1,7 @@
 'use client'
 
+import { Tab } from '@headlessui/react'
+import clsx from 'clsx'
 import {
   Children,
   createContext,
@@ -9,8 +11,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Tab } from '@headlessui/react'
-import clsx from 'clsx'
 import { create } from 'zustand'
 
 import { Tag } from '@/components/Tag'
@@ -24,6 +24,30 @@ const languageNames: Record<string, string> = {
   python: 'Python',
   ruby: 'Ruby',
   go: 'Go',
+  rust: 'Rust',
+  java: 'Java',
+  c: 'C',
+  cpp: 'C++',
+  cs: 'C#',
+  sh: 'Shell',
+  bash: 'Bash',
+  zsh: 'Zsh',
+  fish: 'Fish',
+  powershell: 'PowerShell',
+  dockerfile: 'Dockerfile',
+  yaml: 'YAML',
+  yml: 'YAML',
+  json: 'JSON',
+  xml: 'XML',
+  html: 'HTML',
+  css: 'CSS',
+  scss: 'SCSS',
+  sass: 'Sass',
+  less: 'Less',
+  sql: 'SQL',
+  graphql: 'GraphQL',
+  markdown: 'Markdown',
+  mdx: 'MDX',
 }
 
 function getPanelTitle({
