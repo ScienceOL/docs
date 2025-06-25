@@ -2,12 +2,10 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect } from 'react'
 
 import { type NavGroup } from '@/@types/navigation'
 import { Button } from '@/components/Button'
-import { useTheme } from 'next-themes'
-import Script from 'next/script'
+import GiscusComment from './GiscusComment'
 
 function PageLink({
   label,
@@ -140,147 +138,10 @@ function PageNavigation({ navigation }: { navigation: NavGroup[] }) {
 }
 
 export function Footer({ navigation }: { navigation: NavGroup[] }) {
-  const { theme, resolvedTheme } = useTheme()
-  const pathname = usePathname()
-
-  // 动态更新 Giscus 主题和路径
-  useEffect(() => {
-    const updateGiscusConfig = (config: any) => {
-      const iframe = document.querySelector(
-        'iframe.giscus-frame',
-      ) as HTMLIFrameElement
-      if (iframe) {
-        iframe.contentWindow?.postMessage(
-          { giscus: { setConfig: config } },
-          'https://giscus.app',
-        )
-        return true
-      }
-      return false
-    }
-
-    const updateGiscusTheme = () => {
-      const giscusTheme = resolvedTheme
-        ? resolvedTheme === 'dark'
-          ? 'dark'
-          : 'light'
-        : 'preferred_color_scheme'
-
-      return updateGiscusConfig({ theme: giscusTheme })
-    }
-
-    // 监听 Giscus 消息，确保加载完成后更新主题
-    const handleMessage = (event: MessageEvent) => {
-      if (event.origin === 'https://giscus.app') {
-        // Giscus 发送消息表示已加载，更新主题
-        updateGiscusTheme()
-      }
-    }
-
-    // 检查 Giscus 是否已经加载
-    const checkGiscusLoaded = () => {
-      const iframe = document.querySelector('iframe.giscus-frame')
-      if (iframe) {
-        updateGiscusTheme()
-        return true
-      }
-      return false
-    }
-
-    window.addEventListener('message', handleMessage)
-
-    // 如果 Giscus 已经加载，直接更新主题
-    if (!checkGiscusLoaded()) {
-      // 使用 MutationObserver 监听 DOM 变化，等待 Giscus 加载
-      const observer = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-          if (mutation.type === 'childList') {
-            const iframe = document.querySelector('iframe.giscus-frame')
-            if (iframe) {
-              updateGiscusTheme()
-              observer.disconnect()
-              break
-            }
-          }
-        }
-      })
-
-      const giscusContainer = document.querySelector('.giscus')
-      if (giscusContainer) {
-        observer.observe(giscusContainer, {
-          childList: true,
-          subtree: true,
-        })
-      }
-    }
-
-    return () => {
-      window.removeEventListener('message', handleMessage)
-    }
-  }, [resolvedTheme])
-
-  // 监听路径变化，更新 Giscus 评论
-  useEffect(() => {
-    const updateGiscusPath = () => {
-      const iframe = document.querySelector(
-        'iframe.giscus-frame',
-      ) as HTMLIFrameElement
-      if (iframe) {
-        // 重新配置 Giscus 以使用新的路径
-        iframe.contentWindow?.postMessage(
-          {
-            giscus: {
-              setConfig: {
-                term: pathname,
-                // 使用完整的配置重新初始化
-                repo: 'ScienceOL/docs',
-                repoId: 'R_kgDOOI9EFg',
-                category: 'Announcements',
-                categoryId: 'DIC_kwDOOI9EFs4Cr9K0',
-                mapping: 'pathname',
-                reactionsEnabled: '1',
-                emitMetadata: '0',
-                inputPosition: 'top',
-                lang: 'zh-CN',
-              },
-            },
-          },
-          'https://giscus.app',
-        )
-      }
-    }
-    updateGiscusPath()
-  }, [pathname])
-
-  const giscusTheme = resolvedTheme
-    ? resolvedTheme === 'dark'
-      ? 'dark'
-      : 'light'
-    : 'preferred_color_scheme'
-
   return (
     <footer className="mx-auto w-full max-w-2xl space-y-10 pb-16 lg:max-w-5xl">
       <PageNavigation navigation={navigation} />
-      {/* Giscus 评论区 */}
-      <div className="giscus mt-8"></div>
-      <Script
-        src="https://giscus.app/client.js"
-        data-repo="ScienceOL/docs"
-        data-repo-id="R_kgDOOI9EFg"
-        data-category="Announcements"
-        data-category-id="DIC_kwDOOI9EFs4Cr9K0"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme={giscusTheme}
-        data-lang="zh-CN"
-        data-loading="lazy"
-        crossOrigin="anonymous"
-        async
-        strategy="afterInteractive"
-      />
+      <GiscusComment />
       <SmallPrint />
     </footer>
   )
