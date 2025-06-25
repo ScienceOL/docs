@@ -59,9 +59,9 @@ export default function GiscusComment() {
 
     window.addEventListener('message', handleMessage)
 
-    // // 延迟执行，确保 DOM 已更新
-    // setTimeout(waitForGiscus, 100)
-    updateGiscusTheme()
+    // 延迟执行，确保 DOM 已更新
+    setTimeout(waitForGiscus, 100)
+
 
     return () => {
       window.removeEventListener('message', handleMessage)
