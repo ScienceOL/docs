@@ -1,7 +1,7 @@
 import { Guides } from './components/Guides'
 import { Resources } from './components/Resources'
 import { HeroPattern } from '@/components/HeroPattern'
-
+import { GitHubIcon } from '@/components/Footer'
 
 export const metadata = {
   title: 'SciOL',
@@ -25,9 +25,9 @@ export const sections = [
 
 我们的业务线由 **OL** 延伸为 2 部分，**O**pen**L**ab 与 **O**nline**L**ab。OpenLab 致力于提升实验室自动化水平，以模块化硬件+开源系统加速智能改造升级。**O**nline**L**ab 提供开源系统的云服务，并接入线下实验室提供在线实验室服务。
 
-我们的产品线包括：多环境管理与社区入口 Studio，AI 原生的容器化工作流调度系统 PROTIUM, 面向实验室场景的智能体 Xyzen，及 3D 数字孪生平台 Anti(即将推出)。我们的实验室硬件基座使用开源的 [Uni-Lab-OS]() 产品。所有产品均在 GitHub 开源。
+我们的产品线包括：多环境管理与社区入口 Studio，AI 原生的容器化工作流调度系统 PROTIUM, 面向实验室场景的智能体 Xyzen，及 3D 数字孪生平台 Anti(即将推出)。我们的实验室硬件基座使用开源的 [Uni-Lab-OS]() 产品。所有项目均在 GitHub 开源。
 
-本页面是关于**多环境管理与社区入口 Studio** 的帮助文档，了解更多模块的信息，请参阅其它主题。
+本页面是关于**多环境管理与社区入口 Studio** 的帮助文档，了解更多模块的信息，请导航至其它主题。
 
 <div className="not-prose mb-16 mt-6 flex gap-3">
   <Button href="/quickstart" arrow="right">
@@ -42,15 +42,19 @@ export const sections = [
 
 开始使用 ScienceOL Studio，首先在 [仪表板 -> 工作流](#) 中创建一个工作流程，
 然后跟随我们的 [工作流快速开始指南](#) 创建您的第一个演示工作流。 {{ className: 'lead' }} 
-当您的工作流准备就绪后，可以将其发布到我们的 [社区](#)，以帮助更多人。 {{ className: 'lead' }}
+当你的工作流准备就绪后，可以将其发布到我们的 [社区](#)，以帮助更多人。 {{ className: 'lead' }}
 
-运行工作流需要 [计算环境](#)或[实验环境](#)，请确保设置您的 API 密钥和环境配置。 {{ className: 'lead' }}
+运行工作流需要[计算环境](#)或[实验环境](#)，按照提示设置你的 API 密钥和环境配置。 {{ className: 'lead' }}
 
-此外，您可以在 GitHub Issue 中提出问题。另外，我们为提交了 PR 并通过审核的用户提供无限量的核心开发者答疑服务。遇到了问题？那就来提 PR 吧！ 
+此外，你可以在 GitHub Issue 中提出问题。另外，我们为提交了 PR 并通过审核的用户提供无限量的核心开发者答疑服务。遇到了问题？那就来提 PR 吧！ 
 
-<div className="not-prose">
+<div className="not-prose flex gap-2 items-center">
+    <GitHubIcon className=" size-4 fill-green-500 dark:fill-green-400" />
+
   <Button href="https://github.com/scienceol" variant="text" arrow="right" target="_blank">
-    <>查看 GitHub</>
+    <>
+    GitHub
+    </>
   </Button>
 </div>
 

@@ -35,7 +35,15 @@ export const navigation: Array<NavGroup> = [
   },
   {
     title: '实验环境',
-    links: [],
+    links: [
+      { title: '实验室概览', href: '/labs' },
+      { title: '3D 模型', href: '/labs/experiment-data' },
+      { title: '组态图', href: '/labs/workflow-data' },
+      { title: '资源管理', href: '/labs/resources' },
+      { title: '注册表', href: '/labs/registry' },
+      { title: '动作节点', href: '/labs/action-nodes' },
+      { title: '成员管理', href: '/labs/personnel' },
+    ],
   },
   {
     title: '计算环境',
@@ -47,6 +55,7 @@ export const navigation: Array<NavGroup> = [
       { title: '概览', href: '/data-models' },
       { title: '实验室模型', href: '/data-models/experiment-data' },
       { title: '资源模型', href: '/data-models/workflow-data' },
+      { title: '动作节点', href: '/data-models/protium' },
     ],
   },
   {

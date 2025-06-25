@@ -33,7 +33,7 @@ const resources: Array<Resource> = [
     href: '/protium',
     name: '工作流 Protium',
     description:
-      'AI 原生的容器化工作流调度系统，支持复杂科学计算流程的自动化管理。',
+      'AI 原生的容器化工作流调度系统，支持复杂科学计算与实验流程的自动化管理。',
     icon: SquaresPlusIcon,
     pattern: {
       y: 16,
