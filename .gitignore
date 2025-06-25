@@ -74,6 +74,7 @@ yarn-error.log
 
 # ===== 构建产物 =====
 build/
+**/tsconfig.tsbuildinfo
 public/static/
 public/build/
 .next/
