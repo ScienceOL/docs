@@ -1,137 +1,122 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
-import { useEffect } from 'react'
-
 import { useTheme } from 'next-themes'
-import Script from 'next/script'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function GiscusComment() {
-  const { theme, resolvedTheme } = useTheme()
+  const { resolvedTheme } = useTheme()
   const pathname = usePathname()
+  const [isGiscusLoaded, setIsGiscusLoaded] = useState(false)
 
-  // 动态更新 Giscus 主题和路径
+  // 每当路径变化时，完全重载Giscus
   useEffect(() => {
-    const updateGiscusConfig = (config: any) => {
+    // 如果已加载，则先移除现有的Giscus元素
+    if (isGiscusLoaded) {
+      const giscusContainer = document.querySelector('.giscus')
+      if (giscusContainer) {
+        // 清空容器内容
+        giscusContainer.innerHTML = ''
+        // 重新设置标志位
+        setIsGiscusLoaded(false)
+
+        // 延迟重新加载Giscus脚本
+        setTimeout(() => {
+          loadGiscus()
+        }, 300)
+      }
+    } else if (document.readyState === 'complete') {
+      // 首次加载
+      loadGiscus()
+    }
+
+    // 加载Giscus脚本的函数
+    function loadGiscus() {
+      const script = document.createElement('script')
+      script.src = 'https://giscus.app/client.js'
+      script.setAttribute('data-repo', 'ScienceOL/docs')
+      script.setAttribute('data-repo-id', 'R_kgDOOI9EFg')
+      script.setAttribute('data-category', 'Announcements')
+      script.setAttribute('data-category-id', 'DIC_kwDOOI9EFs4Cr9K0')
+      script.setAttribute('data-mapping', 'specific')
+      script.setAttribute('data-term', pathname)
+      script.setAttribute('data-strict', '1')
+      script.setAttribute('data-reactions-enabled', '1')
+      script.setAttribute('data-emit-metadata', '0')
+      script.setAttribute('data-input-position', 'top')
+      script.setAttribute(
+        'data-theme',
+        resolvedTheme === 'dark' ? 'dark' : 'light',
+      )
+      script.setAttribute('data-loading', 'lazy')
+      script.setAttribute('data-lang', 'zh-CN')
+      script.crossOrigin = 'anonymous'
+      script.async = true
+
+      // 找到Giscus容器并添加脚本
+      const giscusContainer = document.querySelector('.giscus')
+      if (giscusContainer) {
+        giscusContainer.appendChild(script)
+        setIsGiscusLoaded(true)
+      }
+    }
+
+    // 监听DOM加载完成事件
+    const handleDOMContentLoaded = () => {
+      loadGiscus()
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
+    }
+
+    return () => {
+      document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded)
+    }
+  }, [pathname, resolvedTheme])
+
+  // 监听主题变化，实时更新Giscus主题
+  useEffect(() => {
+    if (!isGiscusLoaded) return
+
+    const updateGiscusTheme = () => {
       const iframe = document.querySelector(
         'iframe.giscus-frame',
       ) as HTMLIFrameElement
       if (iframe) {
+        const theme = resolvedTheme === 'dark' ? 'dark' : 'light'
         iframe.contentWindow?.postMessage(
-          { giscus: { setConfig: config } },
+          { giscus: { setConfig: { theme } } },
           'https://giscus.app',
         )
-        return true
       }
-      return false
     }
 
-    const updateGiscusTheme = () => {
-      const giscusTheme = resolvedTheme
-        ? resolvedTheme === 'dark'
-          ? 'transparent_dark'
-          : 'light'
-        : 'preferred_color_scheme'
-
-      return updateGiscusConfig({ theme: giscusTheme })
-    }
-
-    // 等待 Giscus 加载完成后更新主题
-    const waitForGiscus = () => {
-      let attempts = 0
-      const maxAttempts = 50 // 最多等待 5 秒
-
-      const checkInterval = setInterval(() => {
-        attempts++
-        if (updateGiscusTheme() || attempts >= maxAttempts) {
-          clearInterval(checkInterval)
-        }
-      }, 100)
-    }
-
-    // 监听 Giscus 消息，确保加载完成后更新主题
+    // 监听Giscus消息
     const handleMessage = (event: MessageEvent) => {
-      if (event.origin === 'https://giscus.app') {
-        // Giscus 发送消息表示已加载，更新主题
-        setTimeout(updateGiscusTheme, 100)
+      if (
+        event.origin === 'https://giscus.app' &&
+        event.data?.giscus?.discussion
+      ) {
+        updateGiscusTheme()
       }
     }
 
     window.addEventListener('message', handleMessage)
 
-    // 延迟执行，确保 DOM 已更新
-    setTimeout(waitForGiscus, 100)
-
+    // 轮询尝试更新主题，确保iframe加载后应用正确主题
+    let attempts = 0
+    const interval = setInterval(() => {
+      updateGiscusTheme()
+      attempts++
+      if (attempts >= 10) clearInterval(interval)
+    }, 500)
 
     return () => {
       window.removeEventListener('message', handleMessage)
+      clearInterval(interval)
     }
-  }, [resolvedTheme])
+  }, [resolvedTheme, isGiscusLoaded])
 
-  // 监听路径变化，更新 Giscus 评论
-  useEffect(() => {
-    const updateGiscusPath = () => {
-      const iframe = document.querySelector(
-        'iframe.giscus-frame',
-      ) as HTMLIFrameElement
-      if (iframe) {
-        // 重新配置 Giscus 以使用新的路径
-        iframe.contentWindow?.postMessage(
-          {
-            giscus: {
-              setConfig: {
-                term: pathname,
-                // 使用完整的配置重新初始化
-                repo: 'ScienceOL/docs',
-                repoId: 'R_kgDOOI9EFg',
-                category: 'Announcements',
-                categoryId: 'DIC_kwDOOI9EFs4Cr9K0',
-                mapping: 'pathname',
-                reactionsEnabled: '1',
-                emitMetadata: '0',
-                inputPosition: 'top',
-                dataLang: 'zh-CN',
-              },
-            },
-          },
-          'https://giscus.app',
-        )
-      }
-    }
-    updateGiscusPath()
-    // // 延迟执行，确保页面已完全切换
-    // const timer = setTimeout(updateGiscusPath, 200)
-
-    // return () => clearTimeout(timer)
-  }, [pathname])
-
-  const giscusTheme = resolvedTheme
-    ? resolvedTheme === 'dark'
-      ? 'dark'
-      : 'light'
-    : 'preferred_color_scheme'
-
-  return (
-    <>
-      {/* Giscus 评论区 */}
-      <div className="giscus mt-8"></div>
-      <Script
-        src="https://giscus.app/client.js"
-        data-repo="ScienceOL/docs"
-        data-repo-id="R_kgDOOI9EFg"
-        data-category="Announcements"
-        data-category-id="DIC_kwDOOI9EFs4Cr9K0"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme={giscusTheme}
-        data-loading="lazy"
-        data-lang="zh-CN"
-        crossOrigin="anonymous"
-        async
-      />
-    </>
-  )
+  return <div className="giscus mt-8">{/* Giscus将在这里动态加载 */}</div>
 }
