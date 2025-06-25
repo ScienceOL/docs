@@ -1,20 +1,21 @@
 'use client'
 
-import Link from 'next/link'
 import {
   type MotionValue,
   motion,
   useMotionTemplate,
   useMotionValue,
 } from 'framer-motion'
+import Link from 'next/link'
 
 import { GridPattern } from '@/components/GridPattern'
 import { Heading } from '@/components/Heading'
+import { BoltIcon } from '@/components/icons/BoltIcon'
 import { ChatBubbleIcon } from '@/components/icons/ChatBubbleIcon'
-import { EnvelopeIcon } from '@/components/icons/EnvelopeIcon'
-import { UserIcon } from '@/components/icons/UserIcon'
-import { UsersIcon } from '@/components/icons/UsersIcon'
-import { PrimarySite } from '@/config'
+import { CogIcon } from '@/components/icons/CogIcon'
+import { DocumentIcon } from '@/components/icons/DocumentIcon'
+import { PackageIcon } from '@/components/icons/PackageIcon'
+import { SquaresPlusIcon } from '@/components/icons/SquaresPlusIcon'
 
 interface Resource {
   href: string
@@ -29,11 +30,11 @@ interface Resource {
 
 const resources: Array<Resource> = [
   {
-    href: '/workflow',
-    name: 'Workflow',
+    href: '/protium',
+    name: '工作流 Protium',
     description:
-      'Learn about the contact model and how to create, retrieve, update, delete, and list contacts.',
-    icon: UserIcon,
+      'AI 原生的容器化工作流调度系统，支持复杂科学计算流程的自动化管理。',
+    icon: SquaresPlusIcon,
     pattern: {
       y: 16,
       squares: [
@@ -43,10 +44,10 @@ const resources: Array<Resource> = [
     },
   },
   {
-    href: '/manuscript',
-    name: 'Manuscript',
+    href: '/xyzen',
+    name: '智能体 Xyzen',
     description:
-      'Learn about the conversation model and how to create, retrieve, update, delete, and list conversations.',
+      '面向实验室场景的智能体系统，提供智能问答、实验指导和数据分析服务。',
     icon: ChatBubbleIcon,
     pattern: {
       y: -6,
@@ -57,11 +58,10 @@ const resources: Array<Resource> = [
     },
   },
   {
-    href: `${PrimarySite}/space`,
-    name: 'Space',
-    description:
-      'Learn about the message model and how to create, retrieve, update, delete, and list messages.',
-    icon: EnvelopeIcon,
+    href: '/uni-lab',
+    name: '实验室 LabOS',
+    description: '智能实验室操作系统，实现实验设备的统一管理和自动化控制。',
+    icon: CogIcon,
     pattern: {
       y: 32,
       squares: [
@@ -71,14 +71,39 @@ const resources: Array<Resource> = [
     },
   },
   {
-    href: '/groups',
-    name: 'Groups',
-    description:
-      'Learn about the group model and how to create, retrieve, update, delete, and list groups.',
-    icon: UsersIcon,
+    href: '/sdk',
+    name: '工具集 SDK',
+    description: '完整的开发工具包，包含各种 API、SDK 和开发工具。',
+    icon: PackageIcon,
     pattern: {
       y: 22,
       squares: [[0, 1]],
+    },
+  },
+  {
+    href: '/development',
+    name: '开发文档',
+    description: '面向开发者的技术文档，包含架构设计、API 参考和最佳实践。',
+    icon: DocumentIcon,
+    pattern: {
+      y: 10,
+      squares: [
+        [0, 2],
+        [2, 3],
+      ],
+    },
+  },
+  {
+    href: '/anti',
+    name: '数字孪生 Anti',
+    description: '3D 数字孪生平台，为实验室提供可视化和仿真能力（即将推出）。',
+    icon: BoltIcon,
+    pattern: {
+      y: 26,
+      squares: [
+        [1, 0],
+        [2, 2],
+      ],
     },
   },
 ]
@@ -177,7 +202,7 @@ export function Resources() {
       <Heading level={2} id="resources">
         Resources
       </Heading>
-      <div className="not-prose mt-4 grid grid-cols-1 gap-8 border-t border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="not-prose mt-4 grid grid-cols-1 gap-8 border-t border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:grid-cols-3">
         {resources.map((resource) => (
           <Resource key={resource.href} resource={resource} />
         ))}

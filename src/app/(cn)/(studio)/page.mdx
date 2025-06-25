@@ -1,0 +1,59 @@
+import { Guides } from './components/Guides'
+import { Resources } from './components/Resources'
+import { HeroPattern } from '@/components/HeroPattern'
+
+
+export const metadata = {
+  title: 'SciOL',
+  description:
+    '共同迈向 SGI(Science General Intelligence)的未来',
+  image: '/images/python.svg',
+}
+
+export const sections = [
+  { title: 'Guides', id: 'guides' },
+  { title: 'Resources', id: 'resources' },
+]
+
+<HeroPattern />
+
+# ScienceOL Studio 文档
+
+**ScienceOL Studio** 取自 **Science O**n**L**ine 之意，中文名 **科学在线工作室**。英文缩写 **SciOL**(/ˈsaɪ.ɔl/)。
+
+我们致力于构建一个完全开源开放的通用 AI for Science 智能实验室系统，迈向科学通用智能 (Scientific General Intelligence, SGI) 未来。
+
+我们的业务线由 **OL** 延伸为 2 部分，**O**pen**L**ab 与 **O**nline**L**ab。OpenLab 致力于提升实验室自动化水平，以模块化硬件+开源系统加速智能改造升级。**O**nline**L**ab 提供开源系统的云服务，并接入线下实验室提供在线实验室服务。
+
+我们的产品线包括：多环境管理与社区入口 Studio，AI 原生的容器化工作流调度系统 PROTIUM, 面向实验室场景的智能体 Xyzen，及 3D 数字孪生平台 Anti(即将推出)。我们的实验室硬件基座使用开源的 [Uni-Lab-OS]() 产品。所有产品均在 GitHub 开源。
+
+本页面是关于**多环境管理与社区入口 Studio** 的帮助文档，了解更多模块的信息，请参阅其它主题。
+
+<div className="not-prose mb-16 mt-6 flex gap-3">
+  <Button href="/quickstart" arrow="right">
+    <>快速开始</>
+  </Button>
+  <Button href="https://scienceol.tech" variant="outline" target="_blank">
+    <>本地部署 Studio</>
+  </Button>
+</div>
+
+## 快速开始 {{ anchor: false }}
+
+开始使用 ScienceOL Studio，首先在 [仪表板 -> 工作流](#) 中创建一个工作流程，
+然后跟随我们的 [工作流快速开始指南](#) 创建您的第一个演示工作流。 {{ className: 'lead' }} 
+当您的工作流准备就绪后，可以将其发布到我们的 [社区](#)，以帮助更多人。 {{ className: 'lead' }}
+
+运行工作流需要 [计算环境](#)或[实验环境](#)，请确保设置您的 API 密钥和环境配置。 {{ className: 'lead' }}
+
+此外，您可以在 GitHub Issue 中提出问题。另外，我们为提交了 PR 并通过审核的用户提供无限量的核心开发者答疑服务。遇到了问题？那就来提 PR 吧！ 
+
+<div className="not-prose">
+  <Button href="https://github.com/scienceol" variant="text" arrow="right" target="_blank">
+    <>查看 GitHub</>
+  </Button>
+</div>
+
+<Guides />
+
+<Resources />

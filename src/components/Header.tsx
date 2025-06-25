@@ -16,6 +16,7 @@ import { MEDIA_URL, PrimarySite } from '@/config'
 // Import icons
 import { Menu } from '@headlessui/react'
 import {
+  BeakerIcon,
   BookOpenIcon,
   ChatBubbleOvalLeftEllipsisIcon,
   CodeBracketIcon,
@@ -38,32 +39,37 @@ import LangSwitch from './LangSwitch'
 
 const navItems = [
   {
-    name: 'Tutorials',
+    name: 'Navi',
     href: `/`,
     icon: BookOpenIcon,
     sub: [
       {
-        name: 'Studio',
-        href: `/environment`,
+        name: '工作室 Studio',
+        href: `/`,
         icon: Square3Stack3DIcon,
       },
       {
-        name: 'Protium',
-        href: `/workflow`,
+        name: '工作流 Protium',
+        href: `/protium`,
         icon: RectangleGroupIcon,
       },
       {
-        name: 'Xyzen',
+        name: '智能体 Xyzen',
         href: `/xyzen`,
         icon: ChatBubbleOvalLeftEllipsisIcon,
       },
       {
-        name: 'SDK',
+        name: '实验室 LabOS',
+        href: `/uni-lab`,
+        icon: BeakerIcon,
+      },
+      {
+        name: '工具集 SDK',
         href: `/sdk`,
         icon: CodeBracketIcon,
       },
       {
-        name: 'Development',
+        name: '开发 Development',
         href: `/development`,
         icon: RocketLaunchIcon,
       },
@@ -238,7 +244,7 @@ function TopLevelNavItem({ item }: { item: (typeof navItems)[0] }) {
                 <motion.div key={subItem.name} variants={itemVariants}>
                   <Link
                     href={subItem.href}
-                    className="group/sub flex w-full cursor-pointer items-center gap-3 whitespace-nowrap rounded-lg px-4 py-2 text-sm
+                    className="group/sub flex w-full cursor-pointer items-center gap-3 whitespace-nowrap rounded-lg px-4 py-2 text-xs font-medium
                      text-zinc-700 transition-colors hover:bg-teal-800/5 hover:text-teal-600
                      dark:text-zinc-200 dark:hover:bg-zinc-700/40 dark:hover:text-teal-300"
                   >

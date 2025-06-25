@@ -85,13 +85,13 @@ boa build -m ./recipes/conda_build_config.yaml -m ./recipes/macos_sdk_config.yam
 
 4. 返回 `unilab` 环境
 
-```sh
-mamba activate boa
+```bash
+mamba activate unilab
 ```
 
 5. 安装刚刚编译的 tar.bz2 文件
 
-```sh
+```bash
 mamba install /absolute/path/to/your/**.tar.bz2
 ```
 
@@ -99,11 +99,11 @@ mamba install /absolute/path/to/your/**.tar.bz2
 
 1. 在根目录执行 `pip install .` 将当前路径挂载为 unilab 包。
 
-2. 配置 local_config.py 文件。【详见附录1】
+2. 配置 `config.py` 文件。【详见附录1】
 
 3. 启动 Uni-Lab-OS，你可以使用任何一个测试用例来启动 Uni-Lab-OS
 
-```sh
+```bash
 # python ./unilabos/app/main.py 可被替换为 unilab
 python ./unilabos/app/main.py \
     -g ./test/experiments/mock_reactor.json \

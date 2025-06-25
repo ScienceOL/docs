@@ -4,7 +4,56 @@ import path from 'path'
 
 import { type Section } from '@/components/SectionProvider'
 
-import { navigation } from './Navi'
+import { NavGroup } from '@/@types/navigation'
+
+export const navigation: Array<NavGroup> = [
+  {
+    title: 'Guides',
+    links: [
+      { title: 'Introduction', href: '/' },
+      {
+        title: 'Quick Start',
+        href: '/quickstart',
+      },
+      {
+        title: 'Deployment',
+        href: 'https://scienceol.tech',
+      },
+      {
+        title: 'Design',
+        href: '/design',
+      },
+      {
+        title: 'Roadmap',
+        href: '/roadmap',
+      },
+      {
+        title: 'FAQs',
+        href: '/faqs',
+      },
+    ],
+  },
+  {
+    title: '实验环境',
+    links: [],
+  },
+  {
+    title: '计算环境',
+    links: [],
+  },
+  {
+    title: '数据模型',
+    links: [
+      { title: '概览', href: '/data-models' },
+      { title: '实验室模型', href: '/data-models/experiment-data' },
+      { title: '资源模型', href: '/data-models/workflow-data' },
+    ],
+  },
+  {
+    title: 'API 接口',
+    links: [],
+  },
+]
 
 export default async function RootLayout({
   children,
