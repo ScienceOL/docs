@@ -1,0 +1,124 @@
+export const metadata = {
+    title: "部署 UniLab",
+    description: "部署 Uni-Lab 开发环境"
+}
+
+# 部署 Uni-Lab-OS 作为端侧开发环境
+
+---
+
+## Step 1: 获取源码及配置环境
+
+<Note>
+由于使用 ROS2 作为后端，仅推荐使用 `mamba` 进行包及环境管理，如果你还没有安装，参考 [Mamba Installation](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html)
+</Note>
+
+1.  clone 项目
+
+```sh
+git clone https://github.com/dptech-corp/Uni-Lab-OS.git
+```
+
+2. 抓取所有分支
+
+```sh
+cd Uni-Lab-OS && git fetch
+```
+
+3. 切换到 dev
+
+```sh
+git switch dev
+```
+
+4. 创建 unilab 虚拟环境
+
+```sh
+mamba env create -f unilabos-win64.yaml
+```
+
+5. 激活 unilab 虚拟环境
+
+```sh
+mamba activate unilab
+```
+
+## Step 2: 安装 `ros-humble-unilabos-msgs` 包
+
+<Note>
+**你有两种方式安装此包：**
+
+1. 从最新的 [Releases](https://github.com/dptech-corp/Uni-Lab-OS/releases) 下载你的系统架构对应的二进制包。
+例如对于 M 系列芯片的 MacOS 电脑，应使用 `osx-arm64`。然后使用 mamba 安装。
+
+2. 使用 boa 本地编译此包，以下介绍本地编译的方法。
+</Note>
+
+### 本地编译安装 `ros-humble-unilabos-msgs` 包
+
+<Warn>
+创建新的 mamba 环境来安装 boa，否则必然会导致原环境异常。
+</Warn>
+
+1. 新建一个 boa 专用环境
+
+```sh
+mamba create env boa
+mamba activate boa
+```
+
+2. 安装 boa
+
+```sh
+mamba install boa -c conda-forge
+```
+
+3. 编译
+
+```sh
+boa build -m ./recipes/conda_build_config.yaml -m ./recipes/macos_sdk_config.yaml ./recipes/ros-humble-unilabos-msgs
+```
+
+<Note>
+编译完成后，你将得到一个 `**.tar.bz2` 文件，通过在终端中搜索 tar.bz2 来得到其绝对路径
+</Note>
+
+4. 返回 `unilab` 环境
+
+```sh
+mamba activate boa
+```
+
+5. 安装刚刚编译的 tar.bz2 文件
+
+```sh
+mamba install /absolute/path/to/your/**.tar.bz2
+```
+
+## Step 3: 启动 Uni-Lab-OS
+
+1. 在根目录执行 `pip install .` 将当前路径挂载为 unilab 包。
+
+2. 配置 local_config.py 文件。【详见附录1】
+
+3. 启动 Uni-Lab-OS，你可以使用任何一个测试用例来启动 Uni-Lab-OS
+
+```sh
+# python ./unilabos/app/main.py 可被替换为 unilab
+python ./unilabos/app/main.py \
+    -g ./test/experiments/mock_reactor.json \
+    --config ./config/local_config.py \
+    --upload_registry \
+    --disable_browser
+```
+
+* `-g` 指定测试文件用例
+* `--config` 指定配置文件
+* `--upload_registry` 上传实验室设备注册表到云端
+* `--disable_browser` 禁用浏览器弹出
+
+更多参数，可通过 `-h` 参数查看。
+
+## 附录1：`config.py` 文件配置
+
+请参考 [`unilabos/config/config.py`](https://github.com/dptech-corp/Uni-Lab-OS/blob/main/unilabos/config/config.py) 进行实现。
