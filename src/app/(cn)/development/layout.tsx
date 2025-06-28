@@ -9,7 +9,7 @@ import { NavGroup } from '@/@types/navigation'
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - dev',
+    template: '%s - Docs',
     default: 'Dev Docs',
   },
 }
