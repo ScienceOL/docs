@@ -2,6 +2,7 @@ import { Guides } from './components/Guides'
 import { Resources } from './components/Resources'
 import { HeroPattern } from '@/components/HeroPattern'
 import { GitHubIcon } from '@/components/Footer'
+import { StarIcon } from '@heroicons/react/24/outline'
 
 export const metadata = {
   title: 'SciOL',
@@ -33,8 +34,11 @@ export const sections = [
   <Button href="/quickstart" arrow="right">
     <>快速开始</>
   </Button>
-  <Button href="https://scienceol.tech" variant="outline" target="_blank">
-    <>本地部署 Studio</>
+  <Button href="https://github.com/ScienceOL/Studio" variant="outline" target="_blank" className="group">
+    <div className='flex items-center gap-x-2'>
+      <span className='dark:group-hover:text-yellow-300'>Github</span> 
+      <StarIcon className='dark:text-zinc-400 dark:group-hover:fill-yellow-300 size-4' />
+    </div>
   </Button>
 </div>
 

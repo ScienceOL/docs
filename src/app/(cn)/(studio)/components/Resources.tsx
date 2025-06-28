@@ -82,7 +82,7 @@ const resources: Array<Resource> = [
   },
   {
     href: '/development',
-    name: '开发文档',
+    name: '开发与运维 DevOps',
     description: '面向开发者的技术文档，包含架构设计、API 参考和最佳实践。',
     icon: DocumentIcon,
     pattern: {

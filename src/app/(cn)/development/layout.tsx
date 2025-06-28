@@ -32,12 +32,16 @@ export const navigation: Array<NavGroup> = [
     ],
   },
   {
-    title: '数据模型',
-    links: [],
+    title: '前端技术文档',
+    links: [
+      { title: "目录结构", href: `/development/web/fileStruc` },
+    ],
   },
   {
-    title: 'API 接口',
-    links: [],
+    title: '后端技术文档',
+    links: [
+      { title: '目录结构', href: `/development/service/fileStruc` },
+    ],
   },
   {
     title: '撰写开发文档',
