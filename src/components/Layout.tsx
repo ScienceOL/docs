@@ -11,7 +11,6 @@ import { Logo } from '@/components/Logo'
 import { Navigation } from '@/components/Navigation'
 import { type Section, SectionProvider } from '@/components/SectionProvider'
 import { PrimarySite } from '@/config'
-import Script from 'next/script'
 
 export function Layout({
   children,
@@ -32,7 +31,7 @@ export function Layout({
           layoutScroll
           className="contents lg:pointer-events-none lg:fixed lg:inset-0 lg:z-40 lg:flex"
         >
-          <div className="contents lg:pointer-events-auto lg:block lg:w-72 lg:overflow-y-auto lg:border-r lg:border-zinc-900/10 lg:px-6 lg:pb-8 lg:pt-4 lg:dark:border-white/10 xl:w-80">
+          <div className="contents lg:pointer-events-auto lg:block lg:w-72 lg:overflow-y-auto lg:border-r lg:border-zinc-900/10 lg:px-6 lg:pb-8 lg:pt-4 lg:dark:border-white/10 xl:w-80 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-300/50 hover:[&::-webkit-scrollbar-thumb]:bg-zinc-400/60 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-600/50 dark:hover:[&::-webkit-scrollbar-thumb]:bg-zinc-500/60 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-0.5">
             <div className="hidden lg:flex">
               <Link href={`${PrimarySite}`} aria-label="Home">
                 <Logo className="h-6" />
@@ -51,8 +50,6 @@ export function Layout({
           <main className="flex-auto">{children}</main>
           <Footer navigation={navigation} />
         </div>
-
-
       </div>
     </SectionProvider>
   )
