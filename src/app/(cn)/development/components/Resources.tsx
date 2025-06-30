@@ -10,11 +10,8 @@ import Link from 'next/link'
 
 import { GridPattern } from '@/components/GridPattern'
 import { Heading } from '@/components/Heading'
-import {
-  CommandLineIcon,
-  RocketLaunchIcon,
-  WindowIcon,
-} from '@heroicons/react/24/outline'
+import { WindowIcon } from '@heroicons/react/24/outline'
+import { UsersIcon } from '@heroicons/react/24/solid'
 
 interface Resource {
   href: string
@@ -41,7 +38,21 @@ const resources: Array<Resource> = [
         [1, 3],
       ],
     },
-  }
+  },
+  {
+    href: '/development/about/team',
+    name: '关于我们',
+    description:
+      '我们的团队成员拥有扎实的交叉学科背景和丰富的实践经验，致力于推动智能实验室技术的创新与发展。',
+    icon: UsersIcon,
+    pattern: {
+      y: 24,
+      squares: [
+        [0, 2],
+        [1, 3],
+      ],
+    },
+  },
 ]
 
 function ResourceIcon({ icon: Icon }: { icon: Resource['icon'] }) {

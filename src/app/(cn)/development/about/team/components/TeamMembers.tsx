@@ -56,7 +56,7 @@ const teamMembers: Array<TeamMember> = [
     specialty: '材料学 → 计算机科学',
     role: 'AI for Science 与全栈开发',
     description:
-      'Uni-Lab 智能实验室创始成员，材料学本硕背景，计算机应用技术博士在读，师从谢源、朱通导师。在AI4S（AI for Science）及全栈开发领域积累了丰富经验。',
+      'Uni-Lab 智能实验室创始成员，材料学本硕，计算机应用技术博士在读，师从朱通、谢源导师。在AI4S（AI for Science）及全栈开发领域积累了丰富经验。',
     avatar: '/team/Quehh.jpg',
     pattern: {
       y: 32,
@@ -95,7 +95,7 @@ const teamMembers: Array<TeamMember> = [
     specialty: '有机化学',
     role: '有机与药物实验丰富实践',
     description:
-      '复旦大学本科，上海创智学院联合培养博士，专注于理论化学与人工智能交叉领域，师从张俊良导师。',
+      '复旦大学本科，上海创智学院联合培养博士，专注于理论化学与人工智能交叉领域，药学辅修化学，师从张俊良、朱通导师。',
     avatar: '/team/Shenjr.jpg',
     pattern: {
       y: 40,
@@ -108,7 +108,7 @@ const teamMembers: Array<TeamMember> = [
   {
     name: 'Panzw',
     realName: 'Pan Z.',
-    age: 26,
+    age: 27,
     education: '硕士',
     university: '中国科学院大学上海天文台',
     specialty: '电子信息',
