@@ -44,8 +44,8 @@ export const navigation: Array<NavGroup> = [
     links: [{ title: '如何撰写开发文档', href: `/development/dev-docs` }],
   },
   {
-    title: '团队',
-    links: [{ title: '初创成员', href: `/development/team` }],
+    title: '关于我们',
+    links: [{ title: '团队成员', href: `/development/about/team` }],
   },
 ]
 
