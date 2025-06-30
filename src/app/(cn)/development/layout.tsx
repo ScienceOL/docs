@@ -45,7 +45,17 @@ export const navigation: Array<NavGroup> = [
   },
   {
     title: '关于我们',
-    links: [{ title: '团队成员', href: `/development/about/team` }],
+    links: [
+      { title: '团队成员', href: `/development/about/team` },
+      {
+        title: '工程案例',
+        href: `/development/about/cases`,
+      },
+      {
+        title: '相关论文',
+        href: `/development/about/papers`,
+      },
+    ],
   },
 ]
 

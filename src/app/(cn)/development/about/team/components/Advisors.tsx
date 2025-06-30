@@ -253,7 +253,7 @@ export function Advisors() {
   return (
     <div className="my-20 xl:max-w-none">
       <Heading level={2} id="advisors" anchor>
-        学术导师
+        专家顾问
       </Heading>
 
       <div className="not-prose mt-6 grid grid-cols-1 gap-10 border-t border-zinc-900/5 pt-12 dark:border-white/5 lg:grid-cols-2">
