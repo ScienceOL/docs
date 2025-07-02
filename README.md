@@ -1,15 +1,5 @@
 # ScienceOL Docs
 
----
-
-## Vision
-
-Towards the future of Science General Intelligence (SGI)!
-
----
-
-## Table of Contents
-
 - [Project Overview](#project-overview)
 - [Features](#features)
 - [Quick Start](#quick-start)
@@ -19,18 +9,16 @@ Towards the future of Science General Intelligence (SGI)!
 - [License](#license)
 - [Contact](#contact)
 
----
-
 ## Project Overview
 
-**ScienceOL Docs** is the official documentation project of the ScienceOL (Science Online Studio) ecosystem, dedicated to providing comprehensive, systematic, and user-friendly product and developer documentation. ScienceOL aims to build a fully open-source, general AI for Science laboratory system, promoting automation, intelligence, and collaboration in scientific research.
+**ScienceOL Docs** is the official documentation project of the ScienceOL ecosystem, dedicated to providing comprehensive, systematic, and user-friendly product and developer documentation. ScienceOL aims to build a fully open-source, general AI for Science laboratory system, promoting automation, intelligence, and collaboration in scientific research.
 
 **Ecosystem:**
 - Studio: Multi-environment management & community portal
 - Protium: AI-native containerized workflow orchestration
 - Xyzen: Intelligent agent for laboratory
 - Anti: 3D digital twin platform (coming soon)
-- LabOS: Intelligent laboratory OS
+- LabOS: Hardware laboratory OS
 
 ---
 
@@ -96,7 +84,7 @@ docs/
 
 - Official Site: [https://scienceol.tech](https://scienceol.tech)
 - GitHub Issues: [https://github.com/ScienceOL/docs/issues](https://github.com/ScienceOL/docs/issues)
-- Core Team & Advisors: [Team Introduction](/src/app/en/development/about/team/page.mdx)
+- Core Team & Advisors: [Team Introduction](/src/app/(cn)/development/about/team/page.mdx)
 - Please open an Issue or PR, or contact team members via email
 
 ---
