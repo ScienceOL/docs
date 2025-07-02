@@ -228,16 +228,16 @@ interface NavigationProps extends React.ComponentPropsWithoutRef<'nav'> {
   navigation: NavGroup[]
 }
 
-// 这是移动端弹出导航
+// Mobile Navigation
 export function Navigation({ navigation, ...props }: NavigationProps) {
   const { isLogged, userInfo, checkIsLogged } = useAuthServiceContext()
 
   return (
     <nav {...props}>
       <ul role="list">
-        <TopLevelNavItem href="/">API</TopLevelNavItem>
-        <TopLevelNavItem href="#">Documentation</TopLevelNavItem>
-        <TopLevelNavItem href="#">Support</TopLevelNavItem>
+        <TopLevelNavItem href="/">Studio</TopLevelNavItem>
+        <TopLevelNavItem href="/protium">Protium</TopLevelNavItem>
+        <TopLevelNavItem href="/development">Development</TopLevelNavItem>
         {navigation.map((group, groupIndex) => (
           <NavigationGroup
             key={group.title}

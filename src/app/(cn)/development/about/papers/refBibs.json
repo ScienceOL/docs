@@ -1,0 +1,512 @@
+[
+  {
+    "key": "SE8GM66U",
+    "version": 4908,
+    "itemType": "preprint",
+    "title": "ORGANA: A Robotic Assistant for Automated Chemistry Experimentation and Characterization",
+    "abstractNote": "Chemistry experiments can be resource- and labor-intensive, often requiring manual tasks like polishing electrodes in electrochemistry. Traditional lab automation infrastructure faces challenges adapting to new experiments. To address this, we introduce ORGANA, an assistive robotic system that automates diverse chemistry experiments using decision-making and perception tools. It makes decisions with chemists in the loop to control robots and lab devices. ORGANA interacts with chemists using Large Language Models (LLMs) to derive experiment goals, handle disambiguation, and provide experiment logs. ORGANA plans and executes complex tasks with visual feedback, while supporting scheduling and parallel task execution. We demonstrate ORGANA's capabilities in solubility, pH measurement, recrystallization, and electrochemistry experiments. In electrochemistry, it executes a 19-step plan in parallel to characterize quinone derivatives for flow batteries. Our user study shows ORGANA reduces frustration and physical demand by over 50%, with users saving an average of 80.3% of their time when using it.",
+    "date": "2025-01-07",
+    "language": "en",
+    "shortTitle": "ORGANA",
+    "libraryCatalog": "arXiv.org",
+    "url": "http://arxiv.org/abs/2401.06949",
+    "accessDate": "2025-07-02T14:19:20Z",
+    "extra": "arXiv:2401.06949 [cs]",
+    "DOI": "10.48550/arXiv.2401.06949",
+    "repository": "arXiv",
+    "archiveID": "arXiv:2401.06949",
+    "creators": [
+      {
+        "firstName": "Kourosh",
+        "lastName": "Darvish",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Marta",
+        "lastName": "Skreta",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Yuchi",
+        "lastName": "Zhao",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Naruki",
+        "lastName": "Yoshikawa",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Sagnik",
+        "lastName": "Som",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Miroslav",
+        "lastName": "Bogdanovic",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Yang",
+        "lastName": "Cao",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Han",
+        "lastName": "Hao",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Haoping",
+        "lastName": "Xu",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Alán",
+        "lastName": "Aspuru-Guzik",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Animesh",
+        "lastName": "Garg",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Florian",
+        "lastName": "Shkurti",
+        "creatorType": "author"
+      }
+    ],
+    "tags": [],
+    "relations": {},
+    "dateAdded": "2025-07-02T14:19:20Z",
+    "dateModified": "2025-07-02T14:19:20Z",
+    "uri": "http://zotero.org/users/10729210/items/SE8GM66U",
+    "itemID": 1284,
+    "attachments": [
+      {
+        "itemType": "attachment",
+        "title": "PDF",
+        "tags": [],
+        "relations": {},
+        "dateAdded": "2025-07-02T14:19:16Z",
+        "dateModified": "2025-07-02T14:19:20Z",
+        "uri": "http://zotero.org/users/10729210/items/D2VQ8PCV",
+        "path": "/Users/Harvey/Zotero/storage/D2VQ8PCV/Darvish 等 - 2025 - ORGANA A Robotic Assistant for Automated Chemistry Experimentation and Characterization.pdf",
+        "select": "zotero://select/library/items/D2VQ8PCV"
+      }
+    ],
+    "notes": [],
+    "citationKey": "darvishORGANARoboticAssistant2025",
+    "itemKey": "SE8GM66U",
+    "libraryID": 1,
+    "select": "zotero://select/library/items/SE8GM66U"
+  },
+  {
+    "key": "K5LBYS9Y",
+    "version": 4881,
+    "itemType": "journalArticle",
+    "title": "Self-driving laboratories, advanced immunotherapies and five more technologies to watch in 2025",
+    "abstractNote": "Sustainability and artificial intelligence dominate our seventh annual round-up of exciting innovations.",
+    "date": "2025-01-20",
+    "language": "en",
+    "libraryCatalog": "www.nature.com",
+    "url": "https://www.nature.com/articles/d41586-025-00075-6",
+    "accessDate": "2025-07-01T08:16:01Z",
+    "rights": "2025 Springer Nature Limited",
+    "extra": "Bandiera_abtest: a\nCg_type: Technology Feature\nPublisher: Nature Publishing Group\nSubject_term: Technology, Computer science, Sustainability, Machine learning, Immunology",
+    "volume": "637",
+    "pages": "1008-1011",
+    "publicationTitle": "Nature",
+    "DOI": "10.1038/d41586-025-00075-6",
+    "issue": "8047",
+    "ISSN": "1476-4687",
+    "creators": [
+      {
+        "firstName": "Michael",
+        "lastName": "Eisenstein",
+        "creatorType": "author"
+      }
+    ],
+    "tags": [
+      {
+        "tag": "综述"
+      }
+    ],
+    "relations": {},
+    "dateAdded": "2025-07-01T08:16:01Z",
+    "dateModified": "2025-07-01T08:20:09Z",
+    "uri": "http://zotero.org/users/10729210/items/K5LBYS9Y",
+    "itemID": 1275,
+    "attachments": [
+      {
+        "itemType": "attachment",
+        "title": "PDF",
+        "tags": [],
+        "relations": {},
+        "dateAdded": "2025-07-01T08:20:57Z",
+        "dateModified": "2025-07-01T08:20:57Z",
+        "uri": "http://zotero.org/users/10729210/items/5IFQ3S5L",
+        "path": "/Users/Harvey/Zotero/storage/5IFQ3S5L/Eisenstein - 2025 - Self-driving laboratories, advanced immunotherapies and five more technologies to watch in 2025.pdf",
+        "select": "zotero://select/library/items/5IFQ3S5L"
+      },
+      {
+        "itemType": "attachment",
+        "title": "Snapshot",
+        "tags": [],
+        "relations": {},
+        "dateAdded": "2025-07-01T08:16:08Z",
+        "dateModified": "2025-07-01T08:16:08Z",
+        "uri": "http://zotero.org/users/10729210/items/XCMT38XQ",
+        "path": "/Users/Harvey/Zotero/storage/XCMT38XQ/d41586-025-00075-6.html",
+        "select": "zotero://select/library/items/XCMT38XQ"
+      }
+    ],
+    "notes": [],
+    "citationKey": "eisensteinSelfdrivingLaboratoriesAdvanced2025",
+    "itemKey": "K5LBYS9Y",
+    "libraryID": 1,
+    "select": "zotero://select/library/items/K5LBYS9Y"
+  },
+  {
+    "key": "H6Y8AJ3Q",
+    "version": 4891,
+    "itemType": "journalArticle",
+    "title": "Delocalized, asynchronous, closed-loop discovery of organic laser emitters",
+    "abstractNote": "Contemporary materials discovery requires intricate sequences of synthesis, formulation, and characterization that often span multiple locations with specialized expertise or instrumentation. To accelerate these workflows, we present a cloud-based strategy that enabled delocalized and asynchronous design-make-test-analyze cycles. We showcased this approach through the exploration of molecular gain materials for organic solid-state lasers as a frontier application in molecular optoelectronics. Distributed robotic synthesis and in-line property characterization, orchestrated by a cloud-based artificial intelligence experiment planner, resulted in the discovery of 21 new state-of-the-art materials. Gram-scale synthesis ultimately allowed for the verification of best-in-class stimulated emission in a thin-film device. Demonstrating the asynchronous integration of five laboratories across the globe, this workflow provides a blueprint for delocalizing—and democratizing—scientific discovery.",
+    "date": "2024-05-17",
+    "libraryCatalog": "science.org (Atypon)",
+    "url": "https://www.science.org/doi/10.1126/science.adk9227",
+    "accessDate": "2025-07-01T08:49:58Z",
+    "extra": "Publisher: American Association for the Advancement of Science",
+    "volume": "384",
+    "pages": "eadk9227",
+    "publicationTitle": "Science",
+    "DOI": "10.1126/science.adk9227",
+    "issue": "6697",
+    "creators": [
+      {
+        "firstName": "Felix",
+        "lastName": "Strieth-Kalthoff",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Han",
+        "lastName": "Hao",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Vandana",
+        "lastName": "Rathore",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Joshua",
+        "lastName": "Derasp",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Théophile",
+        "lastName": "Gaudin",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Nicholas H.",
+        "lastName": "Angello",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Martin",
+        "lastName": "Seifrid",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Ekaterina",
+        "lastName": "Trushina",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Mason",
+        "lastName": "Guy",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Junliang",
+        "lastName": "Liu",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Xun",
+        "lastName": "Tang",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Masashi",
+        "lastName": "Mamada",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Wesley",
+        "lastName": "Wang",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Tuul",
+        "lastName": "Tsagaantsooj",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Cyrille",
+        "lastName": "Lavigne",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Robert",
+        "lastName": "Pollice",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Tony C.",
+        "lastName": "Wu",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Kazuhiro",
+        "lastName": "Hotta",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Leticia",
+        "lastName": "Bodo",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Shangyu",
+        "lastName": "Li",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Mohammad",
+        "lastName": "Haddadnia",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Agnieszka",
+        "lastName": "Wołos",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Rafał",
+        "lastName": "Roszak",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Cher Tian",
+        "lastName": "Ser",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Carlota",
+        "lastName": "Bozal-Ginesta",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Riley J.",
+        "lastName": "Hickman",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Jenya",
+        "lastName": "Vestfrid",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Andrés",
+        "lastName": "Aguilar-Granda",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Elena L.",
+        "lastName": "Klimareva",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Ralph C.",
+        "lastName": "Sigerson",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Wenduan",
+        "lastName": "Hou",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Daniel",
+        "lastName": "Gahler",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Slawomir",
+        "lastName": "Lach",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Adrian",
+        "lastName": "Warzybok",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Oleg",
+        "lastName": "Borodin",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Simon",
+        "lastName": "Rohrbach",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Benjamin",
+        "lastName": "Sanchez-Lengeling",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Chihaya",
+        "lastName": "Adachi",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Bartosz A.",
+        "lastName": "Grzybowski",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Leroy",
+        "lastName": "Cronin",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Jason E.",
+        "lastName": "Hein",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Martin D.",
+        "lastName": "Burke",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Alán",
+        "lastName": "Aspuru-Guzik",
+        "creatorType": "author"
+      }
+    ],
+    "tags": [],
+    "relations": {},
+    "dateAdded": "2025-07-01T08:49:58Z",
+    "dateModified": "2025-07-01T08:49:58Z",
+    "uri": "http://zotero.org/users/10729210/items/H6Y8AJ3Q",
+    "itemID": 1279,
+    "attachments": [
+      {
+        "itemType": "attachment",
+        "title": "PDF",
+        "tags": [],
+        "relations": {},
+        "dateAdded": "2025-07-01T09:10:39Z",
+        "dateModified": "2025-07-01T09:22:53Z",
+        "uri": "http://zotero.org/users/10729210/items/HZ6EPR3X",
+        "path": "/Users/Harvey/Zotero/storage/HZ6EPR3X/Strieth-Kalthoff 等 - 2024 - Delocalized, asynchronous, closed-loop discovery of organic laser emitters.pdf",
+        "select": "zotero://select/library/items/HZ6EPR3X"
+      }
+    ],
+    "notes": [],
+    "citationKey": "strieth-kalthoffDelocalizedAsynchronousClosedloop2024",
+    "itemKey": "H6Y8AJ3Q",
+    "libraryID": 1,
+    "select": "zotero://select/library/items/H6Y8AJ3Q"
+  },
+  {
+    "key": "L3D6QMAQ",
+    "version": 4905,
+    "itemType": "preprint",
+    "title": "ChemActor: Enhancing Automated Extraction of Chemical Synthesis Actions with LLM-Generated Data",
+    "abstractNote": "With the increasing interest in robotic synthesis in the context of organic chemistry, the automated extraction of chemical procedures from literature is critical. However, this task remains challenging due to the inherent ambiguity of chemical language and the high cost of human annotation required for developing reliable computer-aided extraction protocols. Here, we present ChemActor, a fully fine-tuned large language model (LLM), as a chemical executor to convert between unstructured experimental procedures and structured action sequences. We propose a sequential LLM-generated data framework to address the challenges of insufficient and low-quality annotated data. This framework integrates a data selection module that selects data based on distribution divergence, with a general-purpose LLM, to generate machine-executable actions from a single molecule input. Additionally, we introduce a novel multi-round LLMs circle review metric, which reflects the model’s advanced understanding of chemical experimental procedures. Extensive experiments on reactionto-description (R2D) and description-to-action (D2A) tasks demonstrate that ChemActor, augmented by LLM-generated data, achieves stateof-the-art performance, outperforming the baseline model by 10%. The code is available at: https://github.com/Zhanghahah/ChemActor.",
+    "date": "2025-07-01",
+    "language": "en",
+    "shortTitle": "ChemActor",
+    "libraryCatalog": "arXiv.org",
+    "url": "http://arxiv.org/abs/2506.23520",
+    "accessDate": "2025-07-02T14:18:19Z",
+    "extra": "arXiv:2506.23520 [cs]",
+    "DOI": "10.48550/arXiv.2506.23520",
+    "repository": "arXiv",
+    "archiveID": "arXiv:2506.23520",
+    "creators": [
+      {
+        "firstName": "Yu",
+        "lastName": "Zhang",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Ruijie",
+        "lastName": "Yu",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Jidong",
+        "lastName": "Tian",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Feng",
+        "lastName": "Zhu",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Jiapeng",
+        "lastName": "Liu",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Xiaokang",
+        "lastName": "Yang",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Yaohui",
+        "lastName": "Jin",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Yanyan",
+        "lastName": "Xu",
+        "creatorType": "author"
+      }
+    ],
+    "tags": [],
+    "relations": {},
+    "dateAdded": "2025-07-02T14:18:19Z",
+    "dateModified": "2025-07-02T14:18:19Z",
+    "uri": "http://zotero.org/users/10729210/items/L3D6QMAQ",
+    "itemID": 1282,
+    "attachments": [
+      {
+        "itemType": "attachment",
+        "title": "PDF",
+        "tags": [],
+        "relations": {},
+        "dateAdded": "2025-07-02T14:18:15Z",
+        "dateModified": "2025-07-02T14:18:19Z",
+        "uri": "http://zotero.org/users/10729210/items/9RDKIHP3",
+        "path": "/Users/Harvey/Zotero/storage/9RDKIHP3/Zhang 等 - 2025 - ChemActor Enhancing Automated Extraction of Chemical Synthesis Actions with LLM-Generated Data.pdf",
+        "select": "zotero://select/library/items/9RDKIHP3"
+      }
+    ],
+    "notes": [],
+    "citationKey": "zhangChemActorEnhancingAutomated2025",
+    "itemKey": "L3D6QMAQ",
+    "libraryID": 1,
+    "select": "zotero://select/library/items/L3D6QMAQ"
+  }
+]

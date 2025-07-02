@@ -3,19 +3,19 @@ import { Heading } from '@/components/Heading'
 
 const guides = [
   {
-    href: '/development/deploy-dev',
+    href: '/development/deploys/deploy-dev',
     name: '开发版本部署',
     description:
       '本地部署 ScienceOL Studio 开发版本，支持代码热更新。适合开发者进行功能开发、调试和测试，提供完整的开发环境配置指南。',
   },
   {
-    href: '/development/deploy-local',
+    href: '/development/deploys/deploy-local',
     name: '试用版本部署',
     description:
       '快速部署 ScienceOL 试用版本，面向有本地试用需求的非开发人员。提供简单易懂的部署步骤，快速体验 SciOL 的功能。',
   },
   {
-    href: '/development/deploy-edge',
+    href: '/development/deploys/deploy-edge',
     name: '实验室端侧部署',
     description:
       '部署 LabOS 开发环境，支持实验室端侧的本地部署。适合需要创建实验室环境的用户，提供详细的配置和使用指南。',
