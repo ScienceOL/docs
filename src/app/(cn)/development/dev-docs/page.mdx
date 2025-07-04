@@ -34,6 +34,10 @@ ScienceOL 的文档使用 MDX（Markdown + JSX）格式，并采用以下目录�
 
 创建新文档之前，你应当已经在本地启动文档开发环境。clone 本项目并在根目录执行 `yarn install && yarn dev` 即可启动 docs 开发环境。
 
+<Note>
+如果你使用 VS Code 进行开发，推荐安装 MDX 及 React 扩展提升书写体验。
+</Note>
+
 创建一个新的文档页面需遵循以下步骤：
 
 1. 在适当的目录结构下创建 `.mdx` 文件，如：
@@ -43,7 +47,7 @@ ScienceOL 的文档使用 MDX（Markdown + JSX）格式，并采用以下目录�
 ```
 
 <Note>
-项目中 `(cn)/development/your-feature/page.mdx` 路径对应网页上的 `/development/your-feature` url
+项目中的 `/src/app/(cn)/development/your-feature/page.mdx` 路径对应网页上的 `/development/your-feature` url
 </Note>
 
 2. 添加必要的前置元数据：
@@ -65,20 +69,22 @@ export const sections = [
 Sections 部分为可选添加，主要用于渲染为左侧目录树。**大部分情况下无需声明**。若需声名，id 必需与 title 关联。
 </Note>
 
-3. 在相应的 `layout.tsx` 文件中添加导航链接：
+3. 在相应模块父目录的 `navigation.ts` 文件中添加导航链接。
 
-```tsx
+相应模块父目录是指 `/app` 路径下的二级目录，例如对于 `/app/(cn)/development/your-feature/page.mdx`，相应的父目录为 `/app/(cn)/development/`
+
+```ts
 {
   title: '文档类别',
   links: [
     // ... 现有链接
-    { title: '你的文档', href: `/development/your-feature` },
+    { title: '你的文档', href: '/development/your-feature' },
   ],
 }
 ```
 
 <Warn>
-**重要提示**：href 的路径应与你的当前文件夹路径相同，例如对于 `/development/your-feature`，则对应 `/src/app/(cn)/development/your-feature/page.mdx` 文件。
+**重要提示**：`href` 的路径应与你的文档文件夹路径相同，例如对于 `/development/your-feature`，则对应 `/src/app/(cn)/development/your-feature/page.mdx` 文件。
 </Warn>
 
 ## 编写指南
