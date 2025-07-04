@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import { Feedback } from '@/components/Feedback'
 import { Heading } from '@/components/Heading'
+import { Mermaid } from '@/components/Mermaid'
 import { Prose } from '@/components/Prose'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
@@ -10,6 +11,7 @@ import Image from 'next/image'
 export const a = Link
 export { Button } from '@/components/Button'
 export { Code as code, CodeGroup, Pre as pre } from '@/components/Code'
+export { Mermaid }
 
 export function wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -60,7 +62,7 @@ export function Img({ src, alt }: { src: string; alt: string }) {
     <div className="my-8 max-w-3xl">
       <Image
         src={src}
-        alt={alt||""}
+        alt={alt || ''}
         width={800}
         height={400}
         className="h-auto w-full rounded-lg border

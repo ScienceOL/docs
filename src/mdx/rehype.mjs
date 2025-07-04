@@ -19,6 +19,37 @@ function rehypeParseCodeBlocks() {
   }
 }
 
+function rehypeMermaid() {
+  return (tree) => {
+    visit(tree, 'element', (node) => {
+      if (
+        node.tagName === 'pre' &&
+        node.children[0]?.tagName === 'code' &&
+        node.properties.language === 'mermaid'
+      ) {
+        const codeNode = node.children[0]
+        const textNode = codeNode.children[0]
+
+        if (textNode && textNode.type === 'text') {
+          // Replace the pre/code block with a Mermaid JSX component
+          Object.assign(node, {
+            type: 'mdxJsxFlowElement',
+            name: 'Mermaid',
+            attributes: [
+              {
+                type: 'mdxJsxAttribute',
+                name: 'chart',
+                value: textNode.value,
+              },
+            ],
+            children: [],
+          })
+        }
+      }
+    })
+  }
+}
+
 function rehypeShiki() {
   return async (tree) => {
     const shikiHighlighter = await getHighlighter()
@@ -123,6 +154,7 @@ function getSections(node) {
 export const rehypePlugins = [
   mdxAnnotations.rehype,
   rehypeParseCodeBlocks,
+  rehypeMermaid,
   rehypeShiki,
   rehypeSlugify,
   [

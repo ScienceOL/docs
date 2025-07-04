@@ -5,11 +5,60 @@ export const metadata = {
 
 # 实验室端设备 MCP 的设计
 
-实验室端侧设备通过设备的注册表信息将设备信息全部发送到云端，包含设备描述及各动作参数及其描述。云端在收到设备描述后，将各动作描述及其参数自动生成 MCP tools，并在 MCP 服务器中发布（现在的问题是是否可以在 Django 中让 MCP 路由与主路由集成，MCP 路由的抽象化方法，MCP 路由的路径设计。）
+## 生产逻辑（设备注册与 MCP 工具生成）
+
+实验室端侧设备通过设备注册表信息将完整的设备信息发送到云端，具体包括：
+
+1. **设备基础信息**：设备名称、型号、版本、状态等
+2. **设备动作描述**：每个动作的功能说明、使用场景
+3. **动作参数定义**：参数名称、类型、范围、默认值、是否必需
+4. **动作返回值定义**：返回数据结构、状态码、错误信息格式【取决于下面的第 3 点】
+
+云端接收到设备描述后，自动执行以下流程：
+
+1. **解析设备注册表**：验证数据格式和完整性
+2. **生成 MCP 工具定义**：将设备动作转换为标准 MCP tools 格式
+3. **注册到 MCP 服务器**：在 MCP 服务器中发布可用工具【是否需要返回值定义，帮助 LLM 理解】
+4. **更新工具索引**：维护设备到 MCP 工具的映射关系
+
+### 待解决的问题
+
+- **Django 集成问题**：如何在 Django 中让 MCP 路由与主路由集成？
+- **路由抽象化**：MCP 路由的抽象化方法设计，能够根据接收到的注册表信息自动创建 MCP 路由，需要一个抽象基类
+- **路径设计**：MCP 路由的路径命名规范和层级结构，同时要支持跨实验室路由的动作发布
+- **热重载**：设备动作添加时 MCP Server 支持热加载动作；设备离线或故障时如何处理已注册的 MCP 工具？
+
+## 消费逻辑（MCP 工具调用与设备控制）
+
+当 LLM 通过 MCP 客户端调用设备动作工具时，系统执行以下流程：
+
+1. **接收 MCP 调用**：服务端接收 LLM 的工具调用请求
+2. **参数验证**：验证调用参数的有效性和完整性
+3. **构建 MQTT 指令**：将 MCP 调用转换为设备可识别的 MQTT 消息
+4. **下发动作指令**：通过 MQTT 向目标设备发送指令（包含动作路由与参数）
+5. **等待设备响应**：监听设备的执行状态和结果返回（端侧持续向 MQTT Status 发布状态）
+6. **处理执行结果**：将设备返回的结果转换为 MCP 响应格式（连续流 or 最终结果？）
+
+### 异步执行状态管理
+
+由于设备动作执行需要时间，系统需要处理以下执行阶段：
+
+- **指令接收确认**：设备确认收到并开始执行指令
+- **执行中状态**：设备正在执行动作的中间状态
+- **执行完成**：设备完成动作并返回最终结果
+- **执行失败**：设备执行失败并返回错误信息
+
+### 可能的问题
+
+- **异步状态反馈**：如何在 MCP 客户端的单次请求中体现"动作已接收正在运行"与"动作已完成"两个阶段？【确认下 MCP 是否支持中间信息】
+- **超时处理**：设备长时间无响应时的超时机制和重试策略
+- **错误恢复**：网络中断或设备故障时的错误恢复机制【二期】
+- **安全性**：设备动作调用的权限验证和访问控制
+- **监控和日志**：动作执行的监控、日志记录和审计追踪【二期】
 
 以下是当前的实验室注册表数据模型，以及一个例子。
 
-## 上报所有注册表 {{ tag: 'POST', label: '/v1/lab/<lab_id>/registry/' }}
+## 设备注册表数据模型 {{ tag: 'POST', label: '/v1/lab/<lab_id>/registry/' }}
 
 <Row>
   <Col>
@@ -30,76 +79,49 @@ export const metadata = {
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/v1/groups">
+    <CodeGroup title="Registry" tag="Example" label="Device Registry">
 
-    ```bash {{ title: 'cURL' }}
+    ```yaml {{ title: 'Example1' }}
+    hotel.thermo_orbitor_rs2_hotel:
+        class:
+            action_value_mappings: {}
+            module: unilabos.devices.resource_container.container:HotelContainer
+            status_types:
+            rotation: String
+            type: python
+        description: Thermo Orbitor RS2 Hotel
+        handles: []
+        icon: ''
+        init_param_schema:
+            config:
+            properties:
+                device_config:
+                type: object
+                rotation:
+                type: object
+            required:
+            - rotation
+            - device_config
+            type: object
+            data:
+            properties:
+                rotation:
+                type: string
+            required:
+            - rotation
+            type: object
+        model:
+            mesh: thermo_orbitor_rs2_hotel
+            type: device
+    ```
+
+   ```yaml {{ title: 'Example2' }}
     curl -G https://api.protocol.chat/v1/groups \
       -H "Authorization: Bearer {token}" \
       -d limit=10
     ```
 
-    ```js
-    import ApiClient from '@example/protocol-api'
-
-    const client = new ApiClient(token)
-
-    await client.groups.list()
-    ```
-
-    ```python
-    from protocol_api import ApiClient
-
-    client = ApiClient(token)
-
-    client.groups.list()
-    ```
-
-    ```php
-    $client = new \Protocol\ApiClient($token);
-
-    $client->groups->list();
-    ```
-
     </CodeGroup>
-
-    ```json {{ title: 'Response' }}
-    {
-      "has_more": false,
-      "data": [
-        {
-          "id": "l7cGNIBKZiNJ6wqF",
-          "name": "Plaza Hotel",
-          "description": "World-renowned.",
-          "avatar_url": "https://assets.protocol.chat/avatars/plazahotel.jpg",
-          "conversation_id": "ZYjVAbCE9g5XRlra",
-          "contacts": [
-            {
-              "username": "Hector"
-              // ...
-            },
-            {
-              "username": "Cedric"
-              // ...
-            },
-            {
-              "username": "Hester"
-              // ...
-            },
-            {
-              "username": "Cliff"
-              // ...
-            }
-          ],
-          "created_at": 692233200,
-          "archived_at": null
-        },
-        {
-          "id": "hSIhXBhNe8X1d8Et"
-          // ...
-        }
-      ]
-    }
-    ```
 
   </Col>
 </Row>
@@ -114,9 +136,56 @@ export const metadata = {
 
 ...
 
+## 流程图一览
+
 整体对 Device Action 生成 MCP 的逻辑由流程图概括如下：
 
 ```mermaid
-cs
+graph TD
+    subgraph 生产逻辑
+        A[实验室设备] -->|发送设备注册表| B(云端服务)
+        B --> C{解析设备注册表}
+        C -->|格式错误| E[返回错误信息]
+        C -->|验证通过| D[生成MCP工具定义]
+        D --> F[注册到MCP服务器]
+        F --> G[更新工具索引]
+        G --> H((生产逻辑完成))
+        
+        classDef prod fill:#e6f3ff,stroke:#3366cc;
+        class A,B,C,D,E,F,G,H prod;
+    end
+
+    subgraph 消费逻辑
+        I[MCP客户端] -->|工具调用请求| J{MCP服务器}
+        J --> K{参数验证}
+        K -->|参数无效| L[返回格式错误]
+        K -->|验证通过| M[构建MQTT指令]
+        M --> N[下发动作指令]
+        N --> O[设备执行动作]
+        O --> P[监听MQTT状态]
+        
+        P --> Q{状态类型}
+        Q -->|接收确认| R[返回中间状态]
+        Q -->|执行完成| S[转换返回格式]
+        Q -->|执行失败| T[返回错误信息]
+        S --> U((消费逻辑完成))
+        
+        classDef cons fill:#ffe6e6,stroke:#cc3333;
+        class I,J,K,L,M,N,O,P,Q,R,S,T,U cons;
+    end
+
+    H -.->|工具注册完成| J
+    O -.->|MQTT消息反馈| P
+    
+    subgraph 待解决问题
+        style prod stroke-dasharray: 5 5
+        style cons stroke-dasharray: 5 5
+        H -->|热重载机制| Z1[设备动态上下线处理]
+        F -->|路由设计| Z2[路径自动生成]
+        K -->|权限验证| Z3[安全控制]
+        P -->|异步状态流| Z4[中间结果反馈]
+        classDef issue fill:#ffffe6,stroke:#cccc00;
+        class Z1,Z2,Z3,Z4 issue;
+    end
 ```
 
