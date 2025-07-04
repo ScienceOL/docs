@@ -17,7 +17,11 @@ export const metadata: Metadata = {
 export const navigation: Array<NavGroup> = [
   {
     title: '开发者手册',
-    links: [{ title: '你好，开发者 👋', href: `/development` }],
+    links: [
+      { title: '你好，开发者 👋', href: `/development` },
+      { title: '产品架构图', href: `/development/product-architecture` },
+      { title: '技术架构图', href: `/development/architecture` },
+    ],
   },
   {
     title: '版本部署',

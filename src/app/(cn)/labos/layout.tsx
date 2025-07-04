@@ -17,8 +17,11 @@ export const metadata: Metadata = {
 export const navigation: Array<NavGroup> = [
   {
     title: 'LabOS',
-    links: [{ title: 'Uni-Lab-OS', href: `/labos` }],
-  }
+    links: [
+      { title: 'Uni-Lab-OS', href: `/labos` },
+      { title: '设备动作的 MCP', href: `/labos/mcp-arch` },
+    ],
+  },
 ]
 
 export default async function RootLayout({
@@ -48,6 +51,5 @@ export default async function RootLayout({
         {children}
       </Layout>
     </div>
-    
   )
 }

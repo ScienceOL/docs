@@ -42,6 +42,10 @@ ScienceOL 的文档使用 MDX（Markdown + JSX）格式，并采用以下目录�
 /src/app/(cn)/development/your-feature/page.mdx
 ```
 
+<Note>
+项目中 `(cn)/development/your-feature/page.mdx` 路径对应网页上的 `/development/your-feature` url
+</Note>
+
 2. 添加必要的前置元数据：
 
 ```mdx
@@ -58,7 +62,7 @@ export const sections = [
 ```
 
 <Note>
-Sections 部分为可选添加，主要用于渲染为左侧目录树。大部分情况下无需声明。若需声名，id 必需与 title 关联。
+Sections 部分为可选添加，主要用于渲染为左侧目录树。**大部分情况下无需声明**。若需声名，id 必需与 title 关联。
 </Note>
 
 3. 在相应的 `layout.tsx` 文件中添加导航链接：
@@ -95,7 +99,7 @@ Sections 部分为可选添加，主要用于渲染为左侧目录树。大部�
    - 使用简洁明了的语言
    - 代码块应该指定语言，如 ```tsx
    - 添加适当的注释和说明
-   - 对于重要信息，使用组件如 `<Note>` 或 `<Warning>` 突出显示
+   - 对于重要信息，使用组件如 `<Note>` 或 `<Warn>` 突出显示
 
 4. **国际化**：
    - 中文内容放在 `(cn)` 目录下
@@ -119,34 +123,41 @@ Sections 部分为可选添加，主要用于渲染为左侧目录树。大部�
   - `<Propertie>` - 单个属性
   - `<Row>` 和 `<Col>` - 布局组件
   - `<Button>` - 按钮组件
-  - `<HeroPattern>` - 顶部背景图案
+
+  你也可以为标题添加 API 信息，例如：
+
+  ```md
+  ## Example {{ tag: 'POST', label: '/v1/example' }}
+  ```
+
+  ## Example {{ tag: 'POST', label: '/v1/example' }}
 
   </Col>
 
   <Col sticky>
 
-  <Note>
-    这是一个提示信息。
-  </Note>
+    <Note>
+      这是一个提示信息。
+    </Note>
 
-  <Warn>
-    这是一个警告信息。
-  </Warn>
+    <Warn>
+      这是一个警告信息。
+    </Warn>
 
-  <CodeGroup title="示例代码组">
+    <CodeGroup title="示例代码组" tag="GET" label="/v1/example">
 
-    ```tsx
-    function Example() {
-        return <div>Example</div>
-    }
-    ```
+      ```tsx
+      function Example() {
+          return <div>Example</div>
+      }
+      ```
 
-    ```python
-    def Example() -> None:
-        return
-    ```
+      ```python
+      def Example() -> None:
+          return
+      ```
 
-  </CodeGroup>
+    </CodeGroup>
 
     <Properties>
         <Property name="properties" type="string">
@@ -165,11 +176,19 @@ Sections 部分为可选添加，主要用于渲染为左侧目录树。大部�
 代码块应当指定语言，并可以添加标题和其他属性：
 
 ```mdx
-    ```tsx {{ title: '示例代码', lineNumbers: true }}
+    ```tsx {{ title: '示例代码' }}
     function Example() {
         return <div>Example</div>
     }
 
+```
+
+对应的展示效果如下：
+
+```tsx {{ title: '示例代码' }}
+function Example() {
+    return <div>Example</div>
+}
 ```
 
 ## 贡献流程

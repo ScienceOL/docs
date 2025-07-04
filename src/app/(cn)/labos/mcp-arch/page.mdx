@@ -1,0 +1,122 @@
+export const metadata = {
+    title: "实验室端设备 MCP 的设计",
+    description: "Uni-Lab-OS 实验室端侧设备 MCP 化"
+}
+
+# 实验室端设备 MCP 的设计
+
+实验室端侧设备通过设备的注册表信息将设备信息全部发送到云端，包含设备描述及各动作参数及其描述。云端在收到设备描述后，将各动作描述及其参数自动生成 MCP tools，并在 MCP 服务器中发布（现在的问题是是否可以在 Django 中让 MCP 路由与主路由集成，MCP 路由的抽象化方法，MCP 路由的路径设计。）
+
+以下是当前的实验室注册表数据模型，以及一个例子。
+
+## 上报所有注册表 {{ tag: 'POST', label: '/v1/lab/<lab_id>/registry/' }}
+
+<Row>
+  <Col>
+
+    这个端点接受所有的 MCP 信息
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="limit" type="integer">
+        Limit the number of groups returned.
+      </Property>
+      <Property name="archived" type="boolean">
+        Only show groups that are archived when set to `true`.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/groups">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G https://api.protocol.chat/v1/groups \
+      -H "Authorization: Bearer {token}" \
+      -d limit=10
+    ```
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.groups.list()
+    ```
+
+    ```python
+    from protocol_api import ApiClient
+
+    client = ApiClient(token)
+
+    client.groups.list()
+    ```
+
+    ```php
+    $client = new \Protocol\ApiClient($token);
+
+    $client->groups->list();
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "has_more": false,
+      "data": [
+        {
+          "id": "l7cGNIBKZiNJ6wqF",
+          "name": "Plaza Hotel",
+          "description": "World-renowned.",
+          "avatar_url": "https://assets.protocol.chat/avatars/plazahotel.jpg",
+          "conversation_id": "ZYjVAbCE9g5XRlra",
+          "contacts": [
+            {
+              "username": "Hector"
+              // ...
+            },
+            {
+              "username": "Cedric"
+              // ...
+            },
+            {
+              "username": "Hester"
+              // ...
+            },
+            {
+              "username": "Cliff"
+              // ...
+            }
+          ],
+          "created_at": 692233200,
+          "archived_at": null
+        },
+        {
+          "id": "hSIhXBhNe8X1d8Et"
+          // ...
+        }
+      ]
+    }
+    ```
+
+  </Col>
+</Row>
+
+为了实现更完整的 MCP 加载，需要将注册表设计为更完整的结构：
+
+
+
+...
+
+新添加的字段：
+
+...
+
+整体对 Device Action 生成 MCP 的逻辑由流程图概括如下：
+
+```mermaid
+cs
+```
+
