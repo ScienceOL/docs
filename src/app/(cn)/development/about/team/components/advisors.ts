@@ -60,7 +60,7 @@ export const advisors: Array<Advisor> = [
       '洪堡学者奖学金获得者',
     ],
     description:
-      '复旦大学化学系教授，博士生导师，师从麻生明院士。曾获洪堡学者奖学金赴德国科隆大学和美国芝加哥大学进行博士后研究。2009年获中国化学会青年化学家奖，2012年获Thieme Chemistry Journal Award，2014年获国家杰出青年科学基金。专注有机合成方法学研究，设计和发展了一系列手性膦催化剂和配体Sadphos。发表论文277篇，包括JACS 23篇、Angew 37篇等顶级期刊论文。',
+      '复旦大学化学系教授，博士生导师，师从麻生明院士。2009年获中国化学会青年化学家奖，2012年获Thieme Chemistry Journal Award，2014年获国家杰出青年科学基金。专注有机合成方法学研究，设计和发展了一系列手性膦催化剂和配体Sadphos。发表论文277篇，包括JACS 23篇、Angew 37篇等顶级期刊论文。',
     avatar: '/advisors/zhangjunliang.png',
     pattern: {
       y: 16,
@@ -81,7 +81,6 @@ export const advisors: Array<Advisor> = [
       'ACM戈登贝尔奖获得者',
       'DeePMD-kit主要开发者',
       'DeepModeling开源社区推动者',
-      '普林斯顿大学博士',
     ],
     description:
       'ACM戈登贝尔奖获得者，DeePMD-kit主要开发者，DeepModeling开源社区推动者，普林斯顿大学博士。专注于机器学习驱动的分子模拟技术，通过深度学习将分子动力学模拟极限提高到1亿原子规模，在保持从头算精度的前提下大幅提升计算效率。极大推动 AI4S 开源社区的发展，助力科学智能的普及和应用。',

@@ -5,13 +5,15 @@ import { Feedback } from '@/components/Feedback'
 import { Heading } from '@/components/Heading'
 import { Mermaid } from '@/components/Mermaid'
 import { Prose } from '@/components/Prose'
+import { StackedVideosLayout } from '@/components/StackedVideosLayout'
+import { Video } from '@/components/Video'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 
 export const a = Link
 export { Button } from '@/components/Button'
 export { Code as code, CodeGroup, Pre as pre } from '@/components/Code'
-export { Mermaid }
+export { Mermaid, StackedVideosLayout, Video }
 
 export function wrapper({ children }: { children: React.ReactNode }) {
   return (

@@ -1,5 +1,62 @@
 [
   {
+    "key": "7BIGA5RG",
+    "version": 4921,
+    "itemType": "journalArticle",
+    "title": "Automated and intelligent chemical synthesis",
+    "abstractNote": "Automation technology has been widely used in modern manufacturing, but chemical synthesis R&D is less automated and still relies heavily on chemists. This is mainly because the classical automation technology without machine intelligence cannot adapt to the process diversity and lacks decision-making ability in facing of uncertainty of results, which are common to chemical R&D. However, the new generation of automation technologies represented by the Internet of Things, collaborative robots, and artificial intelligence has been able to achieve more flexible deployment and smarter operations, and can thus meet the requirement for in depth integration into the chemical synthesis and material research. Automated and intelligent chemical synthesis systems targeting “unmanned laboratories” are booming. The paper is to sort out the advances of this field in recent years, and give an outlook on its future development.",
+    "date": "2023-1-1",
+    "language": "en",
+    "libraryCatalog": "DOI.org (Crossref)",
+    "url": "https://engine.scichina.com/doi/10.1360/SSC-2022-0192",
+    "accessDate": "2025-07-05T15:05:37Z",
+    "volume": "53",
+    "pages": "48-65",
+    "publicationTitle": "SCIENTIA SINICA Chimica",
+    "DOI": "10.1360/SSC-2022-0192",
+    "issue": "1",
+    "journalAbbreviation": "Sci. Sin.-Chim",
+    "ISSN": "1674-7224",
+    "creators": [
+      {
+        "firstName": "Yu",
+        "lastName": "Ling",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Changxu",
+        "lastName": "Lin",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Da",
+        "lastName": "Zhou",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Lingyun",
+        "lastName": "Cao",
+        "creatorType": "author"
+      },
+      {
+        "firstName": "Cheng",
+        "lastName": "Wang",
+        "creatorType": "author"
+      }
+    ],
+    "tags": [],
+    "relations": {},
+    "dateAdded": "2025-07-05T15:05:37Z",
+    "dateModified": "2025-07-05T15:05:37Z",
+    "uri": "http://zotero.org/users/10729210/items/7BIGA5RG",
+    "itemID": 1288,
+    "notes": [],
+    "citationKey": "lingAutomatedIntelligentChemical2023",
+    "itemKey": "7BIGA5RG",
+    "libraryID": 1,
+    "select": "zotero://select/library/items/7BIGA5RG"
+  },
+  {
     "key": "SE8GM66U",
     "version": 4908,
     "itemType": "preprint",

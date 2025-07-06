@@ -87,10 +87,10 @@ export default function AdvisorCard({ advisor }: { advisor: Advisor }) {
     <div
       key={advisor.name}
       onMouseMove={onMouseMove}
-      className="group relative flex rounded-3xl bg-white transition-all duration-300 hover:shadow-2xl hover:shadow-zinc-900/10 dark:bg-zinc-900/50 dark:hover:shadow-black/20"
+      className="group relative flex rounded-3xl bg-white transition-shadow hover:shadow-2xl hover:shadow-zinc-900/10 dark:bg-zinc-900/50 dark:hover:shadow-black/20"
     >
       <AdvisorPattern {...advisor.pattern} mouseX={mouseX} mouseY={mouseY} />
-      <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-zinc-900/5 transition-all duration-300 group-hover:ring-zinc-900/15 dark:ring-white/5 dark:group-hover:ring-white/15" />
+      <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-zinc-900/5 group-hover:ring-zinc-900/15 dark:ring-white/5 dark:group-hover:ring-white/15" />
       <div className="relative rounded-3xl px-8 pb-8 pt-10">
         <div className="flex flex-col items-start text-left">
           <div className="flex items-center space-x-4">

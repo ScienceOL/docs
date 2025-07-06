@@ -81,7 +81,7 @@ export const teamMembers: Array<TeamMember> = [
     realName: 'Pan Z.',
     age: 27,
     education: '硕士',
-    university: '中国科学院大学上海天文台',
+    university: '中国科学院大学',
     specialty: '电子信息',
     role: '硬件工程师',
     description:
