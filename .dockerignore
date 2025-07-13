@@ -7,11 +7,11 @@ node_modules
 npm-debug.log
 
 # Build and output directories
-.next
+.next/
 buildx.sh
 launch/
 .temp/
 
 # Development environment files
-.git
-.vscode
+.git/
+.vscode/
