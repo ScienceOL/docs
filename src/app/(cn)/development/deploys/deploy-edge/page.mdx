@@ -58,14 +58,18 @@ mamba activate unilab
 
 1. 从最新的 [Releases](https://github.com/dptech-corp/Uni-Lab-OS/releases) 下载你的系统架构对应的二进制包。
 
-    例如对于 M 系列芯片的 MacOS 电脑，应使用 `osx-arm64`。然后使用 conda 安装：
-    ```sh
-    conda install '/absolute/path/to/your/download/file'
-    ```
-    > 这里使用 conda 而不是 mamba，避免 mamba 去搜索无效的包索引。
-
-2. 使用 boa 本地编译此包，以下介绍本地编译的方法。
+2. 使用 boa 本地编译此包，以下介绍本地这两种方法。
 </Note>
+
+### 方法 1: 直接下载对应编译包
+
+例如对于 M 系列芯片的 MacOS 电脑，应使用 `osx-arm64`。然后使用 conda 安装：
+
+```sh
+conda install '/absolute/path/to/your/download/file'
+```
+
+这里推荐使用 conda 而不是 mamba，避免 mamba 去搜索无效的包索引。在安装 mamba 时已自动安装 conda
 
 ### 本地编译安装 `ros-humble-unilabos-msgs` 包
 
@@ -91,9 +95,22 @@ mamba install boa -c conda-forge
 
 3. 编译
 
-```sh
-boa build -m ./recipes/conda_build_config.yaml -m ./recipes/macos_sdk_config.yaml ./recipes/ros-humble-unilabos-msgs
+<CodeGroup>
+
+```sh {{ title: 'MacOS' }}
+boa build \
+    -m ./recipes/conda_build_config.yaml \
+    -m ./recipes/macos_sdk_config.yaml \
+    ./recipes/ros-humble-unilabos-msgs
 ```
+
+```sh {{ title: 'Windows' }}
+boa build \
+    -m ./recipes/conda_build_config.yaml \
+    ./recipes/ros-humble-unilabos-msgs
+```
+
+</CodeGroup>
 
 <Note>
 编译完成后，你将得到一个 `**.tar.bz2` 文件，通过在终端中搜索 tar.bz2 来得到其绝对路径

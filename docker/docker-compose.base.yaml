@@ -1,9 +1,0 @@
-name: sciol-docs
-services:
-  docs:
-    restart: unless-stopped
-    container_name: sciol-docs
-    image: ghcr.io/scienceol/docs:latest
-    pull_policy: always
-    ports:
-      - '32235:32235'
