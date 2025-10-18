@@ -1,3 +1,4 @@
+
 import '@/styles/tailwind.css'
 import { type Metadata } from 'next'
 import { Providers } from './providers'

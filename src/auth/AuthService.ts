@@ -1,5 +1,6 @@
 import { AuthServiceProps, UserProps } from '@/auth/auth-service'
 import { BASE_URL, IS_CLIENT } from '@/config'
+import { safeLocalStorage } from '@/lib/storage'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -11,7 +12,7 @@ export const useAuthService = (): AuthServiceProps => {
 
   useEffect(() => {
     if (IS_CLIENT) {
-      const userInfo = localStorage.getItem('userInfo')
+      const userInfo = safeLocalStorage.getItem('userInfo')
       if (userInfo) {
         setUserInfo(JSON.parse(userInfo))
       }
@@ -33,7 +34,7 @@ export const useAuthService = (): AuthServiceProps => {
         setIsLogged(true)
         setUserInfo(res.data)
         if (IS_CLIENT) {
-          localStorage.setItem('userInfo', JSON.stringify(res.data))
+          safeLocalStorage.setItem('userInfo', JSON.stringify(res.data))
         }
       }
     } catch (error: any) {
@@ -190,7 +191,7 @@ export const useAuthService = (): AuthServiceProps => {
 
       setUserInfo({} as UserProps)
       if (IS_CLIENT) {
-        localStorage.removeItem('userInfo')
+        safeLocalStorage.removeItem('userInfo')
       }
       router.refresh()
     }

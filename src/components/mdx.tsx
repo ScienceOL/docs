@@ -1,3 +1,4 @@
+"use client";
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -8,12 +9,19 @@ import { Prose } from '@/components/Prose'
 import { StackedVideosLayout } from '@/components/StackedVideosLayout'
 import { Video } from '@/components/Video'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-import Image from 'next/image'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid'
+import React, { useState } from 'react'
 
 export const a = Link
 export { Button } from '@/components/Button'
 export { Code as code, CodeGroup, Pre as pre } from '@/components/Code'
 export { Mermaid, StackedVideosLayout, Video }
+
+// 覆盖 Markdown 图片语法，使其使用 Img 组件样式
+export function img({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
+  if (!src) return null
+  return <Img src={src} alt={alt || ''} />
+}
 
 export function wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -61,29 +69,24 @@ export function Note({ children }: { children: React.ReactNode }) {
 
 export function Img({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="my-8 max-w-3xl">
-      <Image
+    <>
+      <img
         src={src}
         alt={alt || ''}
-        width={800}
-        height={400}
-        className="h-auto w-full rounded-lg border
-                   border-gray-100/60 shadow-md transition-all
-                   duration-200 hover:border-gray-200/80 hover:shadow-lg
-                   dark:border-neutral-700/80 dark:shadow-neutral-900/30
-                   dark:hover:border-neutral-600"
+        className="my-4 h-auto w-full max-w-3xl rounded-lg border border-gray-200/60 shadow-md 
+                   transition-all duration-200 
+                   hover:border-gray-300/80 hover:shadow-lg
+                   dark:border-gray-700/80 dark:shadow-gray-900/30
+                   dark:hover:border-gray-600"
         loading="lazy"
         decoding="async"
       />
       {alt && (
-        <p
-          className="mt-3 text-center text-sm font-light italic text-gray-500
-                      dark:text-neutral-400"
-        >
+        <span className="block text-center text-sm font-light italic text-gray-500 dark:text-gray-400">
           {alt}
-        </p>
+        </span>
       )}
-    </div>
+    </>
   )
 }
 
@@ -168,5 +171,159 @@ export function Property({
         </dd>
       </dl>
     </li>
+  )
+}
+
+export function ImageGallery({ children }: { children: React.ReactNode }) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  
+  // 提取所有 img 元素并添加样式
+  const images = React.Children.toArray(children).filter(
+    (child): child is React.ReactElement =>
+      React.isValidElement(child) && child.type === 'img'
+  )
+  
+  const imageCount = images.length
+  
+  if (imageCount === 0) return null
+  
+  // 统一的图片样式类
+  const imageClasses = `
+    rounded-lg border border-gray-200/60 shadow-md 
+    transition-all duration-200 
+    hover:border-gray-300/80 hover:shadow-lg
+    dark:border-gray-700/80 dark:shadow-gray-900/30
+    dark:hover:border-gray-600
+    w-full h-auto object-cover
+  `.trim()
+  
+  // 为图片添加样式
+  const styledImages = images.map((img, idx) => 
+    React.cloneElement(img, {
+      ...img.props,
+      className: clsx(img.props.className, imageClasses),
+      key: idx,
+    })
+  )
+  
+  // 轮播控制
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev === 0 ? imageCount - 1 : prev - 1))
+  }
+  
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev === imageCount - 1 ? 0 : prev + 1))
+  }
+  
+  // 1张图：居中展示
+  if (imageCount === 1) {
+    return (
+      <div className="my-4 flex justify-center">
+        <div className="max-w-3xl w-full">
+          {styledImages[0]}
+        </div>
+      </div>
+    )
+  }
+  
+  // 2张图：并排展示
+  if (imageCount === 2) {
+    return (
+      <div className="my-4 flex justify-center gap-4">
+        {styledImages.map((img, idx) => (
+          <div key={idx} className="flex-1 max-w-md">
+            {img}
+          </div>
+        ))}
+      </div>
+    )
+  }
+  
+  // 3张图：三列展示
+  if (imageCount === 3) {
+    return (
+      <div className="my-4 grid grid-cols-3 gap-3 max-w-5xl mx-auto">
+        {styledImages.map((img, idx) => (
+          <div key={idx} className="w-full">
+            {img}
+          </div>
+        ))}
+      </div>
+    )
+  }
+  
+  // 4张及以上：轮播展示
+  return (
+    <div className="my-4 max-w-4xl mx-auto">
+      <div className="relative group">
+        {/* 主图区域 */}
+        <div className="relative overflow-hidden rounded-lg">
+          {styledImages[currentIndex]}
+        </div>
+        
+        {/* 左右箭头 */}
+        <button
+          onClick={goToPrevious}
+          className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 shadow-lg 
+                     opacity-0 group-hover:opacity-100 transition-opacity duration-200
+                     hover:bg-white dark:bg-gray-800/90 dark:hover:bg-gray-800"
+          aria-label="上一张"
+        >
+          <ChevronLeftIcon className="h-6 w-6 text-gray-800 dark:text-gray-200" />
+        </button>
+        
+        <button
+          onClick={goToNext}
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 shadow-lg
+                     opacity-0 group-hover:opacity-100 transition-opacity duration-200
+                     hover:bg-white dark:bg-gray-800/90 dark:hover:bg-gray-800"
+          aria-label="下一张"
+        >
+          <ChevronRightIcon className="h-6 w-6 text-gray-800 dark:text-gray-200" />
+        </button>
+        
+        {/* 指示器 */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+          {styledImages.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentIndex(idx)}
+              className={clsx(
+                'h-2 rounded-full transition-all duration-200',
+                idx === currentIndex
+                  ? 'w-8 bg-white dark:bg-gray-200'
+                  : 'w-2 bg-white/50 dark:bg-gray-400/50 hover:bg-white/75 dark:hover:bg-gray-300/75'
+              )}
+              aria-label={`跳转到第 ${idx + 1} 张`}
+            />
+          ))}
+        </div>
+        
+        {/* 图片计数 */}
+        <div className="absolute top-4 right-4 rounded-full bg-black/50 px-3 py-1 text-sm text-white backdrop-blur-sm">
+          {currentIndex + 1} / {imageCount}
+        </div>
+      </div>
+      
+      {/* 缩略图 */}
+      <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
+        {styledImages.map((img, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentIndex(idx)}
+            className={clsx(
+              'flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200',
+              idx === currentIndex
+                ? 'border-blue-500 dark:border-blue-400 ring-2 ring-blue-500/20'
+                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+            )}
+          >
+            <div className="w-full h-full">
+              {img}
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
   )
 }

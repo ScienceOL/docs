@@ -2,16 +2,14 @@
 
 > 本节介绍了如何快速学会Xyzen去解决实际问题。请参阅每节中的图文内容以深入了解。
 
-
-
-## 1、AI聊天助手
+## 1、聊天助手
 
 成功登录Xyzen平台，进入到如下界面：
 
-<div style={{display: 'flex', gap: '1px', justifyContent: 'center'}}>
-  <img src="https://storage.sciol.ac.cn/library/docs/开始新对话_night.png" alt="图片1" width="360"/>
-  <img src="https://storage.sciol.ac.cn/library/docs/发送你好_night.png" alt="图片2" width="360"/>
-</div>
+<ImageGallery>
+  <img src="https://storage.sciol.ac.cn/library/docs/开始新对话_night.png" alt="图片1" />
+  <img src="https://storage.sciol.ac.cn/library/docs/发送你好_night.png" alt="图片2" />
+</ImageGallery>
 
 点击 `开始新对话` ，即可与聊天助手进行交互。
 
@@ -23,37 +21,50 @@
 
 点击聊天页面右上角的MCP图标
 
-<div align="center">
-  <img src="https://storage.sciol.ac.cn/library/docs/点击MCPlogo_night.png" alt="添加MCP图" width="700"/>
-  {/* <p><em>图1: Xyzen 聊天助手界面</em></p> */}
-</div>
+![添加MCP图](https://storage.sciol.ac.cn/library/docs/点击MCPlogo_night.png)
 
 进入 `MCP Servers` 窗口，点击 `Add Server` 或者 `Add Your First Server`（如果是第一次在Xyzen平台添加MCP工具）
 
-<div align="center">
-  <img src="https://storage.sciol.ac.cn/library/docs/add_first_mcp.png" alt="添加MCP图" width="700"/>
-  {/* <p><em>图1: Xyzen 聊天助手界面</em></p> */}
-</div>
+![添加MCP图](https://storage.sciol.ac.cn/library/docs/add_first_mcp.png)
 
-依次添加 `Server Name` 、 `Description` （可选）和 `Server URL` ，点击右下角 `Add Server` 按钮，即可完成MCP服务的添加。其中 `Server URL` 为本地启动的Xyzen服务对应的端口+xyzen/mcp/mcptools。
-<Note>注意：mcptools对应的python脚本要置于Xyzen/service/handler/mcp目录下。</Note>
+依次添加 `Server Name` 、 `Description` （可选）和 `Server URL` ，点击右下角 `Add Server` 按钮，即可完成MCP服务的添加。其中 `Server URL` 
+为提供服务的 MCP Server 地址。
 
-<div style={{display: 'flex', gap: '1px', justifyContent: 'center'}}>
-  <img src="https://storage.sciol.ac.cn/library/docs/add_mcp_server_night.png" alt="添加MCP样例" width="360"/>
-  <img src="https://storage.sciol.ac.cn/library/docs/online_offline.png" alt="首个MCP工具" width="360"/>
-</div>
-绿色 `Online` 即为成功添加MCP工具（如test）；若为红色 `Offline` （如pytorch1），尝试点击右上角Refresh或刷新浏览器当前页面，如果刷新不能解决 `Offline`，建议检查端口号、路径名称、MCP工具脚本是否正确，重新添加`MCP server`。
+<Note>Xyzen 内置了一系列 MCP 服务，你也可以方便的在 Xyzen 中集成你的自定义 MCP Server，有关这方面的详情，请参阅[自定义 MCP 服务](/xyzen/mcp)。</Note>
+
+<ImageGallery>
+  <img src="https://storage.sciol.ac.cn/library/docs/add_mcp_server_night.png" alt="添加MCP样例" />
+  <img src="https://storage.sciol.ac.cn/library/docs/online_offline.png" alt="首个MCP工具" />
+</ImageGallery>
+
+绿色 `Online` 即为成功添加MCP工具（如test）；若为红色 `Offline` （如pytorch1），尝试点击右上角Refresh或刷新浏览器当前页面，如果刷新不能解决 `Offline`，
+建议检查端口号、路径名称、MCP工具脚本是否正确，重新添加`MCP server`。
+
 ### II.调用MCP工具
 以较为简单的整型数加法为例展示如何调用已添加的MCP Server，点击页面右半栏左上角的`助手`→`+添加助手`，进入`添加新助手`窗口：
-<div style={{display:'flex', gap:'1px', justifyContent: 'center'}}>
-  <img src="https://storage.sciol.ac.cn/library/docs/添加助手_night.png" alt="添加助手" width="210"/>
-  <img src="https://storage.sciol.ac.cn/library/docs/加法求解器助手.png" alt="创建助手" width="330"/>
-  <img src="https://storage.sciol.ac.cn/library/docs/助手添加完成_night.png" alt="助手添加完成" width="210"/>
-  {/* <p><em>图1: Xyzen 聊天助手界面</em></p> */}
-</div>
-    输入`名称`（必填项）、`描述`、`系统提示`并勾选下方”连接的MCP服务器“中需要添加的 MCPtool，点击`创建助手`按钮，完成助手的创建。
+<ImageGallery>
+  <img src="https://storage.sciol.ac.cn/library/docs/添加助手_night.png" alt="添加助手" />
+  <img src="https://storage.sciol.ac.cn/library/docs/加法求解器助手.png" alt="创建助手" />
+  <img src="https://storage.sciol.ac.cn/library/docs/助手添加完成_night.png" alt="助手添加完成" />
+</ImageGallery>
+
+输入`名称`（必填项）、`描述`、`系统提示`并勾选下方"连接的MCP服务器"中需要添加的 MCPtool，点击`创建助手`按钮，完成助手的创建。
+
 #### **与新助手聊天**
+
 返回助手页面，点击刚刚创建的助手"例如：加法求解器"进入聊天页面，在对话框中输入"计算 123 + 456"的指令，点击发送按钮：
+
+#### **开启工具使用确认**
+
+如果你希望模型在调用MCP工具前进行确认，可以在聊天输入框的左上角点击盾牌图标。如下图所示：
+
+<ImageGallery>
+  <img src="https://storage.sciol.ac.cn/library/docs/勾选MCP使用确认.png" alt="开启工具使用确认" />
+  <img src="https://storage.sciol.ac.cn/library/docs/确认执行MCP工具.png" alt="开启工具使用确认_highlight" />
+  <img src="https://storage.sciol.ac.cn/library/docs/MCP工具内部执行结果.png" alt="开启工具使用确认" />
+</ImageGallery>
+
+与直接开始聊天不同，此时模型会在调用MCP工具前请用户确认使用哪些MCP工具，点击 `确认执行` 即可调用某个或某些MCP工具完成指定任务，防止运行一些意料之外的 MCP 工具，提升安全性。
 
 <div style={{display: 'flex', gap: '20px', justifyContent: 'center', alignItems: 'flex-start', flexWrap: 'wrap'}}>
   <div style={{flex: 1, minWidth: '300px', maxWidth: '45%'}}>
@@ -77,38 +88,6 @@
   </div>
 </div>
 
-{/*
-<StackedVideosLayout
-  title="MCP工具演示"
-  videos={[
-    {
-      src: "https://storage.sciol.ac.cn/library/docs/mcptool-计算加法.mov",
-      alt: "加法求解器"
-    }
-  ]}
-/>
-*/}
-#### **开启工具使用确认**
-如果你希望模型在调用MCP工具前进行确认，可以在聊天输入框的左上角点击盾牌图标。如下图所示：
-<div style={{display:'flex', gap: '1px', justifyContent: 'center'}}>
-  <img src="https://storage.sciol.ac.cn/library/docs/勾选MCP使用确认.png" alt="开启工具使用确认" width="400"/>
-  <img src="https://storage.sciol.ac.cn/library/docs/确认执行MCP工具.png" alt="开启工具使用确认_highlight" width="220"/>
-  <img src="https://storage.sciol.ac.cn/library/docs/MCP工具内部执行结果.png" alt="开启工具使用确认" width="160"/>
-  {/* <p><em>图1: Xyzen 聊天助手界面</em></p> */}
-</div>
-{/*
-<StackedVideosLayout
-  title="开启MCP工具使用确认功能"
-  videos={[
-    {
-      src: "https://storage.sciol.ac.cn/library/docs/勾选MCP工具确认.mov",
-      alt: "开启工具使用确认"
-    }
-  ]}
-/>
-*/}
-与直接开始聊天不同，此时模型会在调用MCP工具前请用户确认使用哪些MCP工具，点击 `确认执行` 即可调用某个或某些MCP工具完成指定任务，避免不同种类的MCP工具之间互相干扰，影响模型回答的效果。
-
 <Note>
-细心观察两个视频可以发现，开启 **MCP工具使用确认功能** 前后，工具的内部执行操作和结果是相同的。
+你可以通过展开 MCP Tool 工具的详情看到工具调用的详细过程。
 </Note>

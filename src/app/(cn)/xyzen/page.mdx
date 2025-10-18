@@ -3,20 +3,44 @@
 Xyzen 是 ScienceOL 矩阵中的 AI 担当。
 
 <Note>
-Xyzen 提供三种部署方式：
-
-1. 通过 Docker 部署
-2. 通过 源码部署
-3. 前端通过 npm 包方式集成在你的已有项目中
+1. 免费开源
+2. 无需整站部署，快速集成于现有网站
+3. 自演化 Agent 框架
 </Note>
 
 ## Features
 
-### 1. 无需全栈部署、快速集成到你的网站中
+Xyzen 最大的特点是通过 NPM Package 方式一键集成于你的现有网站中，来快速为你的服务添加 AI 能力。
+**不同于其他的 LLM Client 开源方案需要整站部署**，
+Xyzen 专注于核心的 LLM 业务逻辑。可基于你的网站风格进行高度定制化。
 
-Xyzen 提供全栈开源，前端以 NPM 包方式分发，你可以一键快速的集成在你的 React 前端项目中。
+### 前端集成
 
-后端提供一键部署，可用于你的前端连接。
+在你的 React 项目中使用 Xyzen：
+
+```bash
+yarn add @sciol/xyzen@latest
+```
+
+基本用法：
+
+```tsx
+import { Xyzen, useXyzen } from '@sciol/xyzen'
+
+function App() {
+  const [isXyzenOpen, panelWidth] = useXyzen() 
+  return (
+    <main>
+        <div style={{
+            marginRight: isXyzenOpen ? panelWidth : 0,
+        }}>
+            {children}
+        </div>
+        <Xyzen />
+    </main>
+  )
+}
+```
 
 ### 2. 一键创建 MCP 服务器，并与各 AI 提供商集成
 

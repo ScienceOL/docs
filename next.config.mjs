@@ -18,6 +18,15 @@ const nextConfig = {
   output: 'standalone',
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
   allowedDevOrigins: ['127.0.0.1'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'storage.sciol.ac.cn',
+        pathname: '/library/docs/**',
+      },
+    ],
+  },
   turbopack: {
     resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.json'],
     resolveAlias: {
