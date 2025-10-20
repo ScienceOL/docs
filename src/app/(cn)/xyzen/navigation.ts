@@ -6,7 +6,8 @@ const navigation: Array<NavGroup> = [
     links: [
       { title: '介绍', href: `/xyzen` },
       { title: '快速开始', href: `/xyzen/quickstart` },
-      { title: 'MCP', href: `/xyzen/mcp` },
+      // { title: 'MCP', href: `/xyzen/mcp` },
+      { title: '示例演示', href: `/xyzen/demo` },
     ],
   },
   {
