@@ -16,7 +16,9 @@ export interface Section {
   title: string
   offsetRem?: number
   tag?: string
+  level?: number
   headingRef?: React.RefObject<HTMLHeadingElement>
+  children?: Array<Section>
 }
 
 interface SectionState {
@@ -27,10 +29,12 @@ interface SectionState {
     id,
     ref,
     offsetRem,
+    level,
   }: {
     id: string
     ref: React.RefObject<HTMLHeadingElement>
     offsetRem: number
+    level?: number
   }) => void
 }
 
@@ -44,19 +48,33 @@ function createSectionStore(sections: Array<Section>) {
           ? {}
           : { visibleSections },
       ),
-    registerHeading: ({ id, ref, offsetRem }) =>
+    registerHeading: ({ id, ref, offsetRem, level }) =>
       set((state) => {
-        return {
-          sections: state.sections.map((section) => {
+        const newSections = [...state.sections]
+        
+        // 查找并更新对应的 section（支持嵌套）
+        const updateSection = (sections: Section[]): Section[] => {
+          return sections.map((section) => {
             if (section.id === id) {
               return {
                 ...section,
                 headingRef: ref,
                 offsetRem,
+                level,
+              }
+            }
+            if (section.children) {
+              return {
+                ...section,
+                children: updateSection(section.children),
               }
             }
             return section
-          }),
+          })
+        }
+        
+        return {
+          sections: updateSection(newSections),
         }
       }),
   }))

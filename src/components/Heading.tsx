@@ -66,7 +66,7 @@ function Anchor({
   )
 }
 
-export function Heading<Level extends 2 | 3>({
+export function Heading<Level extends 2 | 3 | 4>({
   children,
   tag,
   label,
@@ -81,7 +81,7 @@ export function Heading<Level extends 2 | 3>({
   anchor?: boolean
 }) {
   level = level ?? (2 as Level)
-  let Component = `h${level}` as 'h2' | 'h3'
+  let Component = `h${level}` as 'h2' | 'h3' | 'h4'
   let ref = useRef<HTMLHeadingElement>(null)
   let registerHeading = useSectionStore((s) => s.registerHeading)
 
@@ -91,8 +91,14 @@ export function Heading<Level extends 2 | 3>({
   })
 
   useEffect(() => {
-    if (level === 2) {
-      registerHeading({ id: props.id, ref, offsetRem: tag || label ? 8 : 6 })
+    // 注册所有 h2, h3, h4 标题
+    if (level === 2 || level === 3 || level === 4) {
+      registerHeading({ 
+        id: props.id, 
+        ref, 
+        offsetRem: tag || label ? 8 : 6,
+        level 
+      })
     }
   })
 

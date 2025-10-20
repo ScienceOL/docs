@@ -192,6 +192,14 @@ export default function typographyStyles({ theme }: PluginUtils) {
           marginTop: theme('spacing.10'),
           marginBottom: theme('spacing.2'),
         },
+        h4: {
+          color: 'var(--tw-prose-headings)',
+          fontSize: theme('fontSize.sm')[0],
+          ...theme('fontSize.sm')[1],
+          fontWeight: '600',
+          marginTop: theme('spacing.8'),
+          marginBottom: theme('spacing.2'),
+        },
 
         // Media
         'img, video, figure': {
@@ -279,14 +287,14 @@ export default function typographyStyles({ theme }: PluginUtils) {
             textDecorationColor: 'var(--tw-prose-links-underline)',
           },
         },
-        ':is(h1, h2, h3) a': {
+        ':is(h1, h2, h3, h4) a': {
           fontWeight: 'inherit',
         },
         strong: {
           color: 'var(--tw-prose-bold)',
           fontWeight: '600',
         },
-        ':is(a, blockquote, thead th) strong': {
+        ':is(a, blockquote, thead th, h4) strong': {
           color: 'inherit',
         },
         code: {
@@ -300,7 +308,7 @@ export default function typographyStyles({ theme }: PluginUtils) {
           backgroundColor: 'var(--tw-prose-code-bg)',
           fontSize: theme('fontSize.2xs'),
         },
-        ':is(a, h1, h2, h3, blockquote, thead th) code': {
+        ':is(a, h1, h2, h3, h4, blockquote, thead th) code': {
           color: 'inherit',
         },
         'h2 code': {
@@ -311,9 +319,13 @@ export default function typographyStyles({ theme }: PluginUtils) {
           fontSize: theme('fontSize.sm')[0],
           fontWeight: 'inherit',
         },
+        'h4 code': {
+          fontSize: theme('fontSize.xs')[0],
+          fontWeight: 'inherit',
+        },
 
         // Overrides
-        ':is(h1, h2, h3) + *': {
+        ':is(h1, h2, h3, h4) + *': {
           marginTop: '0',
         },
         '> :first-child': {

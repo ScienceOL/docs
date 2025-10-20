@@ -9,10 +9,66 @@ import { useRef } from 'react'
 
 import { Button } from '@/components/Button'
 import { useIsInsideMobileNavigation } from '@/components/MobileNavigation'
-import { useSectionStore } from '@/components/SectionProvider'
+import { type Section, useSectionStore } from '@/components/SectionProvider'
 import { Tag } from '@/components/Tag'
 import { remToPx } from '@/lib/remToPx'
 import { PrimarySite } from '@/config'
+
+// 将平铺的 sections 转换为嵌套的树形结构
+function buildSectionTree(sections: Section[]): Section[] {
+  const tree: Section[] = []
+  const stack: Section[] = []
+
+  sections.forEach((section) => {
+    const newSection = { ...section }
+    const level = section.level || 2
+
+    // 移除所有比当前级别高或相等的节点
+    while (stack.length > 0 && (stack[stack.length - 1].level || 2) >= level) {
+      stack.pop()
+    }
+
+    if (stack.length === 0) {
+      // 顶级节点 (h2)
+      tree.push(newSection)
+    } else {
+      // 子节点
+      const parent = stack[stack.length - 1]
+      if (!parent.children) {
+        parent.children = []
+      }
+      parent.children.push(newSection)
+    }
+
+    stack.push(newSection)
+  })
+
+  return tree
+}
+
+// 递归渲染 section 及其子级
+function renderSectionTree(
+  sections: Section[],
+  linkHref: string,
+): React.ReactNode {
+  return sections.map((section) => (
+    <li key={section.id}>
+      <NavLink
+        href={`${linkHref}#${section.id}`}
+        tag={section.tag}
+        isAnchorLink
+        level={section.level || 2}
+      >
+        {section.title}
+      </NavLink>
+      {section.children && section.children.length > 0 && (
+        <ul role="list" className="mt-1">
+          {renderSectionTree(section.children, linkHref)}
+        </ul>
+      )}
+    </li>
+  ))
+}
 
 function useInitialValue<T>(value: T, condition = true) {
   let initialValue = useRef(value).current
@@ -44,20 +100,31 @@ function NavLink({
   tag,
   active = false,
   isAnchorLink = false,
+  level = 2,
 }: {
   href: string
   children: React.ReactNode
   tag?: string
   active?: boolean
   isAnchorLink?: boolean
+  level?: number
 }) {
+  // 根据层级计算缩进
+  const getPaddingLeft = () => {
+    if (!isAnchorLink) return 'pl-4'
+    if (level === 2) return 'pl-7'
+    if (level === 3) return 'pl-10'
+    if (level === 4) return 'pl-14'
+    return 'pl-7'
+  }
+
   return (
     <Link
       href={href}
       aria-current={active ? 'page' : undefined}
       className={clsx(
         'flex justify-between gap-2 py-1 pr-3 text-sm transition',
-        isAnchorLink ? 'pl-7' : 'pl-4',
+        getPaddingLeft(),
         active
           ? 'text-zinc-900 dark:text-white'
           : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white',
@@ -151,10 +218,12 @@ function NavigationGroup({
   // state, so that the state does not change during the close animation.
   // The state will still update when we re-open (re-render) the navigation.
   let isInsideMobileNavigation = useIsInsideMobileNavigation()
-  let [pathname, sections] = useInitialValue(
-    [usePathname(), useSectionStore((s) => s.sections)],
-    isInsideMobileNavigation,
-  )
+  let pathname = useInitialValue(usePathname(), isInsideMobileNavigation)
+  // Don't freeze sections - they need to update when the page loads
+  let sections = useSectionStore((s) => s.sections)
+  
+  // 构建树形结构
+  const sectionTree = buildSectionTree(sections)
 
   let isActiveGroup =
     group.links.findIndex((link) => link.href === pathname) !== -1
@@ -189,7 +258,7 @@ function NavigationGroup({
                 {link.title}
               </NavLink>
               <AnimatePresence mode="popLayout" initial={false}>
-                {link.href === pathname && sections.length > 0 && (
+                {link.href === pathname && sectionTree.length > 0 && (
                   <motion.ul
                     role="list"
                     initial={{ opacity: 0 }}
@@ -202,17 +271,7 @@ function NavigationGroup({
                       transition: { duration: 0.15 },
                     }}
                   >
-                    {sections.map((section) => (
-                      <li key={section.id}>
-                        <NavLink
-                          href={`${link.href}#${section.id}`}
-                          tag={section.tag}
-                          isAnchorLink
-                        >
-                          {section.title}
-                        </NavLink>
-                      </li>
-                    ))}
+                    {renderSectionTree(sectionTree, link.href)}
                   </motion.ul>
                 )}
               </AnimatePresence>
