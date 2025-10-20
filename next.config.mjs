@@ -18,6 +18,10 @@ const nextConfig = {
   output: 'standalone',
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
   allowedDevOrigins: ['127.0.0.1'],
+  // 确保 standalone 模式下包含所有 MDX 文件
+  outputFileTracingIncludes: {
+    '**/*': ['./src/app/**/*.mdx'],
+  },
   images: {
     remotePatterns: [
       {
