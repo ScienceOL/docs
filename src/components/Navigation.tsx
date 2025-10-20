@@ -222,8 +222,22 @@ function NavigationGroup({
   // Don't freeze sections - they need to update when the page loads
   let sections = useSectionStore((s) => s.sections)
   
+  // 添加调试日志（同时支持开发和生产环境）
+  if (typeof window !== 'undefined') {
+    console.log('[Navigation Debug]', {
+      pathname,
+      sectionsCount: sections.length,
+      sections: sections.map(s => ({ title: s.title, level: s.level, id: s.id }))
+    })
+  }
+  
   // 构建树形结构
   const sectionTree = buildSectionTree(sections)
+  
+  // 调试树形结构
+  if (typeof window !== 'undefined') {
+    console.log('[Navigation Tree]', sectionTree)
+  }
 
   let isActiveGroup =
     group.links.findIndex((link) => link.href === pathname) !== -1

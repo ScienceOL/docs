@@ -22,6 +22,15 @@ export function Layout({
   navigation: Array<NavGroup>
 }) {
   let pathname = usePathname()
+  
+  // 添加调试日志（同时支持开发和生产环境）
+  if (typeof window !== 'undefined') {
+    console.log('[Layout Debug]', {
+      pathname,
+      allSectionsKeys: Object.keys(allSections),
+      currentPageSections: allSections[pathname],
+    })
+  }
 
   return (
     <SectionProvider sections={allSections[pathname] ?? []}>
