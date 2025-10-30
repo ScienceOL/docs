@@ -14,10 +14,11 @@
 
 ## 数据流转路径
 1. Component → Query Hook → Service → apiClient/Utils
-不经过 Store。Query 的缓存就是该服务器数据的权威来源。【服务端状态】
+不经过 Store。对于简单逻辑 Query = Core + Store + Service，所以也不需要经过 Core 了，Query 的缓存就是该服务器数据的权威来源。【服务端状态】
 2. Component → useAuth Hook → Core → Service → apiClient/Utils
 Core 负责写 Store（isAuthenticated、isLoading、必要的用户概要），useAuth 读 Store。【复杂流程编排】
 
+<Note> 依赖方向：Component → Store（读），Core → Store（写），Query Hook ⇏ Store（默认不写），Service ⇏ Store（禁止） </Note>
 <Note> Core 直接调用 Service 层，不调用 Query 层 </Note>
 <Note> Hook 可以直接调用 Query 层，Query 层的作用是数据获取/缓存，和 Core 层各有侧重点，复杂流程编排时再调用 Core 层</Note>
 <Note> Store 不在“数据请求链路”中。它是客户端状态源（UI/会话），独立于 Query/Service。服务器状态（列表/详情/userinfo 等）用 TanStack Query 管理，不复制到 Store，避免“双写”和陈旧数据。</Note>
