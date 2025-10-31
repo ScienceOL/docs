@@ -4,13 +4,13 @@
 
 | 层级          | 位置             | 职责      | 可以做                                                               | 不能做                                                       |
 | ------------- | ---------------- | --------- | -------------------------------------------------------------------- | ------------------------------------------------------------ |
-| **Component** | `components/`    | UI 渲染   | • 渲染 JSX<br>• 绑定事件<br>• 调用 Hook                              | • 直接访问 Store<br>• 包含业务逻辑<br>• HTTP 请求            |
-| **Hook**      | `hooks/`         | 能力封装  | • 封装 Core 方法<br>• 订阅 Store<br>• 生命周期处理<br>• 计算派生状态 | • 包含核心业务逻辑<br>• 直接调用 Service<br>• 复杂的流程编排 |
-| **Core** ⭐   | `lib/core/`      | 业务逻辑  | • 所有业务逻辑<br>• 流程编排<br>• 调用 Store/Query<br>• 处理副作用   | • 渲染 UI<br>• 操作 DOM<br>• 直接访问组件状态                |
-| **Store**     | `store/`         | 状态管理  | • 定义状态<br>• 更新状态<br>• 持久化                                 | • 业务逻辑<br>• HTTP 请求<br>• 复杂计算                      |
-| **Query**     | `hooks/queries/` | 数据缓存  | • 封装请求<br>• 缓存策略<br>• 调用 Service                           | • 业务流程编排<br>• 状态管理                                 |
-| **Service**   | `service/`       | HTTP 请求 | • 纯 HTTP 请求<br>• 数据序列化                                       | • 业务逻辑<br>• 状态管理<br>• UI 交互                        |
-| **Utils**     | `utils/`         | 工具函数  | • 格式化<br>• 验证<br>• 底层操作                                     | • 业务流程<br>• 状态管理                                     |
+| **Component** | `components/`    | UI 渲染   | • 渲染 JSX • 绑定事件 • 调用 Hook                              | • 直接访问 Store • 包含业务逻辑 • HTTP 请求            |
+| **Hook**      | `hooks/`         | 能力封装  | • 封装 Core 方法 • 订阅 Store • 生命周期处理 • 计算派生状态 | • 包含核心业务逻辑 • 直接调用 Service • 复杂的流程编排 |
+| **Core** ⭐   | `lib/core/`      | 业务逻辑  | • 所有业务逻辑 • 流程编排 • 调用 Store/Query • 处理副作用   | • 渲染 UI • 操作 DOM • 直接访问组件状态                |
+| **Store**     | `store/`         | 状态管理  | • 定义状态 • 更新状态 • 持久化                                 | • 业务逻辑 • HTTP 请求 • 复杂计算                      |
+| **Query**     | `hooks/queries/` | 数据缓存  | • 封装请求 • 缓存策略 • 调用 Service                           | • 业务流程编排 • 状态管理                                 |
+| **Service**   | `service/`       | HTTP 请求 | • 纯 HTTP 请求 • 数据序列化                                       | • 业务逻辑 • 状态管理 • UI 交互                        |
+| **Utils**     | `utils/`         | 工具函数  | • 格式化 • 验证 • 底层操作                                     | • 业务流程 • 状态管理                                     |
 
 ## 数据流转路径
 1. Component → Query Hook → Service → apiClient/Utils
