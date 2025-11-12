@@ -47,30 +47,7 @@ export const advisors: Array<Advisor> = [
       ],
     },
   },
-  {
-    name: '张俊良',
-    title: '教授',
-    institution: '复旦大学',
-    department: '化学系',
-    specialization: '共轭烯炔化学 | 小环化学 | 金催化 | 不对称催化',
-    achievements: [
-      '国家杰出青年科学基金获得者',
-      '中国化学会青年化学家奖获得者',
-      'Thieme Chemistry Journal Award获得者',
-      '洪堡学者奖学金获得者',
-    ],
-    description:
-      '复旦大学化学系教授，博士生导师，师从麻生明院士。2009年获中国化学会青年化学家奖，2012年获Thieme Chemistry Journal Award，2014年获国家杰出青年科学基金。专注有机合成方法学研究，设计和发展了一系列手性膦催化剂和配体Sadphos。发表论文277篇，包括JACS 23篇、Angew 37篇等顶级期刊论文。',
-    avatar: '/advisors/zhangjunliang.png',
-    pattern: {
-      y: 16,
-      squares: [
-        [0, 3],
-        [1, 1],
-        [2, 2],
-      ],
-    },
-  },
+
   {
     name: '张林峰',
     title: '深势科技创始人兼首席科学家、AISI 院长',
