@@ -3,6 +3,9 @@
   "packageManager": "yarn@1.22.22",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.18 <25"
+  },
   "scripts": {
     "dev": "next dev -p 32235",
     "tsc": "tsc --noEmit",

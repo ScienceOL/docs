@@ -38,20 +38,21 @@ export default function GiscusComment() {
       script.setAttribute('data-repo-id', 'R_kgDOOI9EFg')
       script.setAttribute('data-category', 'Announcements')
       script.setAttribute('data-category-id', 'DIC_kwDOOI9EFs4Cr9K0')
-      script.setAttribute('data-mapping', 'specific')
-      script.setAttribute('data-term', pathname)
-      script.setAttribute('data-strict', '1')
+      script.setAttribute('data-mapping', 'pathname')
+      script.setAttribute('data-strict', '0')
       script.setAttribute('data-reactions-enabled', '1')
       script.setAttribute('data-emit-metadata', '0')
       script.setAttribute('data-input-position', 'top')
-      script.setAttribute(
-        'data-theme',
-        resolvedTheme === 'dark' ? 'transparent_dark' : 'light',
-      )
+      script.setAttribute('data-theme', 'preferred_color_scheme')
       script.setAttribute('data-loading', 'lazy')
-      script.setAttribute('data-lang', 'zh-CN')
+      script.setAttribute('data-lang', 'en')
       script.crossOrigin = 'anonymous'
       script.async = true
+
+      // 错误处理
+      script.onerror = () => {
+        console.error('Failed to load Giscus script')
+      }
 
       // 找到Giscus容器并添加脚本
       const giscusContainer = document.querySelector('.giscus')
@@ -75,7 +76,8 @@ export default function GiscusComment() {
     } // 依赖 resolvedTheme 是正确的
   }, [pathname, resolvedTheme]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // 监听主题变化，实时更新Giscus主题
+  // 使用 preferred_color_scheme 后，Giscus 会自动根据系统主题切换
+  // 如果需要手动同步主题，可以保留以下代码
   useEffect(() => {
     if (!isGiscusLoaded) return
 
@@ -83,38 +85,20 @@ export default function GiscusComment() {
       const iframe = document.querySelector(
         'iframe.giscus-frame',
       ) as HTMLIFrameElement
-      if (iframe) {
-        const theme = resolvedTheme === 'dark' ? 'transparent_dark' : 'light'
-        iframe.contentWindow?.postMessage(
-          { giscus: { setConfig: { theme } } },
+      if (iframe && iframe.contentWindow) {
+        // 使用 preferred_color_scheme 让 giscus 自动跟随系统主题
+        iframe.contentWindow.postMessage(
+          { giscus: { setConfig: { theme: 'preferred_color_scheme' } } },
           'https://giscus.app',
         )
       }
     }
 
-    // 监听Giscus消息
-    const handleMessage = (event: MessageEvent) => {
-      if (
-        event.origin === 'https://giscus.app' &&
-        event.data?.giscus?.discussion
-      ) {
-        updateGiscusTheme()
-      }
-    }
-
-    window.addEventListener('message', handleMessage)
-
-    // 轮询尝试更新主题，确保iframe加载后应用正确主题
-    let attempts = 0
-    const interval = setInterval(() => {
-      updateGiscusTheme()
-      attempts++
-      if (attempts >= 10) clearInterval(interval)
-    }, 500)
+    // 给 iframe 一些时间加载
+    const timer = setTimeout(updateGiscusTheme, 1000)
 
     return () => {
-      window.removeEventListener('message', handleMessage)
-      clearInterval(interval)
+      clearTimeout(timer)
     }
   }, [resolvedTheme, isGiscusLoaded])
 
