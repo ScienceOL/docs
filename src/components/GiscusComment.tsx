@@ -43,7 +43,10 @@ export default function GiscusComment() {
       script.setAttribute('data-reactions-enabled', '1')
       script.setAttribute('data-emit-metadata', '0')
       script.setAttribute('data-input-position', 'top')
-      script.setAttribute('data-theme', 'preferred_color_scheme')
+      script.setAttribute(
+        'data-theme',
+        resolvedTheme === 'dark' ? 'transparent_dark' : 'light',
+      )
       script.setAttribute('data-loading', 'lazy')
       script.setAttribute('data-lang', 'en')
       script.crossOrigin = 'anonymous'
@@ -76,8 +79,7 @@ export default function GiscusComment() {
     } // 依赖 resolvedTheme 是正确的
   }, [pathname, resolvedTheme]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // 使用 preferred_color_scheme 后，Giscus 会自动根据系统主题切换
-  // 如果需要手动同步主题，可以保留以下代码
+  // 监听主题变化，实时更新Giscus主题
   useEffect(() => {
     if (!isGiscusLoaded) return
 
@@ -86,19 +88,37 @@ export default function GiscusComment() {
         'iframe.giscus-frame',
       ) as HTMLIFrameElement
       if (iframe && iframe.contentWindow) {
-        // 使用 preferred_color_scheme 让 giscus 自动跟随系统主题
+        const theme = resolvedTheme === 'dark' ? 'transparent_dark' : 'light'
         iframe.contentWindow.postMessage(
-          { giscus: { setConfig: { theme: 'preferred_color_scheme' } } },
+          { giscus: { setConfig: { theme } } },
           'https://giscus.app',
         )
       }
     }
 
-    // 给 iframe 一些时间加载
-    const timer = setTimeout(updateGiscusTheme, 1000)
+    // 监听Giscus消息
+    const handleMessage = (event: MessageEvent) => {
+      if (
+        event.origin === 'https://giscus.app' &&
+        event.data?.giscus?.discussion
+      ) {
+        updateGiscusTheme()
+      }
+    }
+
+    window.addEventListener('message', handleMessage)
+
+    // 轮询尝试更新主题，确保iframe加载后应用正确主题
+    let attempts = 0
+    const interval = setInterval(() => {
+      updateGiscusTheme()
+      attempts++
+      if (attempts >= 10) clearInterval(interval)
+    }, 500)
 
     return () => {
-      clearTimeout(timer)
+      window.removeEventListener('message', handleMessage)
+      clearInterval(interval)
     }
   }, [resolvedTheme, isGiscusLoaded])
 
