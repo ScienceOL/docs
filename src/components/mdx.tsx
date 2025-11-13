@@ -1,6 +1,7 @@
 "use client";
 import clsx from 'clsx'
 import Link from 'next/link'
+import Image from 'next/image'
 
 import { Feedback } from '@/components/Feedback'
 import { Heading } from '@/components/Heading'
@@ -10,7 +11,7 @@ import { StackedVideosLayout } from '@/components/StackedVideosLayout'
 import { Video } from '@/components/Video'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid'
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 
 export const a = Link
 export { Button } from '@/components/Button'
@@ -82,7 +83,7 @@ export function Note({ children }: { children: React.ReactNode }) {
 export function Img({ src, alt }: { src: string; alt: string }) {
   return (
     <>
-      <img
+      <Image
         src={src}
         alt={alt || ''}
         className="my-4 h-auto w-full max-w-3xl rounded-lg border border-gray-200/60 shadow-md 
@@ -188,6 +189,8 @@ export function Property({
 
 export function ImageGallery({ children }: { children: React.ReactNode }) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [minHeight, setMinHeight] = useState<number | null>(null)
+  const imageRefs = useRef<(HTMLImageElement | null)[]>([])
   
   // 提取所有 img 元素并添加样式
   const images = React.Children.toArray(children).filter(
@@ -196,6 +199,33 @@ export function ImageGallery({ children }: { children: React.ReactNode }) {
   )
   
   const imageCount = images.length
+  
+  // 计算多张图片的最小高度
+  useEffect(() => {
+    if (imageCount < 2 || imageCount > 3) return
+    
+    const updateMinHeight = () => {
+      const validRefs = imageRefs.current.filter((ref): ref is HTMLImageElement => ref !== null)
+      if (validRefs.length === imageCount) {
+        // 获取实际渲染的高度，而不是原始高度
+        const heights = validRefs.map(img => img.getBoundingClientRect().height)
+        const minH = Math.min(...heights)
+        if (minH > 0) {
+          setMinHeight(minH)
+        }
+      }
+    }
+    
+    // 延迟执行，确保图片已经渲染
+    const timer = setTimeout(updateMinHeight, 100)
+    
+    // 监听窗口resize
+    window.addEventListener('resize', updateMinHeight)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('resize', updateMinHeight)
+    }
+  }, [imageCount])
   
   if (imageCount === 0) return null
   
@@ -238,28 +268,128 @@ export function ImageGallery({ children }: { children: React.ReactNode }) {
     )
   }
   
-  // 2张图：并排展示
+  // 2张图:并排展示，保持高度一致且图片内容完整
   if (imageCount === 2) {
     return (
-      <div className="my-4 flex justify-center gap-4">
-        {styledImages.map((img, idx) => (
-          <div key={idx} className="flex-1 max-w-md">
-            {img}
-          </div>
-        ))}
+      <div className="my-4 flex justify-center items-end" style={{gap: '12px'}}>
+        {styledImages.map((img, idx) => {
+          const imgProps = img.props as React.ImgHTMLAttributes<HTMLImageElement>
+          return (
+            <div key={idx} className="flex items-center justify-center">
+              {React.cloneElement(img, {
+                ...imgProps,
+                ref: (el: HTMLImageElement | null) => {
+                  imageRefs.current[idx] = el
+                  // 图片加载完成后计算最小高度
+                  if (el && el.complete && el.naturalHeight > 0) {
+                    setTimeout(() => {
+                      const validRefs = imageRefs.current.filter((ref): ref is HTMLImageElement => ref !== null && ref.complete)
+                      if (validRefs.length === 2) {
+                        const heights = validRefs.map(img => img.getBoundingClientRect().height)
+                        const minH = Math.min(...heights)
+                        if (minH > 0 && Math.abs(minH - (minHeight || 0)) > 1) {
+                          setMinHeight(minH)
+                        }
+                      }
+                    }, 50)
+                  }
+                },
+                onLoad: (e: React.SyntheticEvent<HTMLImageElement>) => {
+                  const target = e.currentTarget
+                  setTimeout(() => {
+                    if (target) {
+                      const validRefs = imageRefs.current.filter((ref): ref is HTMLImageElement => ref !== null && ref.complete)
+                      if (validRefs.length === 2) {
+                        const heights = validRefs.map(img => img.getBoundingClientRect().height)
+                        const minH = Math.min(...heights)
+                        if (minH > 0) {
+                          setMinHeight(minH)
+                        }
+                      }
+                    }
+                  }, 50)
+                  // 调用原有的onLoad
+                  if (imgProps.onLoad) {
+                    imgProps.onLoad(e)
+                  }
+                },
+                className: clsx(imgProps.className, 'h-auto w-auto'),
+                style: minHeight ? { 
+                  height: `${minHeight}px`,
+                  width: 'auto',
+                  maxWidth: '100%'
+                } : { 
+                  maxHeight: '900px', 
+                  width: 'auto',
+                  height: 'auto'
+                }
+              })}
+            </div>
+          )
+        })}
       </div>
     )
   }
   
-  // 3张图：三列展示
+  // 3张图：三列展示，保持高度一致
   if (imageCount === 3) {
     return (
-      <div className="my-4 grid grid-cols-3 gap-3 max-w-5xl mx-auto">
-        {styledImages.map((img, idx) => (
-          <div key={idx} className="w-full">
-            {img}
-          </div>
-        ))}
+      <div className="my-4 flex justify-center items-end" style={{gap: '12px'}}>
+        {styledImages.map((img, idx) => {
+          const imgProps = img.props as React.ImgHTMLAttributes<HTMLImageElement>
+          return (
+            <div key={idx} className="flex items-center justify-center">
+              {React.cloneElement(img, {
+                ...imgProps,
+                ref: (el: HTMLImageElement | null) => {
+                  imageRefs.current[idx] = el
+                  // 图片加载完成后计算最小高度
+                  if (el && el.complete && el.naturalHeight > 0) {
+                    setTimeout(() => {
+                      const validRefs = imageRefs.current.filter((ref): ref is HTMLImageElement => ref !== null && ref.complete)
+                      if (validRefs.length === 3) {
+                        const heights = validRefs.map(img => img.getBoundingClientRect().height)
+                        const minH = Math.min(...heights)
+                        if (minH > 0 && Math.abs(minH - (minHeight || 0)) > 1) {
+                          setMinHeight(minH)
+                        }
+                      }
+                    }, 50)
+                  }
+                },
+                onLoad: (e: React.SyntheticEvent<HTMLImageElement>) => {
+                  const target = e.currentTarget
+                  setTimeout(() => {
+                    if (target) {
+                      const validRefs = imageRefs.current.filter((ref): ref is HTMLImageElement => ref !== null && ref.complete)
+                      if (validRefs.length === 3) {
+                        const heights = validRefs.map(img => img.getBoundingClientRect().height)
+                        const minH = Math.min(...heights)
+                        if (minH > 0) {
+                          setMinHeight(minH)
+                        }
+                      }
+                    }
+                  }, 50)
+                  // 调用原有的onLoad
+                  if (imgProps.onLoad) {
+                    imgProps.onLoad(e)
+                  }
+                },
+                className: clsx(imgProps.className, 'h-auto w-auto'),
+                style: minHeight ? { 
+                  height: `${minHeight}px`,
+                  width: 'auto',
+                  maxWidth: '100%'
+                } : { 
+                  maxHeight: '900px', 
+                  width: 'auto',
+                  height: 'auto'
+                }
+              })}
+            </div>
+          )
+        })}
       </div>
     )
   }
@@ -336,6 +466,222 @@ export function ImageGallery({ children }: { children: React.ReactNode }) {
           </button>
         ))}
       </div>
+    </div>
+  )
+}
+
+export function VideoGallery({ children }: { children: React.ReactNode }) {
+  const [minHeight, setMinHeight] = useState<number | null>(null)
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+  
+  // 提取所有 video 元素
+  const videos = React.Children.toArray(children).filter(
+    (child): child is React.ReactElement =>
+      React.isValidElement(child) && child.type === 'video'
+  )
+  
+  const videoCount = videos.length
+  
+  // 计算视频的最小高度
+  useEffect(() => {
+    if (videoCount < 2 || videoCount > 3) return
+    
+    const updateMinHeight = () => {
+      const validRefs = videoRefs.current.filter((ref): ref is HTMLVideoElement => ref !== null && ref.videoHeight > 0)
+      if (validRefs.length === videoCount) {
+        const heights = validRefs.map(video => {
+          const rect = video.getBoundingClientRect()
+          return rect.height
+        })
+        const minH = Math.min(...heights)
+        if (minH > 0) {
+          setMinHeight(minH)
+        }
+      }
+    }
+    
+    const timer = setTimeout(updateMinHeight, 200)
+    window.addEventListener('resize', updateMinHeight)
+    
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('resize', updateMinHeight)
+    }
+  }, [videoCount])
+  
+  if (videoCount === 0) return null
+  
+  // 1个视频：居中展示
+  if (videoCount === 1) {
+    const videoProps = videos[0].props as any
+    const alt = videoProps.alt || ''
+    return (
+      <div className="my-4 flex justify-center">
+        <div className="max-w-3xl w-full">
+          <div className="overflow-hidden rounded-xl">
+            <video
+              {...videoProps}
+              className="w-full h-auto rounded-xl border border-gray-200/60 shadow-lg dark:border-gray-700/80"
+              controls
+            />
+          </div>
+          {alt && (
+            <span className="block text-center text-sm font-light italic text-gray-500 dark:text-gray-400 mt-2">
+              {alt}
+            </span>
+          )}
+        </div>
+      </div>
+    )
+  }
+  
+  // 2个视频：并排展示，保持高度一致
+  if (videoCount === 2) {
+    return (
+      <div className="my-4 flex justify-center items-end" style={{gap: '12px'}}>
+        {videos.map((video, idx) => {
+          const videoProps = video.props as any
+          const alt = videoProps.alt || ''
+          return (
+            <div key={idx} className="flex flex-col items-center">
+              <div className="overflow-hidden rounded-xl">
+                <video
+                  {...videoProps}
+                  ref={(el: HTMLVideoElement | null) => {
+                    videoRefs.current[idx] = el
+                    if (el && el.readyState >= 1) {
+                      setTimeout(() => {
+                        const validRefs = videoRefs.current.filter((ref): ref is HTMLVideoElement => ref !== null && ref.videoHeight > 0)
+                        if (validRefs.length === 2) {
+                          const heights = validRefs.map(v => v.getBoundingClientRect().height)
+                          const minH = Math.min(...heights)
+                          if (minH > 0 && Math.abs(minH - (minHeight || 0)) > 1) {
+                            setMinHeight(minH)
+                          }
+                        }
+                      }, 100)
+                    }
+                  }}
+                  onLoadedMetadata={(e: React.SyntheticEvent<HTMLVideoElement>) => {
+                    setTimeout(() => {
+                      const validRefs = videoRefs.current.filter((ref): ref is HTMLVideoElement => ref !== null && ref.videoHeight > 0)
+                      if (validRefs.length === 2) {
+                        const heights = validRefs.map(v => v.getBoundingClientRect().height)
+                        const minH = Math.min(...heights)
+                        if (minH > 0) {
+                          setMinHeight(minH)
+                        }
+                      }
+                    }, 100)
+                    if (videoProps.onLoadedMetadata) {
+                      videoProps.onLoadedMetadata(e)
+                    }
+                  }}
+                  className="rounded-xl border border-gray-200/60 shadow-lg 
+                            transition-all duration-200 
+                            hover:border-gray-300/80 hover:shadow-xl
+                            dark:border-gray-700/80 dark:shadow-gray-900/30
+                            dark:hover:border-gray-600"
+                  style={minHeight ? { 
+                    height: `${minHeight}px`,
+                    width: 'auto',
+                    maxWidth: '100%'
+                  } : { 
+                    maxHeight: '800px', 
+                    width: 'auto',
+                    height: 'auto'
+                  }}
+                  controls
+                />
+              </div>
+              {alt && (
+                <span className="block text-center text-sm font-light italic text-gray-500 dark:text-gray-400 mt-2">
+                  {alt}
+                </span>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+  
+  // 3个视频：三列展示，保持高度一致
+  if (videoCount === 3) {
+    return (
+      <div className="my-4 flex justify-center items-end" style={{gap: '12px'}}>
+        {videos.map((video, idx) => {
+          const videoProps = video.props as React.VideoHTMLAttributes<HTMLVideoElement>
+          return (
+            <div key={idx} className="flex items-center justify-center overflow-hidden rounded-xl">
+              <video
+                {...videoProps}
+                ref={(el: HTMLVideoElement | null) => {
+                  videoRefs.current[idx] = el
+                  if (el && el.readyState >= 1) {
+                    setTimeout(() => {
+                      const validRefs = videoRefs.current.filter((ref): ref is HTMLVideoElement => ref !== null && ref.videoHeight > 0)
+                      if (validRefs.length === 3) {
+                        const heights = validRefs.map(v => v.getBoundingClientRect().height)
+                        const minH = Math.min(...heights)
+                        if (minH > 0 && Math.abs(minH - (minHeight || 0)) > 1) {
+                          setMinHeight(minH)
+                        }
+                      }
+                    }, 100)
+                  }
+                }}
+                onLoadedMetadata={(e: React.SyntheticEvent<HTMLVideoElement>) => {
+                  setTimeout(() => {
+                    const validRefs = videoRefs.current.filter((ref): ref is HTMLVideoElement => ref !== null && ref.videoHeight > 0)
+                    if (validRefs.length === 3) {
+                      const heights = validRefs.map(v => v.getBoundingClientRect().height)
+                      const minH = Math.min(...heights)
+                      if (minH > 0) {
+                        setMinHeight(minH)
+                      }
+                    }
+                  }, 100)
+                  if (videoProps.onLoadedMetadata) {
+                    videoProps.onLoadedMetadata(e)
+                  }
+                }}
+                className="rounded-xl border border-gray-200/60 shadow-lg 
+                          transition-all duration-200 
+                          hover:border-gray-300/80 hover:shadow-xl
+                          dark:border-gray-700/80 dark:shadow-gray-900/30
+                          dark:hover:border-gray-600"
+                style={minHeight ? { 
+                  height: `${minHeight}px`,
+                  width: 'auto',
+                  maxWidth: '100%'
+                } : { 
+                  maxHeight: '600px', 
+                  width: 'auto',
+                  height: 'auto'
+                }}
+                controls
+              />
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+  
+  // 4个及以上：垂直堆叠
+  return (
+    <div className="my-4 flex flex-col gap-4 max-w-4xl mx-auto">
+      {videos.map((video, idx) => (
+        <div key={idx} className="overflow-hidden rounded-xl">
+          <video
+            {...video.props}
+            className="w-full h-auto rounded-xl border border-gray-200/60 shadow-lg 
+                      dark:border-gray-700/80"
+            controls
+          />
+        </div>
+      ))}
     </div>
   )
 }
