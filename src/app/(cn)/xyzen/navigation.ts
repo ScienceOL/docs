@@ -8,6 +8,8 @@ const navigation: Array<NavGroup> = [
       { title: '快速开始', href: `/xyzen/quickstart` },
       // { title: 'MCP', href: `/xyzen/mcp` },
       { title: '示例演示', href: `/xyzen/demo` },
+      {title:'自定义MCP服务', href:`/xyzen/chat/mcp`},
+      {title:'常见问题', href:`/xyzen/faq`},
     ],
   },
   {

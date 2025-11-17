@@ -21,6 +21,7 @@ export function StackedVideosLayout({
   className,
 }: StackedVideosLayoutProps) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [videoAspectRatio, setVideoAspectRatio] = useState<number | null>(null)
 
   const handleVideoClick = (index: number) => {
     if (index !== activeIndex) {
@@ -40,14 +41,31 @@ export function StackedVideosLayout({
     setActiveIndex((prev) => (prev + 1) % videos.length)
   }
 
+  const handleVideoMetadata = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const video = e.currentTarget
+    if (video.videoWidth && video.videoHeight) {
+      setVideoAspectRatio(video.videoWidth / video.videoHeight)
+    }
+  }
+
   if (!videos || videos.length === 0) {
     return null
+  }
+
+  // 根据宽高比计算容器高度
+  let containerClassName = 'group/videos relative w-full'
+  
+  if (videoAspectRatio) {
+
+    if (videoAspectRatio < 1) {
+      containerClassName += ' max-w-sm mx-auto'
+    }
   }
 
   return (
     <div className={clsx('my-8 px-8 lg:max-w-3xl lg:px-12', className)}>
       {/* 视频堆叠容器 */}
-      <div className="group/videos relative h-[400px] w-full">
+      <div className={containerClassName} style={videoAspectRatio ? { aspectRatio: videoAspectRatio } : { height: '500px' }}>
         {/* 整体组件标题 - 显示在顶部 */}
         {title && (
           <div className="mb-2 text-center">
@@ -81,6 +99,7 @@ export function StackedVideosLayout({
                 src={video.src}
                 controls={isActive}
                 muted
+                onLoadedMetadata={handleVideoMetadata}
                 className={clsx(
                   'h-full w-full rounded-lg border bg-black object-contain shadow-lg transition-all duration-300',
                   'border-gray-100/60 dark:border-neutral-700/80',
