@@ -129,7 +129,7 @@ Content-Type: application/json
 {
   "name": "My OpenAI Account",
   "provider_type": "openai",
-  "key": "sk-...",
+  "key": "your_api_key_here",
   "api": "https://api.openai.com/v1"
 }
 ```
@@ -249,10 +249,13 @@ Content-Type: application/json
 
 获取当前用户拥有的所有 Agent。包括基本信息和关联的 MCP 服务器列表。
 
-```bash
-GET /agents
-Authorization: Bearer <token>
 ```
+GET /agents
+```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 **响应**
 ```json
@@ -840,7 +843,7 @@ curl -X POST http://localhost:48196/xyzen/api/v1/providers \
   -d '{
     "name": "My OpenAI",
     "provider_type": "openai",
-    "key": "sk-..."
+    "key": "your_api_key_here"
   }'
 ```
 
