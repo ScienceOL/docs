@@ -81,7 +81,7 @@ export const teamMembers: Array<TeamMember> = [
     realName:'Chen X.',
     age:29,
     education:'博士',
-    university:'中国科学技术大学',
+    university:'中国科学院大学',
     specialty:'天文物理',
     role:'软硬协同工程师',
     description:'中国科学院大学在读博士主要研究方向包括流体力学有限元并行数值仿真，以及人工智能在三维流场重构中的应用与优化。',

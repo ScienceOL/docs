@@ -8,14 +8,16 @@ import { Mermaid } from '@/components/Mermaid'
 import { Prose } from '@/components/Prose'
 import { StackedVideosLayout } from '@/components/StackedVideosLayout'
 import { Video } from '@/components/Video'
+
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid'
 import React, { useState } from 'react'
 
+
 export const a = Link
 export { Button } from '@/components/Button'
 export { Code as code, CodeGroup, Pre as pre } from '@/components/Code'
-export { Mermaid, StackedVideosLayout, Video }
+export { Mermaid, StackedVideosLayout, Video}
 
 // 覆盖 Markdown 图片语法，使其使用 Img 组件样式
 export function img({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {

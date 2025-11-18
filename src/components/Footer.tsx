@@ -91,13 +91,13 @@ function SmallPrint() {
         reserved.
       </p>
       <div className="flex gap-4">
-        <SocialLink href="#" icon={TwitterIcon}>
+        <SocialLink href="https://twitter.com/ScienceOL" icon={TwitterIcon}>
           Follow us on Twitter
         </SocialLink>
-        <SocialLink href="#" icon={GitHubIcon}>
+        <SocialLink href="https://github.com/ScienceOL" icon={GitHubIcon}>
           Follow us on GitHub
         </SocialLink>
-        <SocialLink href="#" icon={DiscordIcon}>
+        <SocialLink href="https://discord.gg/ScienceOL" icon={DiscordIcon}>
           Join our Discord server
         </SocialLink>
       </div>
@@ -107,7 +107,12 @@ function SmallPrint() {
 
 function PageNavigation({ navigation }: { navigation: NavGroup[] }) {
   let pathname = usePathname()
-  let allPages = navigation.flatMap((group) => group.links)
+  const allPages = navigation
+    .flatMap((group) => group.links)
+    .filter(
+      (p): p is { href: string; title: string } =>
+        typeof p.href === 'string' && typeof p.title === 'string'
+    )
   let currentPageIndex = allPages.findIndex((page) => page.href === pathname)
 
   if (currentPageIndex === -1) {
