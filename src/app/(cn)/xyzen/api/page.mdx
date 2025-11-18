@@ -729,8 +729,8 @@ GET /endpoint?page=1&limit=20&sort=-created_at
 1. **创建提供商**（如果还没有）
 ```bash
 curl -X POST http://localhost:48196/xyzen/api/v1/providers \
-  -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your_api_key>" \
   -d '{
     "name": "My OpenAI",
     "provider_type": "openai",
@@ -741,8 +741,8 @@ curl -X POST http://localhost:48196/xyzen/api/v1/providers \
 2. **创建 Agent**
 ```bash
 curl -X POST http://localhost:48196/xyzen/api/v1/agents \
-  -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your_api_key>" \
   -d '{
     "name": "Paper Analyzer",
     "model": "gpt-4",
@@ -754,8 +754,8 @@ curl -X POST http://localhost:48196/xyzen/api/v1/agents \
 3. **创建会话**
 ```bash
 curl -X POST http://localhost:48196/xyzen/api/v1/sessions \
-  -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your_api_key>" \
   -d '{
     "name": "ML Survey Analysis",
     "agent_id": "AGENT_ID"
