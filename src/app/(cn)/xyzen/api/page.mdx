@@ -118,11 +118,14 @@ GET /providers/me
 
 为当前用户创建一个新的 LLM 提供商。如果这是用户的第一个提供商，它会自动设为默认。
 
-```bash
+请求：
+```
 POST /providers
-Authorization: Bearer <token>
 Content-Type: application/json
+```
 
+请求体：
+```json
 {
   "name": "My OpenAI Account",
   "provider_type": "openai",
@@ -130,6 +133,10 @@ Content-Type: application/json
   "api": "https://api.openai.com/v1"
 }
 ```
+
+<Note>
+所有需要认证的请求都需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 **响应** (201 Created)
 ```json
@@ -146,25 +153,36 @@ Content-Type: application/json
 
 更新现有的提供商配置。可以修改名称、API Key、端点等信息。
 
-```bash
+请求：
+```
 PATCH /providers/{provider_id}
-Authorization: Bearer <token>
 Content-Type: application/json
+```
 
+请求体：
+```json
 {
   "name": "Updated Provider Name",
   "key": "new-api-key"
 }
 ```
 
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
+
 ### 删除提供商
 
 删除指定的提供商。删除后无法恢复。
 
-```bash
-DELETE /providers/{provider_id}
-Authorization: Bearer <token>
+请求：
 ```
+DELETE /providers/{provider_id}
+```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 ---
 
@@ -176,11 +194,14 @@ Agent 是 Xyzen 中的核心概念。每个 Agent 都拥有自己的系统提示
 
 为当前用户创建一个新的 Agent。Agent 会与指定的提供商和 MCP 服务器关联。
 
-```bash
+请求：
+```
 POST /agents
-Authorization: Bearer <token>
 Content-Type: application/json
+```
 
+请求体：
+```json
 {
   "name": "Research Assistant",
   "description": "助手用于研究论文分析",
@@ -194,6 +215,10 @@ Content-Type: application/json
   "mcp_server_ids": ["mcp-uuid-1", "mcp-uuid-2"]
 }
 ```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 **参数说明**：
 - `name` - Agent 的名称（必填）
@@ -257,20 +282,26 @@ Authorization: Bearer <token>
 
 获取指定 Agent 的详细信息。
 
-```bash
-GET /agents/{agent_id}
-Authorization: Bearer <token>
 ```
+GET /agents/{agent_id}
+```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 ### 更新 Agent
 
 修改 Agent 的配置，包括名称、描述、系统提示、关联的 MCP 服务器等。
 
-```bash
+请求：
+```
 PATCH /agents/{agent_id}
-Authorization: Bearer <token>
 Content-Type: application/json
+```
 
+请求体：
+```json
 {
   "name": "Updated Agent Name",
   "temperature": 0.8,
@@ -278,14 +309,21 @@ Content-Type: application/json
 }
 ```
 
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
+
 ### 删除 Agent
 
 删除指定的 Agent。删除后所有关联的会话仍会保留。
 
-```bash
-DELETE /agents/{agent_id}
-Authorization: Bearer <token>
 ```
+DELETE /agents/{agent_id}
+```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 ---
 
@@ -297,11 +335,14 @@ Authorization: Bearer <token>
 
 为指定 Agent 创建一个新会话。系统会自动创建一个名为"新的聊天"的初始主题。
 
-```bash
+请求：
+```
 POST /sessions
-Authorization: Bearer <token>
 Content-Type: application/json
+```
 
+请求体：
+```json
 {
   "name": "论文分析 - 机器学习综述",
   "description": "分析最新的机器学习综述论文",
@@ -309,6 +350,10 @@ Content-Type: application/json
   "is_active": true
 }
 ```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 **响应** (201 Created)
 ```json
@@ -325,10 +370,13 @@ Content-Type: application/json
 
 获取当前用户的所有会话及其包含的主题。
 
-```bash
-GET /sessions
-Authorization: Bearer <token>
 ```
+GET /sessions
+```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 **响应**
 ```json
@@ -354,34 +402,47 @@ Authorization: Bearer <token>
 
 获取指定会话的详细信息。
 
-```bash
-GET /sessions/{session_id}
-Authorization: Bearer <token>
 ```
+GET /sessions/{session_id}
+```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 ### 更新会话
 
 修改会话的名称、描述或激活状态。
 
-```bash
+请求：
+```
 PATCH /sessions/{session_id}
-Authorization: Bearer <token>
 Content-Type: application/json
+```
 
+请求体：
+```json
 {
   "name": "Updated Session Name",
   "description": "Updated description"
 }
 ```
 
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
+
 ### 删除会话
 
 删除指定会话及其所有主题和消息。
 
-```bash
-DELETE /sessions/{session_id}
-Authorization: Bearer <token>
 ```
+DELETE /sessions/{session_id}
+```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 ---
 
@@ -393,15 +454,22 @@ Authorization: Bearer <token>
 
 在指定会话中创建一个新主题。
 
-```bash
+请求：
+```
 POST /sessions/{session_id}/topics
-Authorization: Bearer <token>
 Content-Type: application/json
+```
 
+请求体：
+```json
 {
   "name": "关于模型架构的讨论"
 }
 ```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 **响应** (201 Created)
 ```json
@@ -418,10 +486,13 @@ Content-Type: application/json
 
 获取指定主题的所有消息。支持分页。
 
-```bash
-GET /sessions/{session_id}/topics/{topic_id}/messages
-Authorization: Bearer <token>
 ```
+GET /sessions/{session_id}/topics/{topic_id}/messages
+```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 **响应**
 ```json
@@ -445,10 +516,13 @@ Authorization: Bearer <token>
 
 删除指定主题及其所有消息。
 
-```bash
-DELETE /sessions/{session_id}/topics/{topic_id}
-Authorization: Bearer <token>
 ```
+DELETE /sessions/{session_id}/topics/{topic_id}
+```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 ---
 
@@ -460,10 +534,13 @@ MCP（Model Context Protocol）服务器提供了额外的工具和数据源，A
 
 获取当前用户配置的所有 MCP 服务器。
 
-```bash
-GET /mcps
-Authorization: Bearer <token>
 ```
+GET /mcps
+```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 **响应**
 ```json
@@ -490,11 +567,14 @@ Authorization: Bearer <token>
 
 为当前用户添加一个新的 MCP 服务器。系统会自动检查服务器的健康状态并获取工具列表。
 
-```bash
+请求：
+```
 POST /mcps
-Authorization: Bearer <token>
 Content-Type: application/json
+```
 
+请求体：
+```json
 {
   "name": "Local Tools",
   "description": "本地工具集",
@@ -502,6 +582,10 @@ Content-Type: application/json
   "token": "optional-auth-token"
 }
 ```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 **参数说明**：
 - `name` - MCP 服务器的名称（必填）
@@ -529,10 +613,13 @@ Content-Type: application/json
 
 检查指定 MCP 服务器的连接状态和工具列表。
 
-```bash
-GET /mcps/{mcp_id}/health
-Authorization: Bearer <token>
 ```
+GET /mcps/{mcp_id}/health
+```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 **响应**
 ```json
@@ -547,41 +634,58 @@ Authorization: Bearer <token>
 
 修改 MCP 服务器的配置。
 
-```bash
+请求：
+```
 PATCH /mcps/{mcp_id}
-Authorization: Bearer <token>
 Content-Type: application/json
+```
 
+请求体：
+```json
 {
   "name": "Updated Name",
   "token": "new-token"
 }
 ```
 
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
+
 ### 删除 MCP 服务器
 
 删除指定的 MCP 服务器。删除后，关联的 Agent 将无法访问该服务器的工具。
 
-```bash
-DELETE /mcps/{mcp_id}
-Authorization: Bearer <token>
 ```
+DELETE /mcps/{mcp_id}
+```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 ### 测试 MCP 工具
 
 测试 MCP 服务器上的特定工具。这有助于验证工具是否正常工作。
 
-```bash
+请求：
+```
 POST /mcps/{mcp_id}/tools/{tool_name}/test
-Authorization: Bearer <token>
 Content-Type: application/json
+```
 
+请求体：
+```json
 {
   "parameters": {
     "query": "search term"
   }
 }
 ```
+
+<Note>
+需要在请求头中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 **响应**
 ```json
@@ -604,8 +708,11 @@ WebSocket 接口用于实时的流式聊天和事件推送。
 
 ```
 WS /ws/v1/chat/sessions/{session_id}/topics/{topic_id}
-Authorization: Bearer <token>
 ```
+
+<Note>
+需要在请求头或连接参数中添加 `Authorization: Bearer <your_token>`
+</Note>
 
 **连接后发送消息**
 ```json
@@ -730,7 +837,6 @@ GET /endpoint?page=1&limit=20&sort=-created_at
 ```bash
 curl -X POST http://localhost:48196/xyzen/api/v1/providers \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <your_api_key>" \
   -d '{
     "name": "My OpenAI",
     "provider_type": "openai",
@@ -742,7 +848,6 @@ curl -X POST http://localhost:48196/xyzen/api/v1/providers \
 ```bash
 curl -X POST http://localhost:48196/xyzen/api/v1/agents \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <your_api_key>" \
   -d '{
     "name": "Paper Analyzer",
     "model": "gpt-4",
@@ -755,21 +860,30 @@ curl -X POST http://localhost:48196/xyzen/api/v1/agents \
 ```bash
 curl -X POST http://localhost:48196/xyzen/api/v1/sessions \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <your_api_key>" \
   -d '{
     "name": "ML Survey Analysis",
     "agent_id": "AGENT_ID"
   }'
 ```
 
+<Note>
+以上所有 curl 命令都需要添加认证头：`-H "Authorization: Bearer <your_token>"`
+</Note>
+
 4. **通过 WebSocket 发送消息**
 ```javascript
 const ws = new WebSocket(
-  'ws://localhost:48196/xyzen/ws/v1/chat/sessions/SESSION_ID/topics/TOPIC_ID',
-  ['Authorization', 'Bearer YOUR_TOKEN']
+  'ws://localhost:48196/xyzen/ws/v1/chat/sessions/SESSION_ID/topics/TOPIC_ID'
 );
 
 ws.onopen = () => {
+  // 建立连接后，发送认证令牌
+  ws.send(JSON.stringify({
+    type: 'auth',
+    token: '<your_token>'
+  }));
+
+  // 然后发送消息
   ws.send(JSON.stringify({
     type: 'message',
     content: '请分析这篇论文的核心贡献'
